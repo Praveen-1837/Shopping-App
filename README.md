@@ -105,7 +105,4 @@ Shopping app/
 
 ---
 
-## 📌 Phase Progress
-- **Phase 1: Foundation (Boilerplate & System Health Check)** — ✅ **Complete**
-- Next: **Phase 2: Auth & Roles (Clerk Integration)**
-# Shopping-App
+
