@@ -1,0 +1,324 @@
+// server/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  CUSTOMER
+  SELLER
+  FARMER
+  ARTISAN
+  EDUCATOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PACKED
+  SHIPPED
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum RoleApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id             String   @id @default(uuid())
+  clerkId        String   @unique
+  name           String
+  email          String   @unique
+  role           Role     @default(CUSTOMER)
+  phone          String?
+  username       String?  @unique
+  alternatePhone String?
+  isBlocked      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  products         Product[]         @relation("SellerProducts")
+  courses          Course[]          @relation("EducatorCourses")
+  producer         Producer?
+  sellerProfile    SellerProfile?
+  cart             Cart?
+  orders           Order[]
+  courseProgress   CourseProgress[]
+  roleApplications RoleApplication[]
+  wishlistItems    Wishlist[]
+  reviews          Review[]
+  addresses        Address[]
+  supportTickets   SupportTicket[]
+
+  @@index([clerkId])
+  @@index([email])
+}
+
+model SellerProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logoUrl      String?
+  bannerUrl    String?
+  bio          String?
+  contactEmail String?
+  contactPhone String?
+  socialLinks  Json? // { instagram, facebook, twitter, ... }
+  badges       String[] // e.g. ["Fair Trade", "Organic", "Verified Seller"]
+  updatedAt    DateTime @updatedAt
+}
+
+model Producer {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  location  String
+  story     String?
+  practices String?
+  photos    String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id                 String    @id @default(uuid())
+  sellerId           String
+  seller             User      @relation("SellerProducts", fields: [sellerId], references: [id], onDelete: Cascade)
+  producerId         String?
+  producer           Producer? @relation(fields: [producerId], references: [id], onDelete: SetNull)
+  title              String
+  description        String
+  price              Decimal   @db.Decimal(10, 2)
+  category           String
+  stock              Int       @default(0)
+  lowStockThreshold  Int       @default(5)
+  status             String    @default("ACTIVE") // "ACTIVE" | "INACTIVE"
+  images             String[]
+  videoUrl           String?
+  seoTitle           String?
+  seoDescription     String?
+  sustainabilityTags String[]
+  traceabilityStages Json?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  orderItems    OrderItem[]
+  embedding     ProductEmbedding?
+  wishlistItems Wishlist[]
+  reviews       Review[]
+
+  @@index([category])
+  @@index([sellerId])
+  @@index([producerId])
+  @@index([status])
+}
+
+model Course {
+  id            String   @id @default(uuid())
+  educatorId    String
+  educator      User     @relation("EducatorCourses", fields: [educatorId], references: [id], onDelete: Cascade)
+  title         String
+  description   String
+  price         Decimal  @db.Decimal(10, 2)
+  discountPrice Decimal? @db.Decimal(10, 2)
+  durationMins  Int
+  category      String   @default("General")
+  published     Boolean  @default(false)
+  visibility    String   @default("PUBLIC") // "PUBLIC" | "INVITE_ONLY"
+  modules       Json // [{ sections: [{ id, title, order, lessons: [{ id, title, type, videoUrl, content, resourceUrl, order, freePreview }] }] }]
+  previewVideo  String?
+  certificate   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  orderItems    OrderItem[]
+  progress      CourseProgress[]
+  embedding     CourseEmbedding?
+  wishlistItems Wishlist[]
+  reviews       Review[]
+
+  @@index([educatorId])
+  @@index([category])
+}
+
+model Review {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  courseId  String?
+  course    Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  reply     String?
+  repliedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([courseId])
+  @@index([productId])
+  @@index([userId])
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  itemType  String // "PRODUCT" | "COURSE"
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     Json // [{ productId, courseId, quantity, type, price, title, image }]
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status          OrderStatus   @default(CONFIRMED)
+  paymentStatus   PaymentStatus @default(SUCCESS)
+  paymentId       String?
+  paymentMethod   String        @default("Mock Payment")
+  total           Decimal       @db.Decimal(10, 2)
+  deliveryAddress Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  items OrderItem[]
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  quantity  Int      @default(1)
+  price     Decimal  @db.Decimal(10, 2)
+  itemType  String // "PRODUCT" | "COURSE"
+}
+
+model CourseProgress {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId          String
+  course            Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  completedModules  String[]
+  progressPercent   Int      @default(0)
+  certificateIssued Boolean  @default(false)
+  updatedAt         DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([userId])
+}
+
+model ProductEmbedding {
+  id        String                      @id @default(uuid())
+  productId String                      @unique
+  product   Product                     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  embedding Unsupported("vector(1536)")
+}
+
+model CourseEmbedding {
+  id        String                      @id @default(uuid())
+  courseId  String                      @unique
+  course    Course                      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  embedding Unsupported("vector(1536)")
+}
+
+model RoleApplication {
+  id            String                @id @default(uuid())
+  userId        String
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requestedRole Role
+  status        RoleApplicationStatus @default(PENDING)
+  details       Json?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   // "Home", "Office", "Farm", "Warehouse", etc.
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  pincode   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SupportTicket {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  message   String
+  status    String   @default("OPEN") // OPEN | IN_PROGRESS | RESOLVED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SiteSettings {
+  id              String   @id @default(uuid())
+  storeName       String   @default("EcoMarket")
+  contactEmail    String?
+  currencySymbol  String   @default("₹")
+  flatShippingFee Decimal  @default(0) @db.Decimal(10, 2)
+  updatedAt       DateTime @updatedAt
+}
+
