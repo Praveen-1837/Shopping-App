@@ -33,6 +33,7 @@ import AdminOnboarding from './pages/AdminOnboarding';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminCategories from './pages/AdminCategories';
 import AdminUsers from './pages/AdminUsers';
+import AdminStores from './pages/AdminStores';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminSettings from './pages/AdminSettings';
@@ -280,6 +281,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={ADMIN_ROLES}>
                     <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/stores"
+                element={
+                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+                    <AdminStores />
                   </ProtectedRoute>
                 }
               />

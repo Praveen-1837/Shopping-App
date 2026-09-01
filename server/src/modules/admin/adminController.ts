@@ -14,6 +14,11 @@ export const getAdminStats = async (_req: Request, res: Response, next: NextFunc
     const totalOrders = await prisma.order.count();
     const totalProducts = await prisma.product.count();
     const totalUsers = await prisma.user.count();
+    const totalStores = await prisma.user.count({
+      where: {
+        role: { in: ['SELLER', 'FARMER', 'ARTISAN'] },
+      },
+    });
 
     res.status(200).json({
       success: true,
@@ -22,6 +27,127 @@ export const getAdminStats = async (_req: Request, res: Response, next: NextFunc
         totalOrders,
         totalProducts,
         totalUsers,
+        totalStores,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/v1/admin/stores
+export const getAdminStores = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 15));
+    const search = ((req.query.search as string) || '').trim();
+    const skip = (page - 1) * limit;
+
+    const where: any = {
+      role: { in: ['SELLER', 'FARMER', 'ARTISAN'] },
+    };
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { sellerProfile: { storeName: { contains: search, mode: 'insensitive' } } },
+        { producer: { name: { contains: search, mode: 'insensitive' } } },
+      ];
+    }
+
+    const [stores, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true,
+          sellerProfile: {
+            select: {
+              logoUrl: true,
+              bio: true,
+              badges: true,
+            },
+          },
+          producer: {
+            select: {
+              id: true,
+              name: true,
+              location: true,
+            },
+          },
+          _count: {
+            select: {
+              products: true,
+            },
+          },
+        },
+      }),
+      prisma.user.count({ where }),
+    ]);
+
+    const sellerIds = stores.map((s) => s.id);
+    const orderItems = sellerIds.length > 0
+      ? await prisma.orderItem.findMany({
+          where: {
+            product: {
+              sellerId: { in: sellerIds },
+            },
+          },
+          select: {
+            orderId: true,
+            product: {
+              select: {
+                sellerId: true,
+              },
+            },
+          },
+        })
+      : [];
+
+    const sellerOrdersMap: Record<string, Set<string>> = {};
+    orderItems.forEach((item) => {
+      const sId = item.product?.sellerId;
+      if (sId) {
+        if (!sellerOrdersMap[sId]) {
+          sellerOrdersMap[sId] = new Set();
+        }
+        sellerOrdersMap[sId].add(item.orderId);
+      }
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    const items = stores.map((usr) => ({
+      id: usr.id,
+      name: usr.name,
+      email: usr.email,
+      role: usr.role,
+      createdAt: usr.createdAt,
+      storeName: usr.producer?.name || usr.name,
+      logoUrl: usr.sellerProfile?.logoUrl || null,
+      bio: usr.sellerProfile?.bio || null,
+      badges: usr.sellerProfile?.badges || [],
+      location: usr.producer?.location || null,
+      producerId: usr.producer?.id || null,
+      productCount: usr._count.products,
+      orderCount: sellerOrdersMap[usr.id]?.size || 0,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: {
+        items,
+        total,
+        page,
+        limit,
+        totalPages,
       },
     });
   } catch (error) {

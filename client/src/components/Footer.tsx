@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Globe, IndianRupee, Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import { useUserRole } from '../hooks/useUserRole';
+import logo from '../assets/logo.png';
 
 export default function Footer() {
   const { isSeller, isFarmer, isArtisan, isEducator, isAdmin, isCustomer } = useUserRole();
@@ -19,6 +20,9 @@ export default function Footer() {
       <footer className="mt-16 bg-[#1B2E1E] text-white font-body py-6 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-[#B0C2B3]">
           <div className="flex items-center space-x-2">
+            <div className="bg-white rounded-md p-0.5 overflow-hidden">
+              <img src={logo} alt="EcoMarket" className="h-5 w-auto object-contain" />
+            </div>
             <span className="font-heading font-extrabold text-white">EcoMarket Admin Operations Portal</span>
             <span>— Operations Mode</span>
           </div>
@@ -209,8 +213,8 @@ export default function Footer() {
         <div className="pt-8 pb-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10">
           {/* Platform Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="p-2 bg-secondary/20 rounded-xl group-hover:scale-105 transition-transform">
-              <ShoppingBag className="w-5 h-5 text-secondary" />
+            <div className="p-1 bg-white rounded-xl group-hover:scale-105 transition-transform overflow-hidden shadow-xs border border-white/20">
+              <img src={logo} alt="EcoMarket" className="h-9 w-auto max-w-[130px] object-contain" />
             </div>
             <span className="font-heading font-extrabold text-xl tracking-tight text-white">
               EcoMarket

@@ -6,6 +6,7 @@ import apiClient from '../api/axios';
 import SideMenu from './SideMenu';
 import AccountListsDropdown from './AccountListsDropdown';
 import { useUserRole } from '../hooks/useUserRole';
+import logo from '../assets/logo.png';
 import {
   Menu,
   Search,
@@ -110,8 +111,8 @@ export default function Navbar({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           {/* Brand */}
           <Link to="/admin/dashboard" className="flex items-center space-x-2.5 group shrink-0">
-            <div className="p-1.5 bg-accent/20 border border-accent/40 rounded-xl group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-5 h-5 text-accent" />
+            <div className="p-1 bg-white rounded-xl border border-white/20 group-hover:scale-105 transition-transform overflow-hidden shadow-xs">
+              <img src={logo} alt="EcoMarket" className="h-8 w-auto max-w-[120px] object-contain" />
             </div>
             <div className="flex items-center space-x-1.5">
               <span className="font-heading font-extrabold text-lg tracking-tight text-white">
@@ -161,6 +162,13 @@ export default function Navbar({
               <span>Users</span>
             </Link>
             <Link
+              to="/admin/stores"
+              className="px-3 py-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors flex items-center space-x-1.5"
+            >
+              <Store className="w-4 h-4 text-accent" />
+              <span>Stores</span>
+            </Link>
+            <Link
               to="/admin/onboarding"
               className="px-3 py-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors flex items-center space-x-1.5"
             >
@@ -183,7 +191,7 @@ export default function Navbar({
                 afterSignOutUrl="/"
                 appearance={{
                   elements: {
-                    avatarBox: 'w-8 h-8 border-2 border-accent/40 hover:border-accent transition-colors',
+                    avatarBox: 'w-8 h-8 rounded-xl ring-2 ring-accent/30',
                   },
                 }}
               />
@@ -202,7 +210,9 @@ export default function Navbar({
           <div className="bg-[#1B2E1E] text-white px-4 py-2 text-xs border-b border-white/10">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center space-x-2 font-bold font-heading text-accent">
-                <ShieldCheck className="w-4 h-4 text-accent" />
+                <div className="bg-white rounded-md p-0.5 overflow-hidden">
+                  <img src={logo} alt="EcoMarket" className="h-4 w-auto object-contain" />
+                </div>
                 <span>Admin Operations Portal</span>
               </div>
               <div className="flex items-center space-x-4 overflow-x-auto no-scrollbar font-medium">
@@ -250,8 +260,8 @@ export default function Navbar({
             </button>
 
             <Link to={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center space-x-2 group">
-              <div className="p-1.5 bg-primary-light rounded-xl group-hover:scale-105 transition-transform">
-                <ShoppingBag className="w-5 h-5 text-primary" />
+              <div className="p-1 bg-white rounded-xl border border-text-muted/15 group-hover:scale-105 transition-transform overflow-hidden shadow-xs">
+                <img src={logo} alt="EcoMarket" className="h-8 sm:h-9 w-auto max-w-[130px] object-contain" />
               </div>
               <span className="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-primary">
                 EcoMarket {isAdmin && <span className="text-xs bg-secondary text-white px-2 py-0.5 rounded-full font-bold">Admin</span>}

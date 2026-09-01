@@ -15,6 +15,7 @@ import {
   Clock,
   ShieldCheck,
   CheckCircle2,
+  Store,
 } from 'lucide-react';
 
 interface Stats {
@@ -22,6 +23,7 @@ interface Stats {
   totalOrders: number;
   totalProducts: number;
   totalUsers: number;
+  totalStores: number;
 }
 
 interface OrderItem {
@@ -81,7 +83,7 @@ export default function AdminDashboard() {
     enabled: !!isSignedIn,
   });
 
-  const stats = statsData?.data || { totalRevenue: 0, totalOrders: 0, totalProducts: 0, totalUsers: 0 };
+  const stats = statsData?.data || { totalRevenue: 0, totalOrders: 0, totalProducts: 0, totalUsers: 0, totalStores: 0 };
   const orders = ordersData?.data?.items || [];
 
   return (
@@ -97,68 +99,83 @@ export default function AdminDashboard() {
             Admin Operations Dashboard
           </h1>
           <p className="text-xs text-text-secondary">
-            Monitor real-time revenue, order fulfillment, marketplace items, and platform users.
+            Monitor real-time revenue, order fulfillment, marketplace items, active stores, and platform users.
           </p>
         </div>
       </div>
 
       {/* Top Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Total Revenue */}
-        <div className="bg-background-card border border-secondary/30 rounded-3xl p-6 shadow-soft space-y-3">
-          <div className="p-3 bg-secondary-light text-secondary rounded-2xl w-fit">
-            <IndianRupee className="w-6 h-6" />
+        <div className="bg-background-card border border-secondary/30 rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="p-2.5 bg-secondary-light text-secondary rounded-2xl w-fit">
+            <IndianRupee className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider block">
               Total Revenue
             </span>
-            <span className="text-2xl font-black font-heading text-secondary">
+            <span className="text-xl font-black font-heading text-secondary">
               ₹{loadingStats ? '...' : stats.totalRevenue.toLocaleString('en-IN')}
             </span>
           </div>
         </div>
 
         {/* Total Orders */}
-        <div className="bg-background-card border border-primary/30 rounded-3xl p-6 shadow-soft space-y-3">
-          <div className="p-3 bg-primary-light text-primary rounded-2xl w-fit">
-            <ShoppingBag className="w-6 h-6" />
+        <div className="bg-background-card border border-primary/30 rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="p-2.5 bg-primary-light text-primary rounded-2xl w-fit">
+            <ShoppingBag className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider block">
               Total Orders
             </span>
-            <span className="text-2xl font-black font-heading text-primary">
+            <span className="text-xl font-black font-heading text-primary">
               {loadingStats ? '...' : stats.totalOrders}
             </span>
           </div>
         </div>
 
         {/* Total Products */}
-        <div className="bg-background-card border border-accent/40 rounded-3xl p-6 shadow-soft space-y-3">
-          <div className="p-3 bg-accent/20 text-text-primary rounded-2xl w-fit">
-            <Package className="w-6 h-6 text-primary" />
+        <div className="bg-background-card border border-accent/40 rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="p-2.5 bg-accent/20 text-text-primary rounded-2xl w-fit">
+            <Package className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider block">
               Catalog Products
             </span>
-            <span className="text-2xl font-black font-heading text-text-primary">
+            <span className="text-xl font-black font-heading text-text-primary">
               {loadingStats ? '...' : stats.totalProducts}
             </span>
           </div>
         </div>
 
-        {/* Total Users */}
-        <div className="bg-background-card border border-ai/30 rounded-3xl p-6 shadow-soft space-y-3">
-          <div className="p-3 bg-ai-light text-ai rounded-2xl w-fit">
-            <Users className="w-6 h-6" />
+        {/* Total Stores */}
+        <div className="bg-background-card border border-primary/30 rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="p-2.5 bg-primary-light text-primary rounded-2xl w-fit">
+            <Store className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider block">
+              Total Stores
+            </span>
+            <span className="text-xl font-black font-heading text-primary">
+              {loadingStats ? '...' : stats.totalStores}
+            </span>
+          </div>
+        </div>
+
+        {/* Total Users */}
+        <div className="bg-background-card border border-ai/30 rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="p-2.5 bg-ai-light text-ai rounded-2xl w-fit">
+            <Users className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider block">
               Registered Users
             </span>
-            <span className="text-2xl font-black font-heading text-ai">
+            <span className="text-xl font-black font-heading text-ai">
               {loadingStats ? '...' : stats.totalUsers}
             </span>
           </div>

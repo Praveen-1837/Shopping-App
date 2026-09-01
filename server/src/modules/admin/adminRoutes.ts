@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { roleGuard } from '../../middleware/roleGuard';
 import {
   getAdminStats,
+  getAdminStores,
   getAdminCategories,
   createAdminCategory,
   updateAdminCategory,
@@ -25,6 +26,9 @@ router.use('/admin', roleGuard(['ADMIN']));
 
 // Stats Endpoint
 router.get('/admin/stats', getAdminStats);
+
+// Stores Directory Endpoint
+router.get('/admin/stores', getAdminStores);
 
 // Categories Endpoints
 router.get('/admin/categories', getAdminCategories);

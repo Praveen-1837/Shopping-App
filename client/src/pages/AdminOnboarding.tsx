@@ -55,6 +55,8 @@ export default function AdminOnboarding() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-onboarding'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-stores'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
     },
   });
 

@@ -108,7 +108,11 @@ export const getPendingApplications = async (req: Request, res: Response, next: 
 
     const where: any = {};
     if (requestedRole) {
-      where.requestedRole = requestedRole as Role;
+      if (requestedRole === 'SELLER' || requestedRole === 'ARTISAN') {
+        where.requestedRole = { in: [Role.SELLER, Role.ARTISAN] };
+      } else {
+        where.requestedRole = requestedRole as Role;
+      }
     }
 
     const [total, applications] = await Promise.all([
@@ -216,12 +220,13 @@ export const reviewRoleApplication = async (req: Request, res: Response, next: N
 
       // 3. If role is FARMER or SELLER or ARTISAN, ensure a Producer record exists
       if (['FARMER', 'SELLER', 'ARTISAN'].includes(requestedRole)) {
+        const businessName = (application.details as any)?.businessName || application.user.name || 'Organic Producer';
         await prisma.producer.upsert({
           where: { userId: application.userId },
-          update: {},
+          update: { name: businessName },
           create: {
             userId: application.userId,
-            name: application.user.name || 'Organic Producer',
+            name: businessName,
             location: 'India',
             story: 'Sustainable local organic producer.',
           },
