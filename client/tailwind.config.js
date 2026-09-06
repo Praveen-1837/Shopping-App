@@ -41,6 +41,7 @@ export default {
       fontFamily: {
         heading: ['Fraunces', 'Georgia', 'serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
+        praise: ['Praise', 'cursive'],
       },
       boxShadow: {
         soft: '0 4px 20px -2px rgba(31, 36, 33, 0.06)',

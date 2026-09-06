@@ -11,3 +11,9 @@
     @apply font-heading;
   }
 }
+
+@layer components {
+  .brand-wordmark {
+    @apply font-praise tracking-normal;
+  }
+}

@@ -23,7 +23,8 @@ export default function Footer() {
             <div className="bg-white rounded-md p-0.5 overflow-hidden">
               <img src={logo} alt="EcoMarket" className="h-5 w-auto object-contain" />
             </div>
-            <span className="font-heading font-extrabold text-white">EcoMarket Admin Operations Portal</span>
+            <span className="brand-wordmark font-praise text-xl text-white leading-none select-none">EcoMarket</span>
+            <span className="font-heading font-extrabold text-white">Admin Operations Portal</span>
             <span>— Operations Mode</span>
           </div>
           <div>© {new Date().getFullYear()} EcoMarket Inc. All rights reserved.</div>
@@ -212,11 +213,11 @@ export default function Footer() {
         {/* Regional Selector Bar (Logo + Dropdown Selectors) */}
         <div className="pt-8 pb-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10">
           {/* Platform Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-2.5 group">
             <div className="p-1 bg-white rounded-xl group-hover:scale-105 transition-transform overflow-hidden shadow-xs border border-white/20">
               <img src={logo} alt="EcoMarket" className="h-9 w-auto max-w-[130px] object-contain" />
             </div>
-            <span className="font-heading font-extrabold text-xl tracking-tight text-white">
+            <span className="brand-wordmark font-praise text-2xl sm:text-3xl tracking-normal text-white leading-none select-none">
               EcoMarket
             </span>
           </Link>

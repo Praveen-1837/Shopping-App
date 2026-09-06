@@ -123,11 +123,11 @@ export default function Navbar({
             <div className="p-1 bg-white rounded-xl border border-white/20 group-hover:scale-105 transition-transform overflow-hidden shadow-xs">
               <img src={logo} alt="EcoMarket" className="h-8 w-auto max-w-[120px] object-contain" />
             </div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-heading font-extrabold text-lg tracking-tight text-white">
+            <div className="flex items-center space-x-2">
+              <span className="brand-wordmark font-praise text-2xl sm:text-3xl tracking-normal text-white leading-none select-none">
                 EcoMarket
               </span>
-              <span className="text-[10px] bg-accent text-[#1B2E1E] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <span className="text-[10px] bg-accent text-[#1B2E1E] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider font-body">
                 Admin
               </span>
             </div>
@@ -275,13 +275,18 @@ export default function Navbar({
               <span className="hidden sm:inline text-xs font-bold text-text-secondary">Menu</span>
             </button>
 
-            <Link to={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center space-x-2 group">
+            <Link to={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-2.5 group">
               <div className="p-1 bg-white rounded-xl border border-text-muted/15 group-hover:scale-105 transition-transform overflow-hidden shadow-xs">
                 <img src={logo} alt="EcoMarket" className="h-8 sm:h-9 w-auto max-w-[130px] object-contain" />
               </div>
-              <span className="font-heading font-extrabold text-lg sm:text-xl tracking-tight text-primary">
-                EcoMarket {isAdmin && <span className="text-xs bg-secondary text-white px-2 py-0.5 rounded-full font-bold">Admin</span>}
+              <span className="brand-wordmark font-praise text-2xl sm:text-3xl text-primary tracking-normal leading-none select-none">
+                EcoMarket
               </span>
+              {isAdmin && (
+                <span className="text-xs bg-secondary text-white px-2 py-0.5 rounded-full font-bold font-body leading-normal">
+                  Admin
+                </span>
+              )}
             </Link>
           </div>
 
