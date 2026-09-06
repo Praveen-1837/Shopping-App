@@ -23,36 +23,95 @@ export default function Cart() {
     },
   });
 
-  // Update item quantity mutation
+  // Update item quantity mutation with Optimistic UI updates
   const updateQtyMutation = useMutation({
     mutationFn: async ({ productId, courseId, quantity }: { productId?: string; courseId?: string; quantity: number }) => {
       const token = await getToken();
+      const targetId = productId || courseId;
       await apiClient.put(
-        '/cart/items',
+        `/cart/items/${targetId}`,
         { productId, courseId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
     },
-    onSuccess: () => {
+    onMutate: async ({ productId, courseId, quantity }) => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+      const previousCart = queryClient.getQueryData(['cart']);
+      const targetId = productId || courseId;
+
+      queryClient.setQueryData(['cart'], (old: any) => {
+        if (!old?.data?.items) return old;
+        const updatedItems = old.data.items.map((item: any) => {
+          const itemId = item.productId || item.courseId;
+          if (itemId === targetId) {
+            return { ...item, quantity };
+          }
+          return item;
+        });
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            items: updatedItems,
+          },
+        };
+      });
+
+      return { previousCart };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(['cart'], context.previousCart);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });
 
-  // Remove item mutation
+  // Remove item mutation with Optimistic UI updates
   const removeItemMutation = useMutation({
     mutationFn: async ({ productId, courseId }: { productId?: string; courseId?: string }) => {
       const token = await getToken();
-      await apiClient.delete('/cart/items', {
+      const targetId = productId || courseId;
+      await apiClient.delete(`/cart/items/${targetId}`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { productId, courseId },
       });
     },
-    onSuccess: () => {
+    onMutate: async ({ productId, courseId }) => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+      const previousCart = queryClient.getQueryData(['cart']);
+      const targetId = productId || courseId;
+
+      queryClient.setQueryData(['cart'], (old: any) => {
+        if (!old?.data?.items) return old;
+        const filteredItems = old.data.items.filter((item: any) => {
+          const itemId = item.productId || item.courseId;
+          return itemId !== targetId;
+        });
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            items: filteredItems,
+          },
+        };
+      });
+
+      return { previousCart };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(['cart'], context.previousCart);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });
 
-  // Clear cart mutation
+  // Clear cart mutation with Optimistic UI updates
   const clearCartMutation = useMutation({
     mutationFn: async () => {
       const token = await getToken();
@@ -60,7 +119,29 @@ export default function Cart() {
         headers: { Authorization: `Bearer ${token}` },
       });
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+      const previousCart = queryClient.getQueryData(['cart']);
+
+      queryClient.setQueryData(['cart'], (old: any) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            items: [],
+          },
+        };
+      });
+
+      return { previousCart };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousCart) {
+        queryClient.setQueryData(['cart'], context.previousCart);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
   });

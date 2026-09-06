@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { clerkMiddleware } from '@clerk/express';
+import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 import { prisma } from './config/db';
@@ -20,6 +21,7 @@ import adminRoutes from './modules/admin/adminRoutes';
 import sellerRoutes from './modules/seller/sellerRoutes';
 import educatorRoutes from './modules/educator/educatorRoutes';
 import userRoutes from './modules/user/userRoutes';
+import bannerRoutes from './modules/content/bannerRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
 
@@ -27,8 +29,12 @@ dotenv.config();
 
 const app = express();
 
+// Serve static uploaded files locally
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
+
 // Enable CORS
 app.use(
+
   cors({
     origin: (origin, callback) => {
       if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || origin === process.env.CLIENT_URL) {
@@ -85,6 +91,7 @@ app.use('/api/v1', courseRoutes);
 app.use('/api/v1', orderRoutes);
 app.use('/api/v1', aiRoutes);
 app.use('/api/v1', producerRoutes);
+app.use('/api/v1', bannerRoutes);
 app.use('/api/v1', marketplaceRoutes);
 app.use('/api/v1', wishlistRoutes);
 app.use('/api/v1', adminRoutes);

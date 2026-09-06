@@ -12,6 +12,17 @@ export const createProductSchema = z.object({
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
   sustainabilityTags: z.array(z.string()).default([]),
+  usageContent: z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      steps: z.array(z.string()).optional(),
+    })
+    .nullable()
+    .optional(),
+  ingredients: z.string().optional().nullable(),
+  usageDirections: z.string().optional().nullable(),
+  safetyInfo: z.string().optional().nullable(),
   producerId: z.string().optional(),
   producerData: z
     .object({

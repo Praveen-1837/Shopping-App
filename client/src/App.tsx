@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import ChatWidget from './components/ChatWidget';
 import Home from './pages/Home';
+import Shop from './pages/Shop';
 import Login from './pages/Login';
 import SignUpPage from './pages/SignUp';
 import MyAccount from './pages/MyAccount';
@@ -32,6 +33,7 @@ import ApplyRole from './pages/ApplyRole';
 import AdminOnboarding from './pages/AdminOnboarding';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminCategories from './pages/AdminCategories';
+import AdminBanners from './pages/AdminBanners';
 import AdminUsers from './pages/AdminUsers';
 import AdminStores from './pages/AdminStores';
 import AdminProducts from './pages/AdminProducts';
@@ -61,7 +63,9 @@ function App() {
               <Routes>
               {/* Public Catalog & Information Routes */}
               <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/category/:categoryName" element={<Shop />} />
+              <Route path="/category/:categoryName" element={<Shop />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/producer/:id" element={<ProducerDetail />} />
               <Route path="/courses" element={<Courses />} />
@@ -273,6 +277,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={ADMIN_ROLES}>
                     <AdminCategories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/banners"
+                element={
+                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+                    <AdminBanners />
                   </ProtectedRoute>
                 }
               />

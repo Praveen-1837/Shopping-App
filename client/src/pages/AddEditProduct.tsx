@@ -40,6 +40,16 @@ export default function AddEditProduct() {
   const [producerLocation, setProducerLocation] = useState<string>('');
   const [producerStory, setProducerStory] = useState<string>('');
 
+  // Recipe usageContent state for Food & Spices category
+  const [recipeTitle, setRecipeTitle] = useState<string>('');
+  const [recipeDesc, setRecipeDesc] = useState<string>('');
+  const [recipeSteps, setRecipeSteps] = useState<string>('');
+
+  // Optional structured product info fields
+  const [ingredients, setIngredients] = useState<string>('');
+  const [usageDirections, setUsageDirections] = useState<string>('');
+  const [safetyInfo, setSafetyInfo] = useState<string>('');
+
   const [uploadingImage, setUploadingImage] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -67,6 +77,16 @@ export default function AddEditProduct() {
       setSeoTitle(prod.seoTitle || '');
       setSeoDescription(prod.seoDescription || '');
       setSustainabilityTags(prod.sustainabilityTags || []);
+
+      if (prod.usageContent) {
+        setRecipeTitle(prod.usageContent.title || '');
+        setRecipeDesc(prod.usageContent.description || '');
+        setRecipeSteps(Array.isArray(prod.usageContent.steps) ? prod.usageContent.steps.join('\n') : '');
+      }
+
+      setIngredients(prod.ingredients || '');
+      setUsageDirections(prod.usageDirections || '');
+      setSafetyInfo(prod.safetyInfo || '');
 
       if (prod.producer) {
         setProducerName(prod.producer.name || '');
@@ -150,7 +170,20 @@ export default function AddEditProduct() {
         seoTitle: seoTitle.trim() || undefined,
         seoDescription: seoDescription.trim() || undefined,
         sustainabilityTags,
+        ingredients: ingredients.trim() || undefined,
+        usageDirections: usageDirections.trim() || undefined,
+        safetyInfo: safetyInfo.trim() || undefined,
       };
+
+      if (category === 'Food & Spices' && (recipeTitle.trim() || recipeDesc.trim() || recipeSteps.trim())) {
+        payload.usageContent = {
+          title: recipeTitle.trim(),
+          description: recipeDesc.trim(),
+          steps: recipeSteps.split('\n').map((s) => s.trim()).filter(Boolean),
+        };
+      } else {
+        payload.usageContent = null;
+      }
 
       if (isFarmerOrArtisan && producerName.trim()) {
         payload.producerData = {
@@ -558,6 +591,105 @@ export default function AddEditProduct() {
             </div>
           </div>
         )}
+
+        {/* Recipe / Culinary Use Guide Section (ONLY for Food & Spices Category) */}
+        {category === 'Food & Spices' && (
+          <div className="bg-amber-500/10 rounded-2xl p-6 border border-amber-500/20 space-y-4">
+            <div className="flex items-center space-x-2 text-amber-700 dark:text-amber-400 font-bold font-heading">
+              <Leaf className="w-5 h-5 text-primary" />
+              <h2 className="text-base">5. Culinary Recipe & Recommended Usage Guide (Food & Spices Only)</h2>
+            </div>
+            <p className="text-xs text-text-secondary">
+              Help customers enjoy this ingredient by providing a recommended recipe or usage instructions.
+            </p>
+
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-text-primary">Recipe / Guide Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Golden Turmeric Golden Milk Wellness Latte"
+                  value={recipeTitle}
+                  onChange={(e) => setRecipeTitle(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-text-primary">Short Summary / Description</label>
+                <input
+                  type="text"
+                  placeholder="e.g. A soothing anti-inflammatory evening tonic using authentic organic turmeric."
+                  value={recipeDesc}
+                  onChange={(e) => setRecipeDesc(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-semibold text-text-primary">Preparation Steps (One step per line)</label>
+                <textarea
+                  rows={3}
+                  placeholder="1. Warm 1 cup of oat or almond milk in a saucepan over medium heat.&#10;2. Whisk in 1 tsp of turmeric powder and 1/2 tsp cinnamon.&#10;3. Simmer for 3 mins, sweeten with raw honey, and serve warm."
+                  value={recipeSteps}
+                  onChange={(e) => setRecipeSteps(e.target.value)}
+                  className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs font-mono"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Section 6: Structured Product Information (Optional) */}
+        <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-4">
+          <h3 className="text-sm font-bold font-heading text-primary uppercase tracking-wider flex items-center space-x-2">
+            <span>6. Structured Product Information (Optional)</span>
+          </h3>
+          <p className="text-xs text-text-secondary">
+            Provide additional structured details for your customers. These sections will only appear on the product page if filled in.
+          </p>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-text-primary">
+                Ingredients / Materials (Optional)
+              </label>
+              <textarea
+                rows={2}
+                placeholder="e.g. 100% Organic Lakadong Turmeric Root, Zero preservatives."
+                value={ingredients}
+                onChange={(e) => setIngredients(e.target.value)}
+                className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs"
+              ></textarea>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-text-primary">
+                Directions / Usage Info (Optional)
+              </label>
+              <textarea
+                rows={2}
+                placeholder="e.g. Store in a cool, dry place away from direct sunlight. Use 1/2 tsp daily in hot water, milk, or cooking."
+                value={usageDirections}
+                onChange={(e) => setUsageDirections(e.target.value)}
+                className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs"
+              ></textarea>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-text-primary">
+                Safety Information & Warnings (Optional)
+              </label>
+              <textarea
+                rows={2}
+                placeholder="e.g. Allergen warning: Processed in a facility that also handles tree nuts. Consult your physician if pregnant."
+                value={safetyInfo}
+                onChange={(e) => setSafetyInfo(e.target.value)}
+                className="w-full px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs"
+              ></textarea>
+            </div>
+          </div>
+        </div>
 
         {/* Submit Actions */}
         <div className="flex items-center justify-end space-x-4 pt-4 border-t border-text-muted/10">

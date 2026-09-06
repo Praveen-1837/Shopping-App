@@ -158,16 +158,40 @@ export const getAdminStores = async (req: Request, res: Response, next: NextFunc
 // GET /api/v1/admin/categories
 export const getAdminCategories = async (_req: Request, res: Response, next: NextFunction) => {
   try {
+    const defaultCategoryImages: Record<string, string> = {
+      'Food & Spices': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800',
+      'Artisan Crafts': 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+      'Eco Living': 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
+      'Organic Produce': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=800',
+    };
+
     let categories = await prisma.category.findMany({
       orderBy: { name: 'asc' },
     });
 
     if (categories.length === 0) {
-      const defaults = ['Food & Spices', 'Artisan Crafts', 'Eco Living', 'Organic Produce'];
-      await prisma.category.createMany({
-        data: defaults.map((name) => ({ name })),
-        skipDuplicates: true,
+      const defaults = Object.keys(defaultCategoryImages);
+      for (const name of defaults) {
+        await prisma.category.create({
+          data: {
+            name,
+            imageUrl: defaultCategoryImages[name],
+          },
+        });
+      }
+      categories = await prisma.category.findMany({
+        orderBy: { name: 'asc' },
       });
+    } else {
+      // Ensure missing imageUrls for default 4 categories get backfilled if null
+      for (const cat of categories) {
+        if (!cat.imageUrl && defaultCategoryImages[cat.name]) {
+          await prisma.category.update({
+            where: { id: cat.id },
+            data: { imageUrl: defaultCategoryImages[cat.name] },
+          });
+        }
+      }
       categories = await prisma.category.findMany({
         orderBy: { name: 'asc' },
       });
@@ -185,7 +209,7 @@ export const getAdminCategories = async (_req: Request, res: Response, next: Nex
 // POST /api/v1/admin/categories
 export const createAdminCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.body;
+    const { name, imageUrl } = req.body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       res.status(400).json({
@@ -210,7 +234,10 @@ export const createAdminCategory = async (req: Request, res: Response, next: Nex
     }
 
     const category = await prisma.category.create({
-      data: { name: cleanName },
+      data: {
+        name: cleanName,
+        imageUrl: typeof imageUrl === 'string' && imageUrl.trim() ? imageUrl.trim() : null,
+      },
     });
 
     res.status(201).json({
@@ -227,7 +254,7 @@ export const createAdminCategory = async (req: Request, res: Response, next: Nex
 export const updateAdminCategory = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id as string;
-    const { name } = req.body;
+    const { name, imageUrl } = req.body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       res.status(400).json({
@@ -239,7 +266,10 @@ export const updateAdminCategory = async (req: Request, res: Response, next: Nex
 
     const category = await prisma.category.update({
       where: { id },
-      data: { name: name.trim() },
+      data: {
+        name: name.trim(),
+        imageUrl: typeof imageUrl === 'string' && imageUrl.trim() ? imageUrl.trim() : null,
+      },
     });
 
     res.status(200).json({
@@ -629,7 +659,7 @@ export const getAdminSettings = async (_req: Request, res: Response, next: NextF
 // PUT /api/v1/admin/settings
 export const updateAdminSettings = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { storeName, contactEmail, currencySymbol, flatShippingFee } = req.body;
+    const { storeName, contactEmail, currencySymbol, flatShippingFee, estimatedDeliveryDays, legalDisclaimerText } = req.body;
 
     let settings = await prisma.siteSettings.findFirst();
 
@@ -640,7 +670,9 @@ export const updateAdminSettings = async (req: Request, res: Response, next: Nex
           contactEmail: contactEmail || 'support@ecomarket.com',
           currencySymbol: currencySymbol || '₹',
           flatShippingFee: flatShippingFee !== undefined ? Number(flatShippingFee) : 0,
-        },
+          estimatedDeliveryDays: estimatedDeliveryDays || '5-7 business days',
+          legalDisclaimerText: legalDisclaimerText || 'Product information is provided by individual sellers and producers on this platform. Please review packaging and product details carefully before use. For food items, always check for allergens and storage instructions. This platform does not independently verify seller-provided claims.',
+        } as any,
       });
     } else {
       settings = await prisma.siteSettings.update({
@@ -650,7 +682,9 @@ export const updateAdminSettings = async (req: Request, res: Response, next: Nex
           ...(contactEmail !== undefined && { contactEmail: String(contactEmail).trim() }),
           ...(currencySymbol !== undefined && { currencySymbol: String(currencySymbol).trim() }),
           ...(flatShippingFee !== undefined && { flatShippingFee: Number(flatShippingFee) }),
-        },
+          ...(estimatedDeliveryDays !== undefined && { estimatedDeliveryDays: String(estimatedDeliveryDays).trim() }),
+          ...(legalDisclaimerText !== undefined && { legalDisclaimerText: String(legalDisclaimerText).trim() }),
+        } as any,
       });
     }
 

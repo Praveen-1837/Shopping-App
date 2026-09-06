@@ -24,6 +24,7 @@ import {
   Package,
   Settings,
   UserCheck,
+  Sparkles,
 } from 'lucide-react';
 
 const PRODUCT_CATEGORIES = [
@@ -53,8 +54,16 @@ export default function Navbar({
   const [searchParams] = useSearchParams();
   const { isAdmin } = useUserRole();
 
-  const currentCategory = location.pathname === '/' ? (searchParams.get('category') || 'All Categories') : '';
-  const isFarmerDirectActive = location.pathname === '/' && searchParams.get('producerRole') === 'FARMER';
+  let currentCategory = '';
+  if (location.pathname.startsWith('/shop/category/')) {
+    currentCategory = decodeURIComponent(location.pathname.replace('/shop/category/', ''));
+  } else if (location.pathname === '/shop') {
+    currentCategory = searchParams.get('category') || 'All Categories';
+  } else if (location.pathname === '/') {
+    currentCategory = searchParams.get('category') || '';
+  }
+
+  const isFarmerDirectActive = location.pathname.startsWith('/shop') && searchParams.get('producerRole') === 'FARMER';
   const isMasterclassesActive = location.pathname === '/courses';
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -83,9 +92,9 @@ export default function Navbar({
       onCategorySelect(localCategory);
     }
     if (localSearch) {
-      navigate(`/?search=${encodeURIComponent(localSearch)}`);
+      navigate(`/shop?search=${encodeURIComponent(localSearch)}`);
     } else {
-      navigate('/');
+      navigate('/shop');
     }
   };
 
@@ -95,14 +104,14 @@ export default function Navbar({
       onCategorySelect(cat);
     }
     if (cat === 'All Categories') {
-      navigate('/');
+      navigate('/shop');
     } else {
-      navigate(`/?category=${encodeURIComponent(cat)}`);
+      navigate(`/shop/category/${encodeURIComponent(cat)}`);
     }
   };
 
   const handleFarmerDirectClick = () => {
-    navigate('/?producerRole=FARMER');
+    navigate('/shop?producerRole=FARMER');
   };
 
   if (isAdmin) {
@@ -146,6 +155,13 @@ export default function Navbar({
             >
               <ShoppingBag className="w-4 h-4 text-accent" />
               <span>Orders</span>
+            </Link>
+            <Link
+              to="/admin/banners"
+              className="px-3 py-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors flex items-center space-x-1.5"
+            >
+              <Sparkles className="w-4 h-4 text-accent" />
+              <span>Banners</span>
             </Link>
             <Link
               to="/admin/categories"
@@ -369,65 +385,67 @@ export default function Navbar({
           </form>
         </div>
 
-        {/* Secondary Category Shortcuts Tier (Horizontally Scrollable) */}
-        <div className="bg-background-muted/50 border-t border-text-muted/10 py-1.5 px-3 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex items-center space-x-2 overflow-x-auto no-scrollbar text-xs font-medium text-text-secondary">
-            <button
-              onClick={() => handleQuickCategoryClick('All Categories')}
-              className={`px-3 py-1 rounded-lg shrink-0 transition-colors cursor-pointer ${
-                location.pathname === '/' && currentCategory === 'All Categories' && !isFarmerDirectActive
-                  ? 'bg-primary text-white font-semibold shadow-xs'
-                  : 'hover:bg-background-card text-text-primary'
-              }`}
-            >
-              All Products
-            </button>
-
-            {PRODUCT_CATEGORIES.filter((c) => c !== 'All Categories').map((cat) => (
+        {/* Secondary Category Shortcuts Tier (Horizontally Scrollable with Scroll Snap & Fade Cue) */}
+        <div className="bg-background-muted/50 border-t border-text-muted/10 py-1.5 relative">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative after:pointer-events-none after:absolute after:right-0 after:top-0 after:bottom-0 after:w-10 after:bg-gradient-to-l after:from-background-card/90 after:to-transparent md:after:hidden">
+            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth text-xs font-medium text-text-secondary pr-8 md:pr-0">
               <button
-                key={cat}
-                onClick={() => handleQuickCategoryClick(cat)}
-                className={`px-3 py-1 rounded-lg shrink-0 transition-colors cursor-pointer ${
-                  location.pathname === '/' && currentCategory === cat && !isFarmerDirectActive
+                onClick={() => handleQuickCategoryClick('All Categories')}
+                className={`px-3 py-1 rounded-lg shrink-0 snap-start transition-colors cursor-pointer ${
+                  (location.pathname === '/shop' || (location.pathname === '/' && !searchParams.get('category'))) && currentCategory === 'All Categories' && !isFarmerDirectActive
                     ? 'bg-primary text-white font-semibold shadow-xs'
                     : 'hover:bg-background-card text-text-primary'
                 }`}
               >
-                {cat}
+                All Products
               </button>
-            ))}
 
-            <Link
-              to="/courses"
-              className={`px-3 py-1 rounded-lg shrink-0 font-bold transition-colors flex items-center space-x-1 ${
-                isMasterclassesActive
-                  ? 'bg-secondary text-white shadow-xs'
-                  : 'hover:bg-background-card text-secondary'
-              }`}
-            >
-              <BookOpen className="w-3 h-3" />
-              <span>Masterclasses</span>
-            </Link>
+              {PRODUCT_CATEGORIES.filter((c) => c !== 'All Categories').map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleQuickCategoryClick(cat)}
+                  className={`px-3 py-1 rounded-lg shrink-0 snap-start transition-colors cursor-pointer ${
+                    (location.pathname.startsWith('/shop') || location.pathname === '/') && currentCategory === cat && !isFarmerDirectActive
+                      ? 'bg-primary text-white font-semibold shadow-xs'
+                      : 'hover:bg-background-card text-text-primary'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
 
-            <button
-              onClick={handleFarmerDirectClick}
-              className={`px-3 py-1 rounded-lg shrink-0 transition-colors flex items-center space-x-1 cursor-pointer ${
-                isFarmerDirectActive
-                  ? 'bg-primary text-white font-semibold shadow-xs'
-                  : 'hover:bg-background-card text-text-primary'
-              }`}
-            >
-              <Sprout className={`w-3 h-3 ${isFarmerDirectActive ? 'text-white' : 'text-primary'}`} />
-              <span>Farmer Direct</span>
-            </button>
+              <Link
+                to="/courses"
+                className={`px-3 py-1 rounded-lg shrink-0 snap-start font-bold transition-colors flex items-center space-x-1 ${
+                  isMasterclassesActive
+                    ? 'bg-secondary text-white shadow-xs'
+                    : 'hover:bg-background-card text-secondary'
+                }`}
+              >
+                <BookOpen className="w-3 h-3" />
+                <span>Masterclasses</span>
+              </Link>
 
-            <div
-              title="Eco Deals — Coming soon!"
-              className="px-3 py-1 rounded-lg shrink-0 text-text-muted/70 font-semibold flex items-center space-x-1.5 cursor-not-allowed opacity-75 border border-dashed border-text-muted/20"
-            >
-              <Tag className="w-3 h-3 text-text-muted" />
-              <span>Eco Deals</span>
-              <span className="text-[9px] bg-background-muted text-text-muted px-1.5 py-0.2 rounded-full font-normal">Soon</span>
+              <button
+                onClick={handleFarmerDirectClick}
+                className={`px-3 py-1 rounded-lg shrink-0 snap-start transition-colors flex items-center space-x-1 cursor-pointer ${
+                  isFarmerDirectActive
+                    ? 'bg-primary text-white font-semibold shadow-xs'
+                    : 'hover:bg-background-card text-text-primary'
+                }`}
+              >
+                <Sprout className={`w-3 h-3 ${isFarmerDirectActive ? 'text-white' : 'text-primary'}`} />
+                <span>Farmer Direct</span>
+              </button>
+
+              <div
+                title="Eco Deals — Coming soon!"
+                className="px-3 py-1 rounded-lg shrink-0 snap-start text-text-muted/70 font-semibold flex items-center space-x-1.5 cursor-not-allowed opacity-75 border border-dashed border-text-muted/20"
+              >
+                <Tag className="w-3 h-3 text-text-muted" />
+                <span>Eco Deals</span>
+                <span className="text-[9px] bg-background-muted text-text-muted px-1.5 py-0.2 rounded-full font-normal">Soon</span>
+              </div>
             </div>
           </div>
         </div>

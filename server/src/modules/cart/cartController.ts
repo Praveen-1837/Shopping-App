@@ -257,7 +257,13 @@ export const patchCartItem = async (req: Request, res: Response, next: NextFunct
       });
     }
 
-    const productId = req.params.productId as string;
+    const targetId =
+      req.params.productId ||
+      req.body?.productId ||
+      req.body?.courseId ||
+      (req.query?.productId as string) ||
+      (req.query?.courseId as string);
+
     const { quantity } = req.body;
 
     const dbUser = await getDbUser(auth.userId);
@@ -274,13 +280,20 @@ export const patchCartItem = async (req: Request, res: Response, next: NextFunct
 
     let currentItems: any[] = (cart.items as any[]) || [];
 
+    if (!targetId) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'BAD_REQUEST', message: 'productId or courseId is required' },
+      });
+    }
+
     if (Number(quantity) <= 0) {
       currentItems = currentItems.filter(
-        (i) => i.productId !== productId && i.courseId !== productId
+        (i) => i.productId !== targetId && i.courseId !== targetId
       );
     } else {
       const idx = currentItems.findIndex(
-        (i) => i.productId === productId || i.courseId === productId
+        (i) => i.productId === targetId || i.courseId === targetId
       );
       if (idx > -1) {
         currentItems[idx].quantity = Number(quantity);
@@ -318,16 +331,22 @@ export const removeCartItem = async (req: Request, res: Response, next: NextFunc
       });
     }
 
-    const productId = req.params.productId as string;
+    const targetId =
+      req.params.productId ||
+      req.body?.productId ||
+      req.body?.courseId ||
+      (req.query?.productId as string) ||
+      (req.query?.courseId as string);
+
     const dbUser = await getDbUser(auth.userId);
 
     let cart = await prisma.cart.findUnique({
       where: { userId: dbUser.id },
     });
 
-    if (cart) {
+    if (cart && targetId) {
       const currentItems: any[] = ((cart.items as any[]) || []).filter(
-        (i) => i.productId !== productId && i.courseId !== productId
+        (i) => i.productId !== targetId && i.courseId !== targetId
       );
 
       cart = await prisma.cart.update({

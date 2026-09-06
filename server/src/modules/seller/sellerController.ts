@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
 import { prisma } from '../../config/db';
 import PDFDocument from 'pdfkit';
+import fs from 'fs';
+import path from 'path';
 
 async function getDbUser(clerkId: string) {
   const user = await prisma.user.findUnique({ where: { clerkId } });
@@ -261,7 +263,7 @@ export const generatePackingSlip = async (req: Request, res: Response, next: Nex
     const doc = new PDFDocument({ margin: 50 });
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=PackingSlip-${order.id.slice(0, 8)}.pdf`);
+    res.setHeader('Content-Disposition', `inline; filename=PackingSlip-${order.id.slice(0, 8)}.pdf`);
 
     doc.pipe(res);
 
@@ -356,61 +358,179 @@ export const generateInvoice = async (req: Request, res: Response, next: NextFun
       return;
     }
 
-    const doc = new PDFDocument({ margin: 50 });
+    const doc = new PDFDocument({ margin: 40, size: 'A4' });
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.id.slice(0, 8)}.pdf`);
+    res.setHeader('Content-Disposition', `inline; filename=Invoice-${order.id.slice(0, 8)}.pdf`);
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
 
     doc.pipe(res);
 
-    // Header
-    doc.font('Helvetica-Bold').fontSize(22).text('TAX INVOICE', { align: 'right' });
-    doc.fontSize(14).text('EcoMarket Multi-Vendor Platform', 50, 50);
-    doc.font('Helvetica').fontSize(9).text('Sustainable Marketplace Inc.', 50, 75);
-    doc.moveDown(2);
+    // 1. Header Row
+    // Left: Logo or Brand Title
+    const possibleLogoPaths = [
+      path.resolve(process.cwd(), '../client/src/assets/logo.png'),
+      path.resolve(process.cwd(), '../client/public/favicon.png'),
+      path.resolve(__dirname, '../../../../client/src/assets/logo.png'),
+    ];
+    let logoPath: string | null = null;
+    for (const p of possibleLogoPaths) {
+      if (fs.existsSync(p)) {
+        logoPath = p;
+        break;
+      }
+    }
 
-    // Invoice Meta & Customer
-    const metaY = doc.y;
-    doc.fontSize(10).text(`Invoice No: INV-${order.id.slice(0, 8)}`, 50, metaY);
-    doc.text(`Order Date: ${new Date(order.createdAt).toLocaleDateString()}`, 50, metaY + 15);
-    doc.text(`Payment Method: ${order.paymentMethod || 'Mock Payment'}`, 50, metaY + 30);
-    doc.text(`Payment Status: ${order.paymentStatus}`, 50, metaY + 45);
+    if (logoPath) {
+      try {
+        doc.image(logoPath, 40, 35, { fit: [140, 45] });
+      } catch (_err) {
+        doc.font('Helvetica-Bold').fontSize(20).fillColor('#2F5233').text('EcoMarket', 40, 40);
+      }
+    } else {
+      doc.font('Helvetica-Bold').fontSize(20).fillColor('#2F5233').text('EcoMarket', 40, 40);
+    }
 
-    doc.text(`Billed To: ${order.user?.name || 'Customer'}`, 320, metaY);
-    doc.text(`Email: ${order.user?.email || 'N/A'}`, 320, metaY + 15);
-    doc.moveDown(4);
+    // Right: INVOICE Title
+    doc.font('Helvetica-Bold').fontSize(24).fillColor('#2F5233').text('INVOICE', 350, 35, { align: 'right', width: 205 });
+    doc.font('Helvetica').fontSize(8).fillColor('#64748B').text('EcoMarket Sustainable Marketplace', 350, 64, { align: 'right', width: 205 });
 
-    // Items Table with Prices
-    doc.font('Helvetica-Bold').fontSize(11).text('Item Description', 50, doc.y);
-    doc.text('Qty', 280, doc.y);
-    doc.text('Unit Price', 350, doc.y);
-    doc.text('Line Total', 450, doc.y, { align: 'right' });
-    doc.moveDown(0.5);
+    // Top Divider Line
+    doc.moveTo(40, 90).lineTo(555, 90).strokeColor('#E2E8F0').lineWidth(1).stroke();
 
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown(0.5);
+    // 2. Second Row: Left/Right Split (BILL TO & Invoice Meta)
+    const secondRowY = 105;
 
-    doc.font('Helvetica');
-    order.items.forEach((item) => {
+    // Left Column: BILL TO
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#2F5233').text('BILL TO', 40, secondRowY);
+    doc.font('Helvetica-Bold').fontSize(10).fillColor('#1E293B').text(order.user?.name || 'Valued Customer', 40, secondRowY + 14);
+
+    let addressLines: string[] = [];
+    if (order.deliveryAddress) {
+      if (typeof order.deliveryAddress === 'string') {
+        addressLines = [order.deliveryAddress];
+      } else if (typeof order.deliveryAddress === 'object') {
+        const addrObj = order.deliveryAddress as any;
+        if (addrObj.line1) addressLines.push(addrObj.line1);
+        if (addrObj.line2) addressLines.push(addrObj.line2);
+        const cityStatePincode = [addrObj.city, addrObj.state, addrObj.pincode].filter(Boolean).join(', ');
+        if (cityStatePincode) addressLines.push(cityStatePincode);
+      }
+    }
+
+    let addrY = secondRowY + 28;
+    if (addressLines.length > 0) {
+      addressLines.forEach((line) => {
+        doc.font('Helvetica').fontSize(9).fillColor('#475569').text(line, 40, addrY, { width: 250 });
+        addrY += 12;
+      });
+    } else {
+      doc.font('Helvetica').fontSize(9).fillColor('#64748B').text('Standard Delivery Address', 40, addrY, { width: 250 });
+      addrY += 12;
+    }
+
+    if (order.user?.email) {
+      doc.font('Helvetica').fontSize(8.5).fillColor('#64748B').text(`Email: ${order.user.email}`, 40, addrY);
+      addrY += 11;
+    }
+    if (order.user?.phone) {
+      doc.font('Helvetica').fontSize(8.5).fillColor('#64748B').text(`Phone: ${order.user.phone}`, 40, addrY);
+      addrY += 11;
+    }
+
+    // Right Column: Invoice No & Date
+    const invNo = `INV-${order.id.slice(0, 8).toUpperCase()}`;
+    const formattedDate = new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+    let metaY = secondRowY;
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#64748B').text('Invoice No:', 330, metaY, { width: 90, align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(9.5).fillColor('#1E293B').text(invNo, 420, metaY, { width: 135, align: 'right' });
+    metaY += 14;
+
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#64748B').text('Date:', 330, metaY, { width: 90, align: 'left' });
+    doc.font('Helvetica').fontSize(9).fillColor('#1E293B').text(formattedDate, 420, metaY, { width: 135, align: 'right' });
+    metaY += 14;
+
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#64748B').text('Payment Status:', 330, metaY, { width: 90, align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#2F5233').text(String(order.paymentStatus), 420, metaY, { width: 135, align: 'right' });
+
+    // 3. Itemized Table
+    const tableTopY = Math.max(addrY + 15, metaY + 25, 195);
+
+    // Table Header Bar (Primary Green Bar)
+    doc.rect(40, tableTopY, 515, 22).fill('#2F5233');
+
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#FFFFFF');
+    doc.text('Description', 50, tableTopY + 6, { width: 230, align: 'left' });
+    doc.text('Qty', 285, tableTopY + 6, { width: 45, align: 'center' });
+    doc.text('Unit Price', 335, tableTopY + 6, { width: 95, align: 'right' });
+    doc.text('Total', 435, tableTopY + 6, { width: 110, align: 'right' });
+
+    let rowY = tableTopY + 22;
+    let subtotal = 0;
+
+    order.items.forEach((item, index) => {
       const title = item.product?.title || item.course?.title || 'Item';
       const unitPrice = Number(item.price);
       const lineTotal = unitPrice * item.quantity;
-      const y = doc.y;
+      subtotal += lineTotal;
 
-      doc.fontSize(10).text(title, 50, y, { width: 220 });
-      doc.text(String(item.quantity), 280, y);
-      doc.text(`₹${unitPrice.toFixed(2)}`, 350, y);
-      doc.text(`₹${lineTotal.toFixed(2)}`, 450, y, { align: 'right' });
-      doc.moveDown(0.8);
+      // Alternating light neutral shading
+      if (index % 2 === 1) {
+        doc.rect(40, rowY, 515, 22).fill('#F8FAF9');
+      }
+
+      doc.font('Helvetica').fontSize(9).fillColor('#1E293B');
+      doc.text(title, 50, rowY + 6, { width: 230, align: 'left', lineBreak: false });
+      doc.text(String(item.quantity), 285, rowY + 6, { width: 45, align: 'center' });
+      doc.text(`₹${unitPrice.toFixed(2)}`, 335, rowY + 6, { width: 95, align: 'right' });
+      doc.text(`₹${lineTotal.toFixed(2)}`, 435, rowY + 6, { width: 110, align: 'right' });
+
+      // Row divider stroke
+      doc.moveTo(40, rowY + 22).lineTo(555, rowY + 22).strokeColor('#E2E8F0').lineWidth(0.5).stroke();
+
+      rowY += 22;
     });
 
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown(1);
+    // 4. Summary Block (Right-aligned below table)
+    let summaryY = rowY + 15;
+    const grandTotal = Number(order.total);
+    const discountAmount = subtotal - grandTotal > 0.01 ? subtotal - grandTotal : 0;
 
-    doc.font('Helvetica-Bold').fontSize(12).text(`TOTAL AMOUNT PAID: ₹${Number(order.total).toFixed(2)}`, { align: 'right' });
+    // Subtotal
+    doc.font('Helvetica').fontSize(9).fillColor('#64748B').text('Subtotal', 330, summaryY, { width: 110, align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#1E293B').text(`₹${subtotal.toFixed(2)}`, 440, summaryY, { width: 115, align: 'right' });
+    summaryY += 15;
 
-    doc.moveDown(2);
-    doc.font('Helvetica-Oblique').fontSize(9).text('This is a computer-generated tax invoice.', { align: 'center' });
+    // Tax (Show ₹0.00 since platform currently doesn't calculate tax)
+    doc.font('Helvetica').fontSize(9).fillColor('#64748B').text('Tax', 330, summaryY, { width: 110, align: 'left' });
+    doc.font('Helvetica').fontSize(9).fillColor('#1E293B').text('₹0.00', 440, summaryY, { width: 115, align: 'right' });
+    summaryY += 15;
+
+    // Discount (Only shown if real discount exists)
+    if (discountAmount > 0) {
+      doc.font('Helvetica').fontSize(9).fillColor('#64748B').text('Discount', 330, summaryY, { width: 110, align: 'left' });
+      doc.font('Helvetica-Bold').fontSize(9).fillColor('#16A34A').text(`-₹${discountAmount.toFixed(2)}`, 440, summaryY, { width: 115, align: 'right' });
+      summaryY += 15;
+    }
+
+    // TOTAL Bar (Solid Primary Green Bar)
+    doc.rect(330, summaryY, 225, 26).fill('#2F5233');
+    doc.font('Helvetica-Bold').fontSize(10).fillColor('#FFFFFF').text('TOTAL', 345, summaryY + 7, { width: 80, align: 'left' });
+    doc.font('Helvetica-Bold').fontSize(11).fillColor('#FFFFFF').text(`₹${grandTotal.toFixed(2)}`, 430, summaryY + 7, { width: 115, align: 'right' });
+
+    // 5. Payment Method Line (Left side below table)
+    const paymentY = rowY + 15;
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#1E293B').text('Payment Method:', 40, paymentY);
+    doc.font('Helvetica').fontSize(9).fillColor('#475569').text(order.paymentMethod || 'Mock Payment', 130, paymentY);
+
+    // 6. Thank You Note (Bottom Footer)
+    const footerY = Math.max(summaryY + 45, 740);
+    doc.moveTo(40, footerY).lineTo(555, footerY).strokeColor('#E2E8F0').lineWidth(0.5).stroke();
+    doc.font('Helvetica-Bold').fontSize(9.5).fillColor('#2F5233').text('Thank you for shopping with EcoMarket!', 40, footerY + 12, { align: 'center', width: 515 });
+    doc.font('Helvetica').fontSize(8).fillColor('#64748B').text('For support or inquiries, please contact support@ecomarket.com', 40, footerY + 25, { align: 'center', width: 515 });
 
     doc.end();
   } catch (error) {

@@ -91,8 +91,9 @@ export default function SellerFulfillmentQueue() {
     return true;
   });
 
-  // Download PDF Document Helper
+  // Download / Preview PDF Document Helper
   const downloadDocument = async (orderId: string, docType: 'packing-slip' | 'invoice') => {
+    const pdfWindow = window.open('', '_blank');
     try {
       const token = await getToken();
       const response = await apiClient.get(`/orders/${orderId}/${docType}`, {
@@ -101,17 +102,14 @@ export default function SellerFulfillmentQueue() {
       });
 
       const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute(
-        'download',
-        `${docType === 'packing-slip' ? 'PackingSlip' : 'TaxInvoice'}-${orderId.slice(0, 8)}.pdf`
-      );
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      if (pdfWindow) {
+        pdfWindow.location.href = url;
+      } else {
+        window.open(url, '_blank');
+      }
     } catch (err: any) {
-      alert(`Failed to download ${docType}: ${err.message || 'Error occurred'}`);
+      if (pdfWindow) pdfWindow.close();
+      alert(`Failed to preview ${docType}: ${err.message || 'Error occurred'}`);
     }
   };
 

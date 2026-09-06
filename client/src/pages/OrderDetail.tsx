@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
@@ -9,6 +10,31 @@ import { ArrowLeft, RefreshCw, AlertCircle, Package, MapPin, CreditCard, ShieldC
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
   const { getToken, isSignedIn } = useAuth();
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadInvoice = async (orderId: string) => {
+    const pdfWindow = window.open('', '_blank');
+    try {
+      setIsDownloading(true);
+      const token = await getToken();
+      const response = await apiClient.get(`/orders/${orderId}/invoice`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      if (pdfWindow) {
+        pdfWindow.location.href = url;
+      } else {
+        window.open(url, '_blank');
+      }
+    } catch (_err) {
+      if (pdfWindow) pdfWindow.close();
+      alert('Failed to preview invoice PDF.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const { data, isLoading, isError, error } = useQuery<{ success: boolean; data: Order }>({
     queryKey: ['order', id],
@@ -83,11 +109,16 @@ export default function OrderDetail() {
 
         <div className="flex items-center space-x-3 shrink-0">
           <button
-            onClick={() => window.print()}
-            className="flex items-center space-x-1.5 px-4 py-2 bg-background-card border border-text-muted/20 hover:bg-background-muted text-xs font-semibold text-text-primary rounded-xl transition-colors shadow-xs cursor-pointer"
+            onClick={() => handleDownloadInvoice(order.id)}
+            disabled={isDownloading}
+            className="flex items-center space-x-1.5 px-4 py-2 bg-background-card border border-text-muted/20 hover:bg-background-muted disabled:opacity-50 text-xs font-semibold text-text-primary rounded-xl transition-colors shadow-xs cursor-pointer"
           >
-            <Download className="w-3.5 h-3.5 text-primary" />
-            <span>Download Invoice</span>
+            {isDownloading ? (
+              <RefreshCw className="w-3.5 h-3.5 text-primary animate-spin" />
+            ) : (
+              <Download className="w-3.5 h-3.5 text-primary" />
+            )}
+            <span>{isDownloading ? 'Generating...' : 'Download Invoice'}</span>
           </button>
           <Link
             to="/my-world/orders"

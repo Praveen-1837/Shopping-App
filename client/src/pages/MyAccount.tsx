@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth, useUser, useClerk } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/axios';
+import Wishlist from './Wishlist';
 import {
   User as UserIcon,
   ShoppingBag,
@@ -31,6 +32,7 @@ import {
   Sparkles,
   ArrowRight,
   UserCheck,
+  Heart,
 } from 'lucide-react';
 
 interface SyncedUser {
@@ -79,7 +81,7 @@ interface SupportTicket {
   createdAt: string;
 }
 
-type TabType = 'identity' | 'orders' | 'addresses' | 'payments' | 'security' | 'preferences' | 'support';
+type TabType = 'identity' | 'orders' | 'addresses' | 'payments' | 'security' | 'wishlist' | 'support';
 
 const AVAILABLE_ROLES = ['CUSTOMER', 'SELLER', 'FARMER', 'ARTISAN', 'EDUCATOR', 'ADMIN'];
 
@@ -397,9 +399,10 @@ export default function MyAccount() {
     }
   };
 
-  // Download Invoice PDF
+  // Download / Preview Invoice PDF
   const handleDownloadInvoice = async (orderId: string) => {
     setDownloadingInvId(orderId);
+    const pdfWindow = window.open('', '_blank');
     try {
       const token = await getToken();
       const response = await apiClient.get(`/orders/${orderId}/invoice`, {
@@ -407,14 +410,14 @@ export default function MyAccount() {
         responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Invoice-${orderId.slice(0, 8)}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      if (pdfWindow) {
+        pdfWindow.location.href = url;
+      } else {
+        window.open(url, '_blank');
+      }
     } catch (err: any) {
-      alert('Failed to download invoice PDF.');
+      if (pdfWindow) pdfWindow.close();
+      alert('Failed to preview invoice PDF.');
     } finally {
       setDownloadingInvId(null);
     }
@@ -563,7 +566,7 @@ export default function MyAccount() {
               { id: 'addresses', label: 'Saved Addresses', icon: MapPin },
               { id: 'payments', label: 'Payments & Security', icon: CreditCard },
               { id: 'security', label: 'Security & Password', icon: Shield },
-              { id: 'preferences', label: 'Preferences & Theme', icon: Sliders },
+              { id: 'wishlist', label: 'Wishlist', icon: Heart },
               { id: 'support', label: 'Support & Tickets', icon: HelpCircle },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -1161,60 +1164,10 @@ export default function MyAccount() {
             </div>
           )}
 
-          {/* TAB 6: PREFERENCES & PERSONALIZATION */}
-          {activeTab === 'preferences' && (
-            <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft space-y-6">
-              <div className="border-b border-text-muted/10 pb-4">
-                <h2 className="text-xl font-bold font-heading text-primary">Preferences & Personalization</h2>
-                <p className="text-xs text-text-secondary">Appearance and quick saved items</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Theme Toggle Card */}
-                <div className="p-6 bg-background-muted/40 border border-text-muted/15 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm font-heading text-primary flex items-center space-x-2">
-                      {isDarkMode ? <Moon className="w-4 h-4 text-accent" /> : <Sun className="w-4 h-4 text-secondary" />}
-                      <span>Appearance Theme</span>
-                    </span>
-                    <button
-                      onClick={toggleDarkMode}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                        isDarkMode ? 'bg-primary' : 'bg-text-muted/30'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          isDarkMode ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <p className="text-xs text-text-secondary">
-                    Toggle between Light mode and Dark mode. Saved to your browser preferences.
-                  </p>
-                </div>
-
-                {/* Wishlist Shortcut Card */}
-                <div className="p-6 bg-background-muted/40 border border-text-muted/15 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm font-heading text-primary flex items-center space-x-2">
-                      <Sparkles className="w-4 h-4 text-primary" />
-                      <span>Saved Wishlist</span>
-                    </span>
-                    <Link
-                      to="/my-world/wishlist"
-                      className="text-xs text-primary font-semibold hover:underline flex items-center space-x-1"
-                    >
-                      <span>View</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-                  <p className="text-xs text-text-secondary">
-                    View your saved products and favorite producer stories.
-                  </p>
-                </div>
-              </div>
+          {/* TAB 6: WISHLIST */}
+          {activeTab === 'wishlist' && (
+            <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft">
+              <Wishlist />
             </div>
           )}
 

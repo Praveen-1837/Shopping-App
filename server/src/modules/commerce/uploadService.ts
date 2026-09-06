@@ -1,6 +1,8 @@
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { Request, Response, NextFunction } from 'express';
+import fs from 'fs';
+import path from 'path';
 
 const storage = multer.memoryStorage();
 
@@ -29,8 +31,8 @@ export const handleImageUpload = async (req: Request, res: Response, next: NextF
 
     const cloudinaryUrl = process.env.CLOUDINARY_URL;
 
-    if (cloudinaryUrl && !cloudinaryUrl.includes('cloudname')) {
-      // Cloudinary configuration from CLOUDINARY_URL
+    if (cloudinaryUrl && !cloudinaryUrl.includes('cloudname') && !cloudinaryUrl.includes('key:secret')) {
+      // Production Cloudinary upload
       cloudinary.config();
 
       const b64 = Buffer.from(req.file.buffer).toString('base64');
@@ -48,15 +50,27 @@ export const handleImageUpload = async (req: Request, res: Response, next: NextF
         },
       });
     } else {
-      // Fallback in local development if Cloudinary is not configured yet
-      const b64 = Buffer.from(req.file.buffer).toString('base64');
-      const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+      // Local development disk storage fallback (never return raw base64 URI)
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      const ext = path.extname(req.file.originalname) || '.jpg';
+      const filename = `img-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+      const filePath = path.join(uploadsDir, filename);
+
+      fs.writeFileSync(filePath, req.file.buffer);
+
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || 'localhost:5000';
+      const fileUrl = `${protocol}://${host}/uploads/${filename}`;
 
       return res.status(200).json({
         success: true,
         data: {
-          url: dataURI,
-          message: 'Uploaded as Base64 Data URL (Add CLOUDINARY_URL to server/.env for production Cloudinary hosting)',
+          url: fileUrl,
+          message: 'Image uploaded successfully to local storage',
         },
       });
     }

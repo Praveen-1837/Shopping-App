@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
-import { FolderTree, Plus, Edit2, Trash2, Check, X, RefreshCw, AlertCircle } from 'lucide-react';
+import { FolderTree, Plus, Edit2, Trash2, Check, X, RefreshCw, AlertCircle, Upload, Image as ImageIcon } from 'lucide-react';
 
 interface Category {
   id: string;
   name: string;
+  imageUrl?: string | null;
   createdAt: string;
 }
 
@@ -15,8 +16,11 @@ export default function AdminCategories() {
   const queryClient = useQueryClient();
 
   const [newCategoryName, setNewCategoryName] = useState<string>('');
+  const [newCategoryImageUrl, setNewCategoryImageUrl] = useState<string>('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>('');
+  const [editImageUrl, setEditImageUrl] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   // Fetch Categories Query
@@ -34,20 +38,60 @@ export default function AdminCategories() {
 
   const categories = data?.data || [];
 
+  // Upload handler for category image
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isEdit = false) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setFormError(null);
+
+    try {
+      const token = await getToken();
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await apiClient.post<{ success: boolean; data: { url: string } }>(
+        '/products/upload-image',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (res.data?.data?.url) {
+        if (isEdit) {
+          setEditImageUrl(res.data.data.url);
+        } else {
+          setNewCategoryImageUrl(res.data.data.url);
+        }
+      }
+    } catch (err: any) {
+      setFormError(err.response?.data?.error?.message || 'Failed to upload image');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   // Create Category Mutation
   const createMutation = useMutation({
-    mutationFn: async (name: string) => {
+    mutationFn: async ({ name, imageUrl }: { name: string; imageUrl: string }) => {
       const token = await getToken();
       await apiClient.post(
         '/admin/categories',
-        { name },
+        { name, imageUrl: imageUrl.trim() || null },
         { headers: { Authorization: `Bearer ${token}` } }
       );
     },
     onSuccess: () => {
       setNewCategoryName('');
+      setNewCategoryImageUrl('');
       setFormError(null);
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['category-previews'] });
     },
     onError: (err: any) => {
       setFormError(err.response?.data?.error?.message || 'Failed to create category');
@@ -56,19 +100,21 @@ export default function AdminCategories() {
 
   // Edit Category Mutation
   const updateMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+    mutationFn: async ({ id, name, imageUrl }: { id: string; name: string; imageUrl: string }) => {
       const token = await getToken();
       await apiClient.put(
         `/admin/categories/${id}`,
-        { name },
+        { name, imageUrl: imageUrl.trim() || null },
         { headers: { Authorization: `Bearer ${token}` } }
       );
     },
     onSuccess: () => {
       setEditingId(null);
       setEditName('');
+      setEditImageUrl('');
       setFormError(null);
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['category-previews'] });
     },
     onError: (err: any) => {
       setFormError(err.response?.data?.error?.message || 'Failed to update category');
@@ -85,6 +131,7 @@ export default function AdminCategories() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['category-previews'] });
     },
     onError: (err: any) => {
       setFormError(err.response?.data?.error?.message || 'Failed to delete category');
@@ -94,17 +141,18 @@ export default function AdminCategories() {
   const handleCreateSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCategoryName.trim()) return;
-    createMutation.mutate(newCategoryName.trim());
+    createMutation.mutate({ name: newCategoryName.trim(), imageUrl: newCategoryImageUrl });
   };
 
   const handleStartEdit = (cat: Category) => {
     setEditingId(cat.id);
     setEditName(cat.name);
+    setEditImageUrl(cat.imageUrl || '');
   };
 
   const handleSaveEdit = (id: string) => {
     if (!editName.trim()) return;
-    updateMutation.mutate({ id, name: editName.trim() });
+    updateMutation.mutate({ id, name: editName.trim(), imageUrl: editImageUrl });
   };
 
   return (
@@ -119,7 +167,7 @@ export default function AdminCategories() {
             Marketplace Category Management
           </h1>
           <p className="text-xs text-text-muted">
-            Add, rename, or delete standardized taxonomy categories for products and courses.
+            Manage taxonomy categories and upload curated tile representative images for homepage grid display.
           </p>
         </div>
       </div>
@@ -132,22 +180,53 @@ export default function AdminCategories() {
         </div>
       )}
 
-      {/* Add New Category Card */}
+      {/* Add New Category Form */}
       <form
         onSubmit={handleCreateSubmit}
-        className="bg-background-card p-6 rounded-3xl border border-text-muted/15 shadow-soft flex flex-col sm:flex-row items-center gap-4"
+        className="bg-background-card p-6 rounded-3xl border border-text-muted/15 shadow-soft space-y-4"
       >
-        <input
-          type="text"
-          placeholder="Enter new category name (e.g. Handmade Pottery, Organic Tea)..."
-          value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
-          className="flex-1 w-full px-4 py-3 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
-        />
+        <h3 className="text-sm font-bold font-heading text-text-primary flex items-center space-x-2">
+          <Plus className="w-4 h-4 text-primary" />
+          <span>Add New Category & Representative Image</span>
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Category name (e.g. Handmade Pottery, Food & Spices)..."
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="url"
+              placeholder="Image URL (https://...)"
+              value={newCategoryImageUrl}
+              onChange={(e) => setNewCategoryImageUrl(e.target.value)}
+              className="flex-1 px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+            <label className="p-2.5 bg-background-muted border border-text-muted/20 rounded-xl hover:bg-primary-light transition-colors cursor-pointer text-text-muted hover:text-primary shrink-0" title="Upload Image File">
+              {isUploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, false)} className="hidden" />
+            </label>
+          </div>
+        </div>
+
+        {newCategoryImageUrl && (
+          <div className="flex items-center space-x-3 pt-1">
+            <div className="w-12 h-12 rounded-xl overflow-hidden border border-text-muted/20 shrink-0">
+              <img src={newCategoryImageUrl} alt="Preview" className="w-full h-full object-cover" />
+            </div>
+            <span className="text-[11px] text-text-muted">Image preview ready for tile display</span>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={createMutation.isPending || !newCategoryName.trim()}
-          className="w-full sm:w-auto px-6 py-3 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+          className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
         >
           {createMutation.isPending ? (
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -175,48 +254,78 @@ export default function AdminCategories() {
           </div>
         ) : categories.length === 0 ? (
           <div className="py-8 text-center text-xs text-text-muted">
-            No formal categories created yet. Add one above!
+            No categories created yet. Add one above!
           </div>
         ) : (
           <div className="divide-y divide-text-muted/10">
             {categories.map((cat) => (
-              <div key={cat.id} className="py-3 flex items-center justify-between gap-4">
+              <div key={cat.id} className="py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 {editingId === cat.id ? (
-                  <div className="flex-1 flex items-center space-x-2">
-                    <input
-                      type="text"
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="flex-1 px-3 py-1.5 bg-background-muted border border-primary rounded-lg text-xs focus:outline-none"
-                    />
-                    <button
-                      onClick={() => handleSaveEdit(cat.id)}
-                      disabled={updateMutation.isPending}
-                      className="p-1.5 bg-success text-white rounded-lg hover:bg-success/90 cursor-pointer"
-                    >
-                      <Check className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="p-1.5 bg-background-muted text-text-muted rounded-lg hover:text-text-primary cursor-pointer"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                  <div className="flex-1 w-full space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="px-3 py-2 bg-background-muted border border-primary rounded-xl text-xs focus:outline-none"
+                        placeholder="Category Name"
+                      />
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="url"
+                          value={editImageUrl}
+                          onChange={(e) => setEditImageUrl(e.target.value)}
+                          className="flex-1 px-3 py-2 bg-background-muted border border-primary rounded-xl text-xs focus:outline-none"
+                          placeholder="Image URL"
+                        />
+                        <label className="p-2 bg-background-muted border border-text-muted/20 rounded-xl hover:bg-primary-light cursor-pointer">
+                          <Upload className="w-4 h-4 text-primary" />
+                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, true)} className="hidden" />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2 pt-1">
+                      <button
+                        onClick={() => handleSaveEdit(cat.id)}
+                        disabled={updateMutation.isPending}
+                        className="px-3 py-1.5 bg-success text-white text-xs font-bold rounded-xl hover:bg-success/90 cursor-pointer inline-flex items-center space-x-1"
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Save</span>
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="px-3 py-1.5 bg-background-muted text-text-muted text-xs font-semibold rounded-xl hover:text-text-primary cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <>
-                    <div>
-                      <span className="font-bold text-xs text-text-primary">{cat.name}</span>
-                      <span className="text-[10px] text-text-muted block">
-                        Added on {new Date(cat.createdAt).toLocaleDateString()}
-                      </span>
+                    <div className="flex items-center space-x-3">
+                      {/* Image Thumbnail */}
+                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-background-muted border border-text-muted/15 shrink-0 flex items-center justify-center">
+                        {cat.imageUrl ? (
+                          <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <ImageIcon className="w-5 h-5 text-text-muted" />
+                        )}
+                      </div>
+
+                      <div>
+                        <span className="font-bold text-xs text-text-primary block">{cat.name}</span>
+                        <span className="text-[11px] text-text-muted">
+                          {cat.imageUrl ? 'Curated image set' : 'Branded fallback active'}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 shrink-0">
                       <button
                         onClick={() => handleStartEdit(cat)}
-                        className="p-2 text-text-secondary hover:text-primary hover:bg-primary-light/50 rounded-lg transition-colors cursor-pointer"
-                        title="Rename Category"
+                        className="p-2 text-text-secondary hover:text-primary hover:bg-primary-light/50 rounded-xl transition-colors cursor-pointer"
+                        title="Edit Category & Image"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
@@ -228,7 +337,7 @@ export default function AdminCategories() {
                           }
                         }}
                         disabled={deleteMutation.isPending}
-                        className="p-2 text-text-secondary hover:text-error hover:bg-error-light rounded-lg transition-colors cursor-pointer"
+                        className="p-2 text-text-secondary hover:text-error hover:bg-error-light rounded-xl transition-colors cursor-pointer"
                         title="Delete Category"
                       >
                         <Trash2 className="w-4 h-4" />

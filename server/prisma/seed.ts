@@ -5,6 +5,23 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seed...');
 
+  // Seed taxonomy categories with curated tile images
+  const defaultCategoryImages: Record<string, string> = {
+    'Food & Spices': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800',
+    'Artisan Crafts': 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+    'Eco Living': 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800',
+    'Organic Produce': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=800',
+  };
+
+  for (const [name, imageUrl] of Object.entries(defaultCategoryImages)) {
+    const existing = await prisma.category.findUnique({ where: { name } });
+    if (!existing) {
+      await prisma.category.create({ data: { name, imageUrl } });
+    } else if (!existing.imageUrl) {
+      await prisma.category.update({ where: { id: existing.id }, data: { imageUrl } });
+    }
+  }
+
   // Create demo seller user
   const sellerUser = await prisma.user.upsert({
     where: { email: 'demo-farmer@example.com' },
@@ -151,6 +168,35 @@ async function main() {
           ...c,
         },
       });
+    }
+  }
+
+  // Seed sample promo banners
+  const banners = [
+    {
+      title: 'Direct From Local Farmers & Eco-Artisans',
+      subtitle: 'Ethically harvested organic produce, natural wellness products, and verified sustainability.',
+      imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1600',
+      ctaText: 'Explore Food & Spices',
+      ctaLink: '/shop?category=Food%20%26%20Spices',
+      order: 0,
+      isActive: true,
+    },
+    {
+      title: 'Handcrafted Artisan Crafts & Eco Living',
+      subtitle: 'Plastic-free handmade products crafted by rural artisan collectives across India.',
+      imageUrl: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&q=80&w=1600',
+      ctaText: 'Discover Artisan Crafts',
+      ctaLink: '/shop?category=Artisan%20Crafts',
+      order: 1,
+      isActive: true,
+    },
+  ];
+
+  for (const b of banners) {
+    const existing = await prisma.promoBanner.findFirst({ where: { title: b.title } });
+    if (!existing) {
+      await prisma.promoBanner.create({ data: b });
     }
   }
 

@@ -183,7 +183,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Admin Actions Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
         <a
           href="/admin/products"
           className="p-4 bg-background-card hover:bg-primary-light/50 border border-text-muted/15 rounded-2xl transition-all text-center space-y-1.5 group"
@@ -197,6 +197,13 @@ export default function AdminDashboard() {
         >
           <ShoppingBag className="w-5 h-5 mx-auto text-secondary group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold text-text-primary block">Orders</span>
+        </a>
+        <a
+          href="/admin/banners"
+          className="p-4 bg-background-card hover:bg-primary-light/50 border border-text-muted/15 rounded-2xl transition-all text-center space-y-1.5 group"
+        >
+          <Store className="w-5 h-5 mx-auto text-primary group-hover:scale-110 transition-transform" />
+          <span className="text-xs font-bold text-text-primary block">Banners</span>
         </a>
         <a
           href="/admin/categories"
