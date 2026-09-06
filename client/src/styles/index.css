@@ -16,4 +16,78 @@
   .brand-wordmark {
     @apply font-praise tracking-normal;
   }
+
+  /* Animated Checkmark Keyframes & Utilities */
+  .checkmark-circle {
+    stroke-dasharray: 226;
+    stroke-dashoffset: 226;
+    animation: checkmark-circle-draw 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    transform-origin: center;
+  }
+
+  .checkmark-stem {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: checkmark-stem-draw 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.45s forwards;
+  }
+
+  .checkmark-pop {
+    animation: checkmark-pop 0.6s ease-out forwards;
+  }
+}
+
+@keyframes checkmark-circle-draw {
+  0% {
+    stroke-dashoffset: 226;
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+  60% {
+    stroke-dashoffset: 0;
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark-stem-draw {
+  0% {
+    stroke-dashoffset: 50;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark-pop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .checkmark-circle,
+  .checkmark-stem,
+  .checkmark-pop {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

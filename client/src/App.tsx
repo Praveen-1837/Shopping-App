@@ -115,6 +115,14 @@ function App() {
                 }
               />
               <Route
+                path="/order/:id/confirmation"
+                element={
+                  <ProtectedRoute>
+                    <OrderConfirmation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/order-confirmation/:id"
                 element={
                   <ProtectedRoute>
