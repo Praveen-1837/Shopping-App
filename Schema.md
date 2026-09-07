@@ -154,6 +154,7 @@ model Order {
   status        OrderStatus   @default(PENDING)
   paymentStatus PaymentStatus @default(PENDING)
   paymentId     String?
+  cancellationReason String?
   total         Decimal
   deliveryAddress Json?
   createdAt     DateTime      @default(now())

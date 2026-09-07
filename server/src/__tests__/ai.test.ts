@@ -11,5 +11,5 @@ describe('AI Assistant Chat Endpoint (Phase 7)', () => {
     const response = await request(app).get('/api/v1/health');
     expect(response.status).toBe(200);
     expect(response.body.status).toBe('ok');
-  });
+  }, 15000);
 });

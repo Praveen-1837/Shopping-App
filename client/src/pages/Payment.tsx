@@ -92,14 +92,31 @@ export default function Payment() {
     },
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handlePayNow = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double-clicks strictly and synchronously
+    if (isSubmitting || processPaymentMutation.isPending || createOrderMutation.isPending) return;
+    
+    setIsSubmitting(true);
     setPaymentError(null);
 
     if (activeOrder) {
-      processPaymentMutation.mutate(activeOrder.id);
+      processPaymentMutation.mutate(activeOrder.id, {
+        onSettled: () => setIsSubmitting(false),
+      });
     } else {
-      createOrderMutation.mutate();
+      createOrderMutation.mutate(undefined, {
+        onSuccess: (data) => {
+          // Instead of requiring a second click, process payment immediately after order creates
+          processPaymentMutation.mutate(data.data.id, {
+            onSettled: () => setIsSubmitting(false),
+          });
+        },
+        onError: () => setIsSubmitting(false),
+      });
     }
   };
 
@@ -298,13 +315,13 @@ export default function Payment() {
 
           <button
             type="submit"
-            disabled={processPaymentMutation.isPending || createOrderMutation.isPending}
+            disabled={isSubmitting || processPaymentMutation.isPending || createOrderMutation.isPending}
             className="px-8 py-3.5 bg-primary text-white hover:bg-primary-hover font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
           >
-            {processPaymentMutation.isPending ? (
+            {isSubmitting || processPaymentMutation.isPending || createOrderMutation.isPending ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Processing Payment...</span>
+                <span>Processing...</span>
               </>
             ) : (
               <>

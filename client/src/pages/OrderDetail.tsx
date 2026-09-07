@@ -5,7 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
 import { Order } from '../types/cart';
 import OrderStatusStepper, { OrderStatusType } from '../components/OrderStatusStepper';
-import { ArrowLeft, RefreshCw, AlertCircle, Package, MapPin, CreditCard, ShieldCheck, BookOpen, Download } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertCircle, Package, MapPin, CreditCard, ShieldCheck, BookOpen, Download, XCircle } from 'lucide-react';
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -130,11 +130,52 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      {/* Delivery Stepper Component */}
-      <OrderStatusStepper
-        status={order.status as OrderStatusType}
-        hasCourseOnly={hasCourseOnly}
-      />
+      {/* Delivery Stepper or Cancellation Notice Component */}
+      {order.status === 'CANCELLED' ? (
+        <div className="bg-error-light border border-error/30 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-start gap-4 text-error shadow-soft">
+          <div className="p-3 bg-white/80 rounded-xl w-fit shrink-0 text-error shadow-xs">
+            <XCircle className="w-8 h-8" />
+          </div>
+          <div className="space-y-2 flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-error/15 pb-2">
+              <h3 className="font-heading font-bold text-lg text-text-primary">This order was cancelled</h3>
+              <span className="text-xs text-text-muted">
+                Cancelled on{' '}
+                {new Date(order.updatedAt || order.createdAt).toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </div>
+
+            <div className="pt-1 text-xs text-text-secondary leading-relaxed">
+              {order.cancellationReason ? (
+                <span>
+                  <strong className="text-text-primary">Reason for cancellation:</strong>{' '}
+                  <span className="italic bg-background-card px-2.5 py-1 rounded-md border border-text-muted/15 font-medium text-error inline-block mt-1 sm:mt-0">
+                    "{order.cancellationReason}"
+                  </span>
+                </span>
+              ) : (
+                <span>This order was cancelled by the seller before fulfillment.</span>
+              )}
+            </div>
+
+            <p className="text-[11px] text-text-muted pt-2 border-t border-error/15">
+              If your card or UPI was charged, a full refund has been automatically initiated back to your original payment method.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <OrderStatusStepper
+          status={order.status as OrderStatusType}
+          hasCourseOnly={hasCourseOnly}
+          cancellationReason={order.cancellationReason}
+        />
+      )}
 
       {/* Main Order Details Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

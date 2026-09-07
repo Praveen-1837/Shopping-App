@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
 import { prisma } from '../../config/db';
 import { Role, OrderStatus } from '@prisma/client';
+import { sendOrderCancellationEmail } from '../notifications/emailService';
 
 async function getDbUser(clerkId: string) {
   let user = await prisma.user.findUnique({ where: { clerkId } });
@@ -19,15 +20,20 @@ async function getDbUser(clerkId: string) {
 }
 
 // Strict Allowed State Transitions Map per Phase 6 Rules
-const ALLOWED_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+export const ALLOWED_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
   [OrderStatus.CONFIRMED]: [OrderStatus.PACKED, OrderStatus.CANCELLED],
   [OrderStatus.PACKED]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
-  [OrderStatus.SHIPPED]: [OrderStatus.IN_TRANSIT, OrderStatus.CANCELLED],
-  [OrderStatus.IN_TRANSIT]: [OrderStatus.OUT_FOR_DELIVERY, OrderStatus.CANCELLED],
+  [OrderStatus.SHIPPED]: [OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED, OrderStatus.CANCELLED],
+  [OrderStatus.IN_TRANSIT]: [OrderStatus.OUT_FOR_DELIVERY, OrderStatus.DELIVERED, OrderStatus.CANCELLED],
   [OrderStatus.OUT_FOR_DELIVERY]: [OrderStatus.DELIVERED, OrderStatus.CANCELLED],
   [OrderStatus.DELIVERED]: [],
   [OrderStatus.CANCELLED]: [],
+};
+
+// Expose the transition map to the frontend to prevent UI duplication
+export const getOrderTransitions = (req: Request, res: Response) => {
+  return res.json({ success: true, data: ALLOWED_TRANSITIONS });
 };
 
 export const updateOrderStatus = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,7 +47,7 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
     }
 
     const id = req.params.id as string;
-    const { status: newStatus } = req.body;
+    const { status: newStatus, cancellationReason } = req.body;
 
     if (!newStatus || !Object.values(OrderStatus).includes(newStatus as OrderStatus)) {
       return res.status(400).json({
@@ -50,14 +56,20 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
       });
     }
 
-    const dbUser = await getDbUser(auth.userId);
+    const dbUser = (req as any).dbUser || (await getDbUser(auth.userId));
 
     const order = await prisma.order.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        status: true,
         items: {
-          include: {
-            product: true,
+          select: {
+            product: {
+              select: {
+                sellerId: true,
+              },
+            },
           },
         },
       },
@@ -105,16 +117,47 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
       where: { id },
       data: {
         status: newStatus as OrderStatus,
+        ...(newStatus === OrderStatus.CANCELLED && typeof cancellationReason === 'string'
+          ? { cancellationReason: cancellationReason.trim() || null }
+          : {}),
       },
       include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         items: {
           include: {
-            product: true,
-            course: true,
+            product: { select: { title: true } },
+            course: { select: { title: true } },
           },
         },
       },
     });
+
+    // If order was cancelled, trigger asynchronous email notification to the customer
+    if (newStatus === OrderStatus.CANCELLED && updatedOrder.user?.email) {
+      const items = updatedOrder.items.map((i) => ({
+        title: i.product?.title || i.course?.title || 'Item',
+        quantity: i.quantity,
+        price: Number(i.price),
+      }));
+
+      // Non-blocking dispatch with graceful failure handling
+      sendOrderCancellationEmail({
+        customerEmail: updatedOrder.user.email,
+        customerName: updatedOrder.user.name,
+        orderId: updatedOrder.id,
+        cancellationReason: updatedOrder.cancellationReason,
+        items,
+        total: Number(updatedOrder.total),
+      }).catch((err) => {
+        console.error('[updateOrderStatus] Failed to dispatch order cancellation email:', err);
+      });
+    }
 
     return res.status(200).json({
       success: true,

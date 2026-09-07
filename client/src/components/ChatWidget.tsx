@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Sparkles, X, Send, AlertCircle, RefreshCw, Bot, User, CheckCircle2 } from 'lucide-react';
+import EcoAiIcon from './EcoAiIcon';
 
 import { useUserRole } from '../hooks/useUserRole';
 
@@ -20,6 +21,8 @@ interface ChatMessage {
 export default function ChatWidget() {
   const { isAdmin } = useUserRole();
   const [isOpen, setIsOpen] = useState(false);
+  const [isInitialEntrance, setIsInitialEntrance] = useState(true);
+  const [showPulse, setShowPulse] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
@@ -35,6 +38,22 @@ export default function ChatWidget() {
   const { getToken, isSignedIn } = useAuth();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initial entrance animation cleanup (clears after animation runs)
+  useEffect(() => {
+    const entranceTimer = setTimeout(() => {
+      setIsInitialEntrance(false);
+    }, 1000);
+    return () => clearTimeout(entranceTimer);
+  }, []);
+
+  // Safety timer: stop pulse animation after 25 seconds regardless
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPulse(false);
+    }, 25000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -183,15 +202,32 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Trigger FAB Button */}
+      {/* Floating Trigger Button with Entrance & Attention Pulse */}
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="flex items-center space-x-2 px-5 py-3 bg-ai text-white rounded-full font-semibold text-xs shadow-card hover:bg-ai/90 hover:scale-105 transition-all cursor-pointer group"
-        >
-          <Sparkles className="w-4 h-4 animate-spin text-white group-hover:rotate-45" />
-          <span>Ask Eco AI Assistant</span>
-        </button>
+        <div className="relative group">
+          {/* Attention Pulse Ring (Runs 3 times after load, stops on open) */}
+          {showPulse && (
+            <span
+              className="absolute -inset-1 rounded-full bg-ai/30 ai-ring-pulse pointer-events-none -z-10"
+              onAnimationEnd={() => setShowPulse(false)}
+            />
+          )}
+
+          <button
+            onClick={() => {
+              setIsOpen(true);
+              setShowPulse(false);
+            }}
+            className={`flex items-center space-x-2.5 px-5 py-3 bg-ai text-white rounded-full font-semibold text-xs shadow-card hover:bg-ai/90 hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10 ${
+              isInitialEntrance ? 'ai-btn-entrance' : ''
+            }`}
+            onAnimationEnd={() => setIsInitialEntrance(false)}
+            aria-label="Ask Eco AI Assistant"
+          >
+            <EcoAiIcon className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform duration-200" />
+            <span className="tracking-wide">Ask Eco AI Assistant</span>
+          </button>
+        </div>
       )}
 
       {/* Chat Box Drawer */}
@@ -199,9 +235,9 @@ export default function ChatWidget() {
         <div className="w-[360px] sm:w-[420px] h-[540px] bg-background-card/95 backdrop-blur-md border border-text-muted/20 rounded-3xl shadow-card flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
           <div className="bg-ai p-4 text-white flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 bg-white/10 rounded-xl">
-                <Sparkles className="w-5 h-5 text-white" />
+            <div className="flex items-center space-x-2.5">
+              <div className="p-1.5 bg-white/15 rounded-xl">
+                <EcoAiIcon className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-heading font-bold text-sm">EcoMarket AI Assistant</h3>
@@ -229,8 +265,8 @@ export default function ChatWidget() {
                   }`}
                 >
                   {isAssistant && (
-                    <div className="w-6 h-6 rounded-full bg-ai/10 border border-ai/30 flex items-center justify-center shrink-0">
-                      <Bot className="w-3.5 h-3.5 text-ai" />
+                    <div className="w-6 h-6 rounded-full bg-ai/10 border border-ai/30 flex items-center justify-center shrink-0 p-0.5">
+                      <EcoAiIcon className="w-4 h-4" />
                     </div>
                   )}
 

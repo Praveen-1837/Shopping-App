@@ -6,9 +6,13 @@ import {
   getMyOrders,
   getSellerOrders,
   getOrderDetail,
+  getOrderTransitions
 } from './orderController';
 
 const router = Router();
+
+// Order transition rules (Publicly available to build UI, avoids /orders/:id wildcard collision)
+router.get('/order-transitions', getOrderTransitions);
 
 // Customer Order History & Detail
 router.get('/my-world/orders', requireAuth(), getMyOrders);

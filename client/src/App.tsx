@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
+import ScrollToTop from './components/ScrollToTop';
 import ChatWidget from './components/ChatWidget';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
@@ -55,6 +56,7 @@ const ADMIN_ROLES = ['ADMIN'];
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="min-h-screen bg-background text-text-primary flex flex-col justify-between font-body relative">
         <div>
           <Navbar />

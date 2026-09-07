@@ -28,6 +28,9 @@ export const roleGuard = (allowedRoles: Role[]) => {
         return next(error);
       }
 
+      // Attach user to req to eliminate duplicate DB lookups in subsequent controllers
+      (req as any).dbUser = dbUser;
+
       const sessionClaims = auth.sessionClaims as any;
       const userRole =
         dbUser?.role ||

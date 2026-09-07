@@ -53,6 +53,7 @@ export interface Order {
   paymentStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
   paymentId?: string;
   paymentMethod?: string;
+  cancellationReason?: string;
   total: number;
   deliveryAddress?: DeliveryAddress;
   createdAt: string;

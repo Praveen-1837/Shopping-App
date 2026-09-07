@@ -29,6 +29,7 @@
     "express": "^4.21.2",
     "multer": "^2.2.0",
     "pdfkit": "^0.20.1",
+    "resend": "^6.26.0",
     "svix": "^2.1.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",

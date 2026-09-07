@@ -15,18 +15,19 @@ import {
   Clock,
   Send,
   XCircle,
+  ArrowRight,
 } from 'lucide-react';
 
-const ORDER_STATUSES = [
-  'PENDING',
-  'CONFIRMED',
-  'PACKED',
-  'SHIPPED',
-  'IN_TRANSIT',
-  'OUT_FOR_DELIVERY',
-  'DELIVERED',
-  'CANCELLED',
-];
+const DEFAULT_ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  PENDING: ['CONFIRMED', 'CANCELLED'],
+  CONFIRMED: ['PACKED', 'CANCELLED'],
+  PACKED: ['SHIPPED', 'CANCELLED'],
+  SHIPPED: ['IN_TRANSIT', 'DELIVERED', 'CANCELLED'],
+  IN_TRANSIT: ['OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'],
+  OUT_FOR_DELIVERY: ['DELIVERED', 'CANCELLED'],
+  DELIVERED: [],
+  CANCELLED: [],
+};
 
 type PipelineTab = 'NEW' | 'PACKED' | 'TRANSIT' | 'DELIVERED' | 'CANCELLED';
 
@@ -35,6 +36,8 @@ export default function SellerFulfillmentQueue() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<PipelineTab>('NEW');
   const [transitionError, setTransitionError] = useState<string | null>(null);
+  const [orderToCancel, setOrderToCancel] = useState<Order | null>(null);
+  const [cancelReason, setCancelReason] = useState('');
 
   // Fetch Seller Fulfillment Queue
   const { data, isLoading, isError, error } = useQuery<{ success: boolean; data: Order[] }>({
@@ -49,19 +52,40 @@ export default function SellerFulfillmentQueue() {
     enabled: !!isSignedIn,
   });
 
+  // Fetch Backend Allowed State Transitions Map (Derived from server source of truth)
+  const { data: transitionsData } = useQuery<{ success: boolean; data: Record<string, string[]> }>({
+    queryKey: ['order-transitions'],
+    queryFn: async () => {
+      const res = await apiClient.get('/order-transitions');
+      return res.data;
+    },
+  });
+  
+  const allowedTransitions = transitionsData?.data || DEFAULT_ALLOWED_TRANSITIONS;
+
   // Update Status Mutation
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+    mutationFn: async ({
+      orderId,
+      status,
+      cancellationReason,
+    }: {
+      orderId: string;
+      status: string;
+      cancellationReason?: string;
+    }) => {
       setTransitionError(null);
       const token = await getToken();
       const res = await apiClient.patch(
         `/orders/${orderId}/status`,
-        { status },
+        { status, ...(cancellationReason ? { cancellationReason } : {}) },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return res.data;
     },
     onSuccess: () => {
+      setOrderToCancel(null);
+      setCancelReason('');
       queryClient.invalidateQueries({ queryKey: ['seller-orders'] });
       queryClient.invalidateQueries({ queryKey: ['my-orders'] });
     },
@@ -75,6 +99,30 @@ export default function SellerFulfillmentQueue() {
   });
 
   const allOrders = data?.data || [];
+
+  // Helper to determine the primary actionable next step per status derived from allowed transitions
+  const getPrimaryNextStep = (currentStatus: string): { label: string; nextStatus: string; color: string } | null => {
+    const nextStates = allowedTransitions[currentStatus] || [];
+    if (currentStatus === 'PENDING' && nextStates.includes('CONFIRMED')) {
+      return { label: 'Confirm Order', nextStatus: 'CONFIRMED', color: 'bg-primary hover:bg-primary-hover text-white' };
+    }
+    if (currentStatus === 'CONFIRMED' && nextStates.includes('PACKED')) {
+      return { label: 'Mark as Packed', nextStatus: 'PACKED', color: 'bg-accent hover:bg-accent/90 text-text-primary' };
+    }
+    if (currentStatus === 'PACKED' && nextStates.includes('SHIPPED')) {
+      return { label: 'Mark as Shipped', nextStatus: 'SHIPPED', color: 'bg-secondary hover:bg-secondary-hover text-white' };
+    }
+    if (currentStatus === 'SHIPPED' && nextStates.includes('IN_TRANSIT')) {
+      return { label: 'Mark as In Transit', nextStatus: 'IN_TRANSIT', color: 'bg-secondary hover:bg-secondary-hover text-white' };
+    }
+    if (currentStatus === 'IN_TRANSIT' && nextStates.includes('OUT_FOR_DELIVERY')) {
+      return { label: 'Mark as Out for Delivery', nextStatus: 'OUT_FOR_DELIVERY', color: 'bg-secondary hover:bg-secondary-hover text-white' };
+    }
+    if (currentStatus === 'OUT_FOR_DELIVERY' && nextStates.includes('DELIVERED')) {
+      return { label: 'Mark as Delivered', nextStatus: 'DELIVERED', color: 'bg-success hover:bg-success/90 text-white' };
+    }
+    return null;
+  };
 
   // Filter orders by active pipeline tab
   const filteredOrders = allOrders.filter((order) => {
@@ -209,6 +257,21 @@ export default function SellerFulfillmentQueue() {
         </button>
       </div>
 
+      {/* In Transit Tab Helper Note */}
+      {activeTab === 'TRANSIT' && (
+        <div className="bg-secondary-light/40 border border-secondary/20 rounded-xl px-4 py-3 flex items-center justify-between text-xs text-text-primary">
+          <div className="flex items-center space-x-2">
+            <Truck className="w-4 h-4 text-secondary shrink-0" />
+            <span className="font-semibold text-secondary-dark">
+              Manual status updates — automated carrier tracking coming soon.
+            </span>
+          </div>
+          <span className="text-[11px] text-text-muted hidden md:inline">
+            Advance orders sequentially: Shipped → In Transit → Out for Delivery → Delivered
+          </span>
+        </div>
+      )}
+
       {isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-error flex items-center space-x-3">
           <AlertCircle className="w-6 h-6 shrink-0" />
@@ -280,26 +343,76 @@ export default function SellerFulfillmentQueue() {
                       <Download className="w-3 h-3 text-text-muted" />
                     </button>
 
-                    {/* Status Dropdown */}
-                    <div className="flex items-center space-x-2 bg-background-muted/60 p-1.5 rounded-xl border border-text-muted/15">
-                      <span className="text-[11px] text-text-muted font-medium pl-1">Status:</span>
-                      <select
-                        value={order.status}
-                        onChange={(e) =>
-                          updateStatusMutation.mutate({
-                            orderId: order.id,
-                            status: e.target.value,
-                          })
+                    {/* Status & Next-Action Controls */}
+                    <div className="flex flex-wrap items-center gap-2 bg-background-muted/60 p-1.5 rounded-xl border border-text-muted/15">
+                      <div className="flex items-center space-x-1.5">
+                        <span className="text-[11px] text-text-muted font-medium pl-1">Status:</span>
+                        <span
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase inline-block ${
+                            order.status === 'DELIVERED'
+                              ? 'bg-success/20 text-success border border-success/30'
+                              : order.status === 'CANCELLED'
+                              ? 'bg-error/20 text-error border border-error/30'
+                              : order.status === 'CONFIRMED'
+                              ? 'bg-primary/20 text-primary border border-primary/30'
+                              : order.status === 'PACKED'
+                              ? 'bg-accent/20 text-text-primary border border-accent/30'
+                              : 'bg-background-card text-text-primary border border-text-muted/20'
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+                      </div>
+
+                      {/* Actionable Next Step Buttons for New Orders, Ready to Ship, and In Transit */}
+                      {(() => {
+                        const primaryNext = getPrimaryNextStep(order.status);
+                        const canCancel =
+                          (allowedTransitions[order.status] || []).includes('CANCELLED') &&
+                          ['NEW', 'PACKED'].includes(activeTab);
+
+                        if (primaryNext && ['NEW', 'PACKED', 'TRANSIT'].includes(activeTab)) {
+                          return (
+                            <div className="flex items-center space-x-2 pl-2 border-l border-text-muted/15">
+                              <button
+                                onClick={() =>
+                                  updateStatusMutation.mutate({
+                                    orderId: order.id,
+                                    status: primaryNext.nextStatus,
+                                  })
+                                }
+                                disabled={updateStatusMutation.isPending}
+                                className={`px-3 py-1 font-bold text-xs rounded-lg shadow-soft flex items-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50 ${primaryNext.color}`}
+                              >
+                                {updateStatusMutation.isPending ? (
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <>
+                                    <span>{primaryNext.label}</span>
+                                    <ArrowRight className="w-3.5 h-3.5" />
+                                  </>
+                                )}
+                              </button>
+
+                              {canCancel && (
+                                <button
+                                  onClick={() => {
+                                    setOrderToCancel(order);
+                                    setCancelReason('');
+                                  }}
+                                  disabled={updateStatusMutation.isPending}
+                                  className="px-2 py-1 text-error hover:bg-error-light/40 border border-error/20 rounded-lg text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
+                                  title="Cancel this order"
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                            </div>
+                          );
                         }
-                        disabled={updateStatusMutation.isPending}
-                        className="px-2.5 py-1 bg-background-card border border-text-muted/20 rounded-lg text-xs font-bold text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
-                      >
-                        {ORDER_STATUSES.map((st) => (
-                          <option key={st} value={st}>
-                            {st}
-                          </option>
-                        ))}
-                      </select>
+
+                        return null;
+                      })()}
                     </div>
                   </div>
                 </div>
@@ -339,6 +452,76 @@ export default function SellerFulfillmentQueue() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Custom Cancellation Confirmation Modal */}
+      {orderToCancel && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-background-card border border-text-muted/20 rounded-2xl p-6 max-w-md w-full shadow-card space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-start space-x-3.5">
+              <div className="p-3 bg-error-light text-error rounded-xl shrink-0">
+                <AlertCircle className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold font-heading text-text-primary">Cancel this order?</h3>
+                <p className="text-xs font-mono text-text-muted">Order #{orderToCancel.id}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-text-secondary leading-relaxed">
+              This action cannot be undone. The customer will see that the order was cancelled, and any reserved stock will be released.
+            </p>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-text-primary">
+                Reason for cancellation <span className="text-text-muted font-normal">(optional, visible to customer)</span>:
+              </label>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="e.g. Out of stock, pricing discrepancy, customer requested cancellation..."
+                rows={3}
+                className="w-full px-3.5 py-2.5 bg-background-muted/70 border border-text-muted/20 rounded-xl text-xs text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-error/40 resize-none"
+              />
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 pt-2 border-t border-text-muted/10">
+              <button
+                type="button"
+                onClick={() => {
+                  setOrderToCancel(null);
+                  setCancelReason('');
+                }}
+                disabled={updateStatusMutation.isPending}
+                className="px-4 py-2.5 rounded-xl border border-text-muted/20 text-xs font-semibold text-text-secondary hover:bg-background-muted transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Keep Order
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  updateStatusMutation.mutate({
+                    orderId: orderToCancel.id,
+                    status: 'CANCELLED',
+                    cancellationReason: cancelReason.trim() || undefined,
+                  });
+                }}
+                disabled={updateStatusMutation.isPending}
+                className="px-4 py-2.5 rounded-xl bg-error hover:bg-error/90 text-white text-xs font-bold shadow-soft transition-all cursor-pointer disabled:opacity-50 flex items-center space-x-1.5"
+              >
+                {updateStatusMutation.isPending ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Cancelling...</span>
+                  </>
+                ) : (
+                  <span>Cancel Order</span>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

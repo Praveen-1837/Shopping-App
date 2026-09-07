@@ -101,6 +101,31 @@ export const createCheckoutOrder = async (req: Request, res: Response, next: Nex
     const shipping = flatFee > 0 ? flatFee : (subtotal > 1000 ? 0 : 70);
     const totalAmount = subtotal + shipping;
 
+    // Backend duplicate submission safeguard: Check for identical recent order (within last 45 seconds)
+    const recentWindow = new Date(Date.now() - 45 * 1000);
+    const recentDuplicate = await prisma.order.findFirst({
+      where: {
+        userId: dbUser.id,
+        total: totalAmount,
+        status: OrderStatus.PENDING,
+        createdAt: { gte: recentWindow }
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        items: {
+          include: { product: true, course: true }
+        }
+      }
+    });
+
+    if (recentDuplicate && recentDuplicate.items.length === orderItemData.length) {
+      return res.status(200).json({
+        success: true,
+        message: 'Existing pending order retrieved (duplicate prevented)',
+        data: recentDuplicate,
+      });
+    }
+
     // Create Order with PENDING status and PENDING paymentStatus
     const order = await prisma.order.create({
       data: {

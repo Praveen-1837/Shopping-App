@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
 import { Order } from '../types/cart';
-import { Package, ArrowRight, RefreshCw, AlertCircle, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Package, ArrowRight, RefreshCw, AlertCircle, ShoppingBag, ChevronLeft, ChevronRight, XCircle } from 'lucide-react';
 
 interface MyOrdersResponse {
   success: boolean;
@@ -130,7 +130,11 @@ export default function MyOrders() {
             return (
               <div
                 key={order.id}
-                className="bg-background-card rounded-2xl border border-text-muted/15 p-6 shadow-soft hover:shadow-card transition-all space-y-4"
+                className={`bg-background-card rounded-2xl border p-6 shadow-soft hover:shadow-card transition-all space-y-4 ${
+                  order.status === 'CANCELLED'
+                    ? 'border-error/30 bg-error-light/10'
+                    : 'border-text-muted/15'
+                }`}
               >
                 {/* Header info */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-text-muted/10 pb-4">
@@ -154,6 +158,23 @@ export default function MyOrders() {
                     </span>
                   </div>
                 </div>
+
+                {/* Cancellation Notice Banner */}
+                {order.status === 'CANCELLED' && (
+                  <div className="bg-error-light/80 border border-error/25 rounded-xl px-4 py-2.5 text-xs text-error flex items-start space-x-2">
+                    <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold">Order Cancelled:</span>{' '}
+                      {order.cancellationReason ? (
+                        <span>
+                          Reason: <span className="italic font-semibold">"{order.cancellationReason}"</span>
+                        </span>
+                      ) : (
+                        <span>Cancelled by seller before fulfillment.</span>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Items Thumbnails */}
                 <div className="flex items-center justify-between">
