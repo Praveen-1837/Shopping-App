@@ -1,3 +1,4 @@
+import { sendOrderCancellationEmail } from "../notifications/emailService";
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../config/db';
 import { OrderStatus } from '@prisma/client';
@@ -692,6 +693,163 @@ export const updateAdminSettings = async (req: Request, res: Response, next: Nex
       success: true,
       message: 'Site settings updated successfully',
       data: settings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/v1/admin/cancellation-requests
+export const getCancellationRequests = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit as string) || 10));
+    const skip = (page - 1) * limit;
+
+    const where = { cancellationRequested: true };
+
+    const [total, orders] = await Promise.all([
+      prisma.order.count({ where }),
+      prisma.order.findMany({
+        where,
+        include: {
+          user: { select: { id: true, name: true, email: true } },
+          items: {
+            include: {
+              product: { include: { seller: { select: { name: true, email: true } } } },
+              course: true,
+            }
+          }
+        },
+        orderBy: { cancellationRequestedAt: 'asc' },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        items: orders,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// PATCH /api/v1/admin/orders/:id/approve-cancellation
+export const approveCancellation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id as string;
+    
+    const order = await prisma.order.findUnique({ 
+      where: { id },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        items: {
+          include: {
+            product: { select: { title: true } },
+            course: { select: { title: true } },
+          },
+        },
+      }
+    });
+
+    if (!order) {
+      res.status(404).json({ success: false, error: { code: 'ORDER_NOT_FOUND', message: 'Order not found' } });
+      return;
+    }
+
+    if (!order.cancellationRequested) {
+      res.status(400).json({ success: false, error: { code: 'BAD_REQUEST', message: 'No cancellation request pending for this order' } });
+      return;
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        status: OrderStatus.CANCELLED,
+        cancellationReason: order.cancellationRequestReason,
+        cancellationRequested: false,
+        cancellationRequestReason: null,
+        cancellationRequestedAt: null,
+      },
+      include: {
+        user: true,
+        items: {
+          include: {
+            product: true,
+            course: true,
+          }
+        }
+      }
+    });
+
+    if (updatedOrder.user?.email) {
+      const items = updatedOrder.items.map((i) => ({
+        title: i.product?.title || i.course?.title || 'Item',
+        quantity: i.quantity,
+        price: Number(i.price),
+      }));
+
+      sendOrderCancellationEmail({
+        customerEmail: updatedOrder.user.email,
+        customerName: updatedOrder.user.name,
+        orderId: updatedOrder.id,
+        cancellationReason: updatedOrder.cancellationReason,
+        items,
+        total: Number(updatedOrder.total),
+      }).catch((err) => {
+        console.error('[approveCancellation] Failed to dispatch order cancellation email:', err);
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Cancellation approved',
+      data: updatedOrder,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// PATCH /api/v1/admin/orders/:id/reject-cancellation
+export const rejectCancellation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id as string;
+
+    const order = await prisma.order.findUnique({ where: { id } });
+
+    if (!order) {
+      res.status(404).json({ success: false, error: { code: 'ORDER_NOT_FOUND', message: 'Order not found' } });
+      return;
+    }
+
+    if (!order.cancellationRequested) {
+      res.status(400).json({ success: false, error: { code: 'BAD_REQUEST', message: 'No cancellation request pending for this order' } });
+      return;
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        cancellationRequested: false,
+        cancellationRequestReason: null,
+        cancellationRequestedAt: null,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Cancellation request rejected',
+      data: updatedOrder,
     });
   } catch (error) {
     next(error);

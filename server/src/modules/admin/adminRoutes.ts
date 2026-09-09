@@ -17,6 +17,9 @@ import {
   deleteAdminProduct,
   getAdminSettings,
   updateAdminSettings,
+  getCancellationRequests,
+  approveCancellation,
+  rejectCancellation,
 } from './adminController';
 
 const router = Router();
@@ -49,6 +52,11 @@ router.delete('/admin/products/:id', deleteAdminProduct);
 router.get('/admin/orders', getAdminOrders);
 router.get('/admin/orders/:id', getAdminOrderDetail);
 router.patch('/admin/orders/:id/status', updateAdminOrderStatus);
+
+// Admin Cancellation Requests
+router.get('/admin/cancellation-requests', getCancellationRequests);
+router.patch('/admin/orders/:id/approve-cancellation', approveCancellation);
+router.patch('/admin/orders/:id/reject-cancellation', rejectCancellation);
 
 // Site Settings Endpoints
 router.get('/admin/settings', getAdminSettings);

@@ -25,6 +25,7 @@ import {
   Settings,
   UserCheck,
   Sparkles,
+  ShieldAlert,
 } from 'lucide-react';
 
 const PRODUCT_CATEGORIES = [
@@ -190,6 +191,13 @@ export default function Navbar({
             >
               <UserCheck className="w-4 h-4 text-accent" />
               <span>Approvals</span>
+            </Link>
+            <Link
+              to="/admin/cancellation-requests"
+              className="px-3 py-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors flex items-center space-x-1.5"
+            >
+              <ShieldAlert className="w-4 h-4 text-accent" />
+              <span>Cancellations</span>
             </Link>
             <Link
               to="/admin/settings"

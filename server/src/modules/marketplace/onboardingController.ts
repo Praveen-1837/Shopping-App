@@ -20,12 +20,16 @@ async function getDbUser(clerkId: string) {
 }
 
 const applySchema = z.object({
-  requestedRole: z.enum(['SELLER', 'FARMER', 'ARTISAN', 'EDUCATOR']),
+  requestedRole: z.enum(['SELLER', 'FARMER', 'ARTISAN', 'EDUCATOR', 'DELIVERY_PARTNER']),
   details: z.object({
     businessName: z.string().optional(),
     experience: z.string().optional(),
     reason: z.string().optional(),
     phone: z.string().optional(),
+    fullName: z.string().optional(),
+    vehicleType: z.string().optional(),
+    serviceArea: z.string().optional(),
+    availability: z.string().optional(),
   }).optional(),
 });
 

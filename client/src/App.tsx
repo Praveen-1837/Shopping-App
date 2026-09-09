@@ -40,6 +40,8 @@ import AdminStores from './pages/AdminStores';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminSettings from './pages/AdminSettings';
+import AdminCancellationRequests from './pages/AdminCancellationRequests';
+import DeliveryCentre from './pages/DeliveryCentre';
 import About from './pages/About';
 import Careers from './pages/Careers';
 import Help from './pages/Help';
@@ -52,6 +54,7 @@ const SELLER_ROLES = ['SELLER', 'FARMER', 'ARTISAN', 'ADMIN'];
 const FARMER_ROLES = ['FARMER', 'SELLER', 'ARTISAN', 'ADMIN'];
 const EDUCATOR_ROLES = ['EDUCATOR', 'ADMIN'];
 const ADMIN_ROLES = ['ADMIN'];
+const DELIVERY_ROLES = ['DELIVERY_PARTNER', 'ADMIN'];
 
 function App() {
   return (
@@ -264,6 +267,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              
+              {/* Delivery Partner Routes */}
+              <Route
+                path="/delivery-centre"
+                element={
+                  <ProtectedRoute allowedRoles={DELIVERY_ROLES}>
+                    <DeliveryCentre />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Admin Dashboard & Management Routes */}
               <Route
@@ -335,6 +348,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={ADMIN_ROLES}>
                     <AdminSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/cancellation-requests"
+                element={
+                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
+                    <AdminCancellationRequests />
                   </ProtectedRoute>
                 }
               />

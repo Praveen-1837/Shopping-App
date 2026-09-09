@@ -22,6 +22,7 @@ import sellerRoutes from './modules/seller/sellerRoutes';
 import educatorRoutes from './modules/educator/educatorRoutes';
 import userRoutes from './modules/user/userRoutes';
 import bannerRoutes from './modules/content/bannerRoutes';
+import deliveryRoutes from './modules/delivery/deliveryRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
 
@@ -98,6 +99,7 @@ app.use('/api/v1', adminRoutes);
 app.use('/api/v1', sellerRoutes);
 app.use('/api/v1', educatorRoutes);
 app.use('/api/v1', userRoutes);
+app.use('/api/v1/delivery', deliveryRoutes);
 
 // 404 Route Handler
 app.use(notFoundHandler);

@@ -82,18 +82,53 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
       });
     }
 
-    // Ownership check: seller must own at least 1 product in order, or be ADMIN
-    if (dbUser.role !== Role.ADMIN) {
-      const ownsProductInOrder = order.items.some(
-        (item) => item.product && item.product.sellerId === dbUser.id
-      );
+    // Permission Checks
+    const isSeller = [Role.SELLER, Role.FARMER, Role.ARTISAN].includes(dbUser.role);
+    const isDeliveryPartner = dbUser.role === Role.DELIVERY_PARTNER;
+    const isAdmin = dbUser.role === Role.ADMIN;
 
-      if (!ownsProductInOrder) {
+    if (!isAdmin) {
+      if (isSeller) {
+        const ownsProductInOrder = order.items.some(
+          (item) => item.product && item.product.sellerId === dbUser.id
+        );
+        if (!ownsProductInOrder) {
+          return res.status(403).json({
+            success: false,
+            error: {
+              code: 'FORBIDDEN',
+              message: 'You are not authorized to update status for orders containing products you do not sell',
+            },
+          });
+        }
+        
+        const sellerAllowedStatuses: string[] = [OrderStatus.CONFIRMED, OrderStatus.PACKED, OrderStatus.SHIPPED];
+        if (!sellerAllowedStatuses.includes(newStatus as string)) {
+          return res.status(403).json({
+            success: false,
+            error: {
+              code: 'FORBIDDEN',
+              message: 'Sellers are only allowed to transition orders up to SHIPPED. Later stages and cancellations must be requested from an ADMIN.',
+            },
+          });
+        }
+      } else if (isDeliveryPartner) {
+        const deliveryAllowedStatuses: string[] = [OrderStatus.IN_TRANSIT, OrderStatus.OUT_FOR_DELIVERY, OrderStatus.DELIVERED];
+        if (!deliveryAllowedStatuses.includes(newStatus as string)) {
+          return res.status(403).json({
+            success: false,
+            error: {
+              code: 'FORBIDDEN',
+              message: 'Delivery Partners are only allowed to transition orders to IN_TRANSIT, OUT_FOR_DELIVERY, or DELIVERED.',
+            },
+          });
+        }
+      } else {
         return res.status(403).json({
           success: false,
           error: {
             code: 'FORBIDDEN',
-            message: 'You are not authorized to update status for orders containing products you do not sell',
+            message: 'You are not authorized to update order statuses.',
           },
         });
       }
@@ -332,6 +367,71 @@ export const getOrderDetail = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json({
       success: true,
       data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const requestCancellation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const auth = getAuth(req);
+    if (!auth || !auth.userId) {
+      return res.status(401).json({
+        success: false,
+        error: { code: 'UNAUTHORIZED', message: 'Authentication required' },
+      });
+    }
+
+    const dbUser = await getDbUser(auth.userId);
+    const id = req.params.id as string;
+    const { reason } = req.body;
+
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        items: {
+          include: { product: true }
+        }
+      }
+    });
+
+    if (!order) {
+      return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Order not found' } });
+    }
+
+    // Must be seller
+    const ownsProductInOrder = order.items.some(
+      (item) => item.product && item.product.sellerId === dbUser.id
+    );
+
+    if (!ownsProductInOrder) {
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You do not own this order' },
+      });
+    }
+
+    if (order.cancellationRequested) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'BAD_REQUEST', message: 'Cancellation already requested for this order' },
+      });
+    }
+
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        cancellationRequested: true,
+        cancellationRequestReason: reason || null,
+        cancellationRequestedAt: new Date(),
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Cancellation requested successfully',
+      data: updatedOrder,
     });
   } catch (error) {
     next(error);

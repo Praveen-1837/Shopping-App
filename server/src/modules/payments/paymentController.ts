@@ -68,61 +68,103 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
       });
     }
 
-    // Payment Succeeded — Update paymentStatus to SUCCESS, status to CONFIRMED, and clear cart
-    const updatedOrder = await prisma.order.update({
-      where: { id: order.id },
-      data: {
-        paymentStatus: PaymentStatus.SUCCESS,
-        status: OrderStatus.CONFIRMED,
-        paymentId: result.transactionId,
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
-            course: true,
-          },
-        },
-      },
-    });
+    // Payment Succeeded — Execute Order Updates + Stock Decrements in a Transaction
+    try {
+      const updatedOrder = await prisma.$transaction(async (tx) => {
+        // 1. Decrement stock for physical products with bounds checking
+        for (const item of order.items) {
+          if (item.productId && item.itemType !== 'COURSE') {
+            const product = await tx.product.findUnique({ where: { id: item.productId } });
+            if (!product || product.stock < item.quantity) {
+              throw new Error(`Insufficient stock for product ${item.productId}`);
+            }
+            await tx.product.update({
+              where: { id: item.productId },
+              data: { stock: { decrement: item.quantity } }
+            });
+          }
+        }
 
-    // Course Activation on Purchase (Phase 5 Requirement):
-    // Automatically create/update CourseProgress rows for any course items in order
-    for (const item of order.items) {
-      if (item.courseId || item.itemType === 'COURSE') {
-        const cId = item.courseId;
-        if (cId) {
-          await prisma.courseProgress.upsert({
-            where: {
-              userId_courseId: {
-                userId: order.userId,
-                courseId: cId,
+        // 2. Update Order Status
+        const orderUpdated = await tx.order.update({
+          where: { id: order.id },
+          data: {
+            paymentStatus: PaymentStatus.SUCCESS,
+            status: OrderStatus.CONFIRMED,
+            paymentId: result.transactionId,
+          },
+          include: {
+            items: {
+              include: {
+                product: true,
+                course: true,
               },
             },
-            update: {}, // Keep existing progress if already enrolled
-            create: {
-              userId: order.userId,
-              courseId: cId,
-              completedModules: [],
-              progressPercent: 0,
-              certificateIssued: false,
-            },
-          });
+          },
+        });
+
+        // 3. Course Activation on Purchase
+        for (const item of order.items) {
+          if (item.courseId || item.itemType === 'COURSE') {
+            const cId = item.courseId;
+            if (cId) {
+              await tx.courseProgress.upsert({
+                where: {
+                  userId_courseId: {
+                    userId: order.userId,
+                    courseId: cId,
+                  },
+                },
+                update: {}, // Keep existing progress if already enrolled
+                create: {
+                  userId: order.userId,
+                  courseId: cId,
+                  completedModules: [],
+                  progressPercent: 0,
+                  certificateIssued: false,
+                },
+              });
+            }
+          }
         }
-      }
+
+        // 4. Clear user cart
+        await tx.cart.updateMany({
+          where: { userId: order.userId },
+          data: { items: [] },
+        });
+
+        return orderUpdated;
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: result.message,
+        data: updatedOrder,
+      });
+
+    } catch (e: any) {
+      console.error("[processOrderPayment] Transaction failed:", e.message);
+
+      // Handle race condition where stock is unavailable gracefully by failing the order
+      const failedOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: PaymentStatus.FAILED,
+          status: OrderStatus.CANCELLED,
+          cancellationReason: e.message,
+        },
+      });
+
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'STOCK_UNAVAILABLE',
+          message: e.message,
+        },
+        data: failedOrder,
+      });
     }
-
-    // Clear user cart
-    await prisma.cart.updateMany({
-      where: { userId: order.userId },
-      data: { items: [] },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: result.message,
-      data: updatedOrder,
-    });
   } catch (error) {
     next(error);
   }

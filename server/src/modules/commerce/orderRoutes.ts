@@ -6,7 +6,8 @@ import {
   getMyOrders,
   getSellerOrders,
   getOrderDetail,
-  getOrderTransitions
+  getOrderTransitions,
+  requestCancellation
 } from './orderController';
 
 const router = Router();
@@ -21,5 +22,6 @@ router.get('/orders/:id', requireAuth(), getOrderDetail);
 // Seller Order Management Queue & Status Transition
 router.get('/seller/orders', requireAuth(), roleGuard(['SELLER', 'FARMER', 'ARTISAN', 'ADMIN']), getSellerOrders);
 router.patch('/orders/:id/status', requireAuth(), roleGuard(['SELLER', 'FARMER', 'ARTISAN', 'ADMIN']), updateOrderStatus);
+router.post('/orders/:id/request-cancellation', requireAuth(), roleGuard(['SELLER', 'FARMER', 'ARTISAN']), requestCancellation);
 
 export default router;

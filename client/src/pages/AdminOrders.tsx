@@ -87,6 +87,17 @@ export default function AdminOrders() {
     },
   });
 
+  const getPrimaryNextStep = (currentStatus: string): { label: string; nextStatus: string; color: string } | null => {
+    // Admin has full progression
+    if (currentStatus === 'PENDING') return { label: 'Confirm Order', nextStatus: 'CONFIRMED', color: 'bg-primary text-white' };
+    if (currentStatus === 'CONFIRMED') return { label: 'Mark as Packed', nextStatus: 'PACKED', color: 'bg-accent text-text-primary' };
+    if (currentStatus === 'PACKED') return { label: 'Mark as Shipped', nextStatus: 'SHIPPED', color: 'bg-secondary text-white' };
+    if (currentStatus === 'SHIPPED') return { label: 'Mark as In Transit', nextStatus: 'IN_TRANSIT', color: 'bg-secondary text-white' };
+    if (currentStatus === 'IN_TRANSIT') return { label: 'Mark as Out for Delivery', nextStatus: 'OUT_FOR_DELIVERY', color: 'bg-secondary text-white' };
+    if (currentStatus === 'OUT_FOR_DELIVERY') return { label: 'Mark as Delivered', nextStatus: 'DELIVERED', color: 'bg-success text-white' };
+    return null;
+  };
+
   const errorMessage =
     (error as any)?.response?.data?.error?.message ||
     (error as any)?.message ||
@@ -357,6 +368,26 @@ export default function AdminOrders() {
                         </option>
                       ))}
                     </select>
+                    {(() => {
+                      const primaryNext = getPrimaryNextStep(orderDetailData.orderStatus || orderDetailData.status);
+                      if (primaryNext) {
+                        return (
+                          <button
+                            onClick={() =>
+                              updateStatusMutation.mutate({
+                                id: orderDetailData.id,
+                                status: primaryNext.nextStatus,
+                              })
+                            }
+                            disabled={updateStatusMutation.isPending}
+                            className={`ml-2 px-3 py-1 font-bold text-xs rounded-lg shadow-soft transition-all cursor-pointer disabled:opacity-50 ${primaryNext.color}`}
+                          >
+                            {updateStatusMutation.isPending ? 'Updating...' : primaryNext.label}
+                          </button>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
                 </div>
 

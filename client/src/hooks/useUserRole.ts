@@ -9,6 +9,7 @@ export interface UserRoleState {
   isArtisan: boolean;
   isEducator: boolean;
   isAdmin: boolean;
+  isDeliveryPartner: boolean;
   canAccessSellerCentre: boolean;
   canAccessFarmerCentre: boolean;
   canAccessEducatorCentre: boolean;
@@ -26,12 +27,13 @@ export function useUserRole(): UserRoleState {
   const isArtisan = role === 'ARTISAN';
   const isEducator = role === 'EDUCATOR';
   const isAdmin = role === 'ADMIN';
+  const isDeliveryPartner = role === 'DELIVERY_PARTNER';
 
   const canAccessSellerCentre = !!isSignedIn && ['SELLER', 'FARMER', 'ARTISAN', 'ADMIN'].includes(role);
   const canAccessFarmerCentre = !!isSignedIn && ['FARMER', 'SELLER', 'ARTISAN', 'ADMIN'].includes(role);
   const canAccessEducatorCentre = !!isSignedIn && ['EDUCATOR', 'ADMIN'].includes(role);
 
-  const hasAnyPartnerRole = !!isSignedIn && (isSeller || isFarmer || isArtisan || isEducator || isAdmin);
+  const hasAnyPartnerRole = !!isSignedIn && (isSeller || isFarmer || isArtisan || isEducator || isDeliveryPartner || isAdmin);
   const isCustomer = !isSignedIn || role === 'CUSTOMER' || !hasAnyPartnerRole;
 
   return {
@@ -43,6 +45,7 @@ export function useUserRole(): UserRoleState {
     isArtisan,
     isEducator,
     isAdmin,
+    isDeliveryPartner,
     canAccessSellerCentre,
     canAccessFarmerCentre,
     canAccessEducatorCentre,

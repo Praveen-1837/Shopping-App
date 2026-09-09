@@ -17,6 +17,7 @@ enum Role {
   ARTISAN
   EDUCATOR
   ADMIN
+  DELIVERY_PARTNER
 }
 
 enum OrderStatus {
@@ -225,7 +226,10 @@ model Order {
   paymentStatus   PaymentStatus @default(SUCCESS)
   paymentId       String?
   paymentMethod   String        @default("Mock Payment")
-  cancellationReason String?
+  cancellationRequested       Boolean   @default(false)
+  cancellationRequestReason   String?
+  cancellationRequestedAt     DateTime?
+  cancellationReason          String?
   total           Decimal       @db.Decimal(10, 2)
   deliveryAddress Json?
   createdAt       DateTime      @default(now())

@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Store,
+  AlertCircle,
 } from 'lucide-react';
 
 interface Stats {
@@ -225,6 +226,13 @@ export default function AdminDashboard() {
         >
           <CheckCircle2 className="w-5 h-5 mx-auto text-success group-hover:scale-110 transition-transform" />
           <span className="text-xs font-bold text-text-primary block">Approvals</span>
+        </a>
+        <a
+          href="/admin/cancellation-requests"
+          className="p-4 bg-background-card hover:bg-error-light/50 border border-text-muted/15 rounded-2xl transition-all text-center space-y-1.5 group"
+        >
+          <AlertCircle className="w-5 h-5 mx-auto text-error group-hover:scale-110 transition-transform" />
+          <span className="text-xs font-bold text-text-primary block">Cancellations</span>
         </a>
         <a
           href="/admin/settings"

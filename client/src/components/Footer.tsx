@@ -5,7 +5,7 @@ import { useUserRole } from '../hooks/useUserRole';
 import logo from '../assets/logo.png';
 
 export default function Footer() {
-  const { isSeller, isFarmer, isArtisan, isEducator, isAdmin, isCustomer } = useUserRole();
+  const { isSeller, isFarmer, isArtisan, isEducator, isAdmin, isCustomer, isDeliveryPartner } = useUserRole();
   const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
   const [selectedCurrency, setSelectedCurrency] = useState<string>('INR - Indian Rupee (₹)');
   const [selectedCountry, setSelectedCountry] = useState<string>('India');
@@ -39,14 +39,14 @@ export default function Footer() {
       <button
         onClick={handleBackToTop}
         aria-label="Back to top"
-        className="w-full py-3.5 bg-[#27422B] hover:bg-[#315236] text-[#FAF7F2] text-xs font-bold tracking-wider uppercase text-center transition-colors cursor-pointer block border-b border-white/10"
+        className="w-full py-3 bg-[#27422B] hover:bg-[#315236] text-[#FAF7F2] text-[12px] font-bold tracking-wider uppercase text-center transition-colors cursor-pointer block border-b border-white/10"
       >
         Back to top
       </button>
 
       {/* Main Footer Body — 4 Column Amazon Pattern */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-white/10 text-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-b border-white/10 text-xs">
           {/* Column 1 — Get to Know Us */}
           <div className="space-y-3">
             <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
@@ -95,6 +95,11 @@ export default function Footer() {
                     </Link>
                   </li>
                   <li>
+                    <Link to="/delivery-centre" className="hover:text-accent hover:underline transition-colors">
+                      Go to Delivery Centre
+                    </Link>
+                  </li>
+                  <li>
                     <Link to="/admin/onboarding" className="hover:text-accent hover:underline transition-colors">
                       Go to Admin Onboarding
                     </Link>
@@ -128,6 +133,19 @@ export default function Footer() {
                     ) : (
                       <Link to="/apply?role=educator" className="hover:text-accent hover:underline transition-colors">
                         Become an Educator
+                      </Link>
+                    )}
+                  </li>
+
+                  {/* Delivery Partner CTA or Dashboard Link */}
+                  <li>
+                    {isDeliveryPartner ? (
+                      <Link to="/delivery-centre" className="hover:text-accent hover:underline transition-colors">
+                        Go to Delivery Centre
+                      </Link>
+                    ) : (
+                      <Link to="/apply?role=delivery" className="hover:text-accent hover:underline transition-colors">
+                        Become a Delivery Partner
                       </Link>
                     )}
                   </li>
@@ -211,7 +229,7 @@ export default function Footer() {
         </div>
 
         {/* Regional Selector Bar (Logo + Dropdown Selectors) */}
-        <div className="pt-8 pb-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10">
+        <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/10">
           {/* Platform Logo */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-2.5 group">
             <div className="p-1 bg-white rounded-xl group-hover:scale-105 transition-transform overflow-hidden shadow-xs border border-white/20">
@@ -268,7 +286,7 @@ export default function Footer() {
         </div>
 
         {/* Compact Single-Row Bottom Bar: Copyright & Social Icons */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#B0C2B3]">
+        <div className="pt-4 pb-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#B0C2B3]">
           <div>
             © {currentYear} EcoMarket Inc. All rights reserved.
           </div>

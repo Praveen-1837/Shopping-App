@@ -14,6 +14,10 @@ interface Application {
     experience?: string;
     reason?: string;
     phone?: string;
+    fullName?: string;
+    vehicleType?: string;
+    serviceArea?: string;
+    availability?: string;
   };
   createdAt: string;
   user: {
@@ -25,7 +29,7 @@ interface Application {
 
 export default function AdminOnboarding() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = (searchParams.get('tab') as 'SELLER' | 'FARMER' | 'EDUCATOR') || 'SELLER';
+  const activeTab = (searchParams.get('tab') as 'SELLER' | 'FARMER' | 'EDUCATOR' | 'DELIVERY_PARTNER') || 'SELLER';
   const { getToken, isSignedIn } = useAuth();
   const queryClient = useQueryClient();
 
@@ -116,6 +120,18 @@ export default function AdminOnboarding() {
           <Award className="w-4 h-4" />
           <span>Educator Approvals</span>
         </button>
+
+        <button
+          onClick={() => setSearchParams({ tab: 'DELIVERY_PARTNER' })}
+          className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+            activeTab === 'DELIVERY_PARTNER'
+              ? 'bg-primary-dark text-white shadow-soft'
+              : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-primary-dark'
+          }`}
+        >
+          <Briefcase className="w-4 h-4" />
+          <span>Delivery Approvals</span>
+        </button>
       </div>
 
       {isLoading ? (
@@ -178,9 +194,29 @@ export default function AdminOnboarding() {
                         <strong>Business / Farm / Institute:</strong> {app.details.businessName}
                       </p>
                     )}
+                    {app.details.fullName && (
+                      <p>
+                        <strong>Full Name:</strong> {app.details.fullName}
+                      </p>
+                    )}
                     {app.details.phone && (
                       <p>
                         <strong>Phone Contact:</strong> {app.details.phone}
+                      </p>
+                    )}
+                    {app.details.vehicleType && (
+                      <p>
+                        <strong>Vehicle Type:</strong> {app.details.vehicleType}
+                      </p>
+                    )}
+                    {app.details.serviceArea && (
+                      <p>
+                        <strong>Service Area:</strong> {app.details.serviceArea}
+                      </p>
+                    )}
+                    {app.details.availability && (
+                      <p>
+                        <strong>Availability:</strong> {app.details.availability}
                       </p>
                     )}
                     {app.details.experience && (

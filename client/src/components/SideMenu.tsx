@@ -18,6 +18,7 @@ import {
   ChevronRight,
   GraduationCap,
   Heart,
+  Truck,
 } from 'lucide-react';
 
 interface SideMenuProps {
@@ -36,7 +37,7 @@ export default function SideMenu({
   onSelectCategory,
 }: SideMenuProps) {
   const { user } = useUser();
-  const { canAccessSellerCentre, canAccessFarmerCentre, canAccessEducatorCentre, isAdmin, isCustomer } = useUserRole();
+  const { canAccessSellerCentre, canAccessFarmerCentre, canAccessEducatorCentre, isAdmin, isCustomer, isDeliveryPartner } = useUserRole();
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Keyboard accessibility: Escape key listener & focus trapping
@@ -221,6 +222,20 @@ export default function SideMenu({
                       <span>Educator Centre</span>
                     </span>
                     <ChevronRight className="w-3.5 h-3.5 text-text-muted" />
+                  </Link>
+                )}
+
+                {(isDeliveryPartner || isAdmin) && (
+                  <Link
+                    to="/delivery-centre"
+                    onClick={onClose}
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-[#1B2E1E]/10 text-[#1B2E1E] transition-colors"
+                  >
+                    <span className="flex items-center space-x-2">
+                      <Truck className="w-3.5 h-3.5 text-[#1B2E1E]" />
+                      <span>Delivery Centre</span>
+                    </span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#1B2E1E]/60" />
                   </Link>
                 )}
 
