@@ -144,7 +144,7 @@ export default function Footer() {
                         Go to Delivery Centre
                       </Link>
                     ) : (
-                      <Link to="/apply?role=delivery" className="hover:text-accent hover:underline transition-colors">
+                      <Link to="/apply?role=delivery_partner" className="hover:text-accent hover:underline transition-colors">
                         Become a Delivery Partner
                       </Link>
                     )}

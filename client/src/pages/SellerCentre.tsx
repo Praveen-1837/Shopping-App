@@ -230,9 +230,9 @@ export default function SellerCentre() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Low Stock Warning */}
               {alerts.lowStockProducts.length > 0 && (
-                <div className="bg-accent/15 border border-accent/40 rounded-3xl p-5 shadow-soft space-y-3">
+                <div className="bg-secondary/15 border border-accent/40 rounded-3xl p-5 shadow-soft space-y-3">
                   <div className="flex items-center space-x-2 text-text-primary font-bold text-xs uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4 text-accent shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-secondary shrink-0" />
                     <span>Low Stock Alert ({alerts.lowStockProducts.length} items)</span>
                   </div>
                   <div className="space-y-2">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { optimizeCloudinaryUrl } from "../utils/formatters";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
@@ -90,7 +91,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="relative aspect-square sm:aspect-[4/3] bg-background-muted overflow-hidden">
           <Link to={`/product/${product.id}`}>
             <img
-              src={primaryImage}
+              src={optimizeCloudinaryUrl(primaryImage, 600, 600)}
               alt={product.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"

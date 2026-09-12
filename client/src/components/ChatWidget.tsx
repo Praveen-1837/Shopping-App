@@ -213,19 +213,23 @@ export default function ChatWidget() {
             />
           )}
 
+          {/* Tooltip */}
+          <span className="absolute right-full top-1/2 -translate-y-1/2 mr-4 px-3 py-1.5 bg-[#1F2421] text-white text-[11px] font-bold rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-soft hidden md:block">
+            Ask Eco AI Assistant
+          </span>
+
           <button
             onClick={() => {
               setIsOpen(true);
               setShowPulse(false);
             }}
-            className={`flex items-center space-x-2.5 px-5 py-3 bg-ai text-white rounded-full font-semibold text-xs shadow-card hover:bg-ai/90 hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10 ${
+            className={`w-[52px] h-[52px] md:w-16 md:h-16 flex items-center justify-center bg-ai text-white rounded-full shadow-card hover:bg-ai/90 hover:scale-105 active:scale-95 transition-all cursor-pointer relative z-10 ${
               isInitialEntrance ? 'ai-btn-entrance' : ''
             }`}
             onAnimationEnd={() => setIsInitialEntrance(false)}
             aria-label="Ask Eco AI Assistant"
           >
-            <EcoAiIcon className="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform duration-200" />
-            <span className="tracking-wide">Ask Eco AI Assistant</span>
+            <EcoAiIcon className="w-8 h-8 md:w-10 md:h-10 shrink-0 group-hover:scale-110 transition-transform duration-200" />
           </button>
         </div>
       )}

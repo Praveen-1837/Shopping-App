@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { formatRoleLabel } from "../utils/formatters";
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
 import { ArrowLeft, CheckCircle2, Sprout, ShoppingBag, BookOpen, Send, AlertCircle, Truck } from 'lucide-react';
@@ -36,6 +37,9 @@ export default function ApplyRole() {
   const [vehicleType, setVehicleType] = useState<string>('Bike/Scooter');
   const [serviceArea, setServiceArea] = useState<string>('');
   const [availability, setAvailability] = useState<string>('Full-time');
+  const [idProofType, setIdProofType] = useState<string>('Aadhaar Card');
+  const [drivingLicenseNumber, setDrivingLicenseNumber] = useState<string>('');
+  const [vehicleRegistrationNumber, setVehicleRegistrationNumber] = useState<string>('');
   
   const [submitted, setSubmitted] = useState<boolean>(false);
 
@@ -47,8 +51,19 @@ export default function ApplyRole() {
       }
       const token = await getToken();
       
+      const requiresVehicleDocs = vehicleType === 'Bike/Scooter' || vehicleType === 'Car';
+      
       const details = requestedRole === 'DELIVERY_PARTNER' 
-        ? { fullName, phone, vehicleType, serviceArea, availability, reason }
+        ? { 
+            fullName, 
+            phone, 
+            vehicleType, 
+            serviceArea, 
+            availability, 
+            reason,
+            idProofType,
+            ...(requiresVehicleDocs ? { drivingLicenseNumber, vehicleRegistrationNumber } : {})
+          }
         : { businessName, experience, reason, phone };
         
       await apiClient.post(
@@ -69,7 +84,7 @@ export default function ApplyRole() {
           <CheckCircle2 className="w-12 h-12 mx-auto text-success" />
           <h2 className="text-2xl font-bold font-heading text-success">Application Submitted!</h2>
           <p className="text-sm text-text-secondary max-w-md mx-auto">
-            Your application to become a verified <strong>{requestedRole}</strong> has been received. Our team will review your application shortly.
+            Your application to become a verified <strong>{formatRoleLabel(requestedRole)}</strong> has been received. Our team will review your application shortly.
           </p>
           <button
             onClick={() => navigate('/')}
@@ -200,6 +215,48 @@ export default function ApplyRole() {
                 <option value="Bike/Scooter">Bike/Scooter</option>
                 <option value="Car">Car</option>
                 <option value="On Foot">On Foot</option>
+              </select>
+            </div>
+
+            {(vehicleType === 'Bike/Scooter' || vehicleType === 'Car') && (
+              <>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-primary">Driving License Number *</label>
+                  <input
+                    type="text"
+                    required
+                    value={drivingLicenseNumber}
+                    onChange={(e) => setDrivingLicenseNumber(e.target.value)}
+                    placeholder="e.g. MH0420110012345"
+                    className="w-full px-4 py-3 text-xs bg-background-muted border border-text-muted/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+                </div>
+                
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-text-primary">Vehicle Registration Number *</label>
+                  <input
+                    type="text"
+                    required
+                    value={vehicleRegistrationNumber}
+                    onChange={(e) => setVehicleRegistrationNumber(e.target.value)}
+                    placeholder="e.g. MH 02 AB 1234"
+                    className="w-full px-4 py-3 text-xs bg-background-muted border border-text-muted/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-text-primary">ID Proof Type *</label>
+              <select
+                value={idProofType}
+                onChange={(e) => setIdProofType(e.target.value)}
+                className="w-full px-4 py-3 text-xs bg-background-muted border border-text-muted/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40"
+              >
+                <option value="Aadhaar Card">Aadhaar Card</option>
+                <option value="PAN Card">PAN Card</option>
+                <option value="Passport">Passport</option>
+                <option value="Voter ID">Voter ID</option>
               </select>
             </div>
 

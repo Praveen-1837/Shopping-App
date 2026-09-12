@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
+import { formatRoleLabel } from "../utils/formatters";
 import { ShieldCheck, CheckCircle2, XCircle, RefreshCw, AlertCircle, Clock, Briefcase, Sprout, Award } from 'lucide-react';
 
 interface Application {
@@ -18,6 +19,9 @@ interface Application {
     vehicleType?: string;
     serviceArea?: string;
     availability?: string;
+    idProofType?: string;
+    drivingLicenseNumber?: string;
+    vehicleRegistrationNumber?: string;
   };
   createdAt: string;
   user: {
@@ -85,53 +89,29 @@ export default function AdminOnboarding() {
 
       {/* 3 Separated View Tabs */}
       <div className="flex items-center space-x-3 border-b border-text-muted/20 pb-1">
-        <button
-          onClick={() => setSearchParams({ tab: 'SELLER' })}
-          className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
-            activeTab === 'SELLER'
-              ? 'bg-primary text-white shadow-soft'
-              : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-primary'
-          }`}
-        >
-          <Briefcase className="w-4 h-4" />
-          <span>Seller Approvals</span>
-        </button>
-
-        <button
-          onClick={() => setSearchParams({ tab: 'FARMER' })}
-          className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
-            activeTab === 'FARMER'
-              ? 'bg-secondary text-white shadow-soft'
-              : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-secondary'
-          }`}
-        >
-          <Sprout className="w-4 h-4" />
-          <span>Farmer Approvals</span>
-        </button>
-
-        <button
-          onClick={() => setSearchParams({ tab: 'EDUCATOR' })}
-          className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
-            activeTab === 'EDUCATOR'
-              ? 'bg-accent text-text-primary shadow-soft font-extrabold'
-              : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-accent'
-          }`}
-        >
-          <Award className="w-4 h-4" />
-          <span>Educator Approvals</span>
-        </button>
-
-        <button
-          onClick={() => setSearchParams({ tab: 'DELIVERY_PARTNER' })}
-          className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
-            activeTab === 'DELIVERY_PARTNER'
-              ? 'bg-primary-dark text-white shadow-soft'
-              : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-primary-dark'
-          }`}
-        >
-          <Briefcase className="w-4 h-4" />
-          <span>Delivery Approvals</span>
-        </button>
+        {[
+          { value: 'SELLER', label: 'Seller Approvals', icon: Briefcase },
+          { value: 'FARMER', label: 'Farmer Approvals', icon: Sprout },
+          { value: 'EDUCATOR', label: 'Educator Approvals', icon: Award },
+          { value: 'DELIVERY_PARTNER', label: 'Delivery Approvals', icon: Briefcase }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.value;
+          return (
+            <button
+              key={tab.value}
+              onClick={() => setSearchParams({ tab: tab.value })}
+              className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+                isActive
+                  ? 'bg-primary text-white shadow-soft'
+                  : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-primary'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {isLoading ? (
@@ -178,7 +158,7 @@ export default function AdminOnboarding() {
 
                 <div className="flex items-center space-x-4 text-xs font-medium text-text-secondary">
                   <span>
-                    Requested Role: <strong className="text-primary font-bold">{app.requestedRole}</strong>
+                    Requested Role: <strong className="text-primary font-bold">{formatRoleLabel(app.requestedRole)}</strong>
                   </span>
                   <span>•</span>
                   <span>
@@ -207,6 +187,21 @@ export default function AdminOnboarding() {
                     {app.details.vehicleType && (
                       <p>
                         <strong>Vehicle Type:</strong> {app.details.vehicleType}
+                      </p>
+                    )}
+                    {app.details.drivingLicenseNumber && (
+                      <p>
+                        <strong>Driving License:</strong> {app.details.drivingLicenseNumber}
+                      </p>
+                    )}
+                    {app.details.vehicleRegistrationNumber && (
+                      <p>
+                        <strong>Registration No:</strong> {app.details.vehicleRegistrationNumber}
+                      </p>
+                    )}
+                    {app.details.idProofType && (
+                      <p>
+                        <strong>ID Proof Type:</strong> {app.details.idProofType}
                       </p>
                     )}
                     {app.details.serviceArea && (

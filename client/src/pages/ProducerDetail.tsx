@@ -74,10 +74,10 @@ export default function ProducerDetail() {
       </Link>
 
       {/* Hero Banner Header */}
-      <div className="relative bg-gradient-to-r from-primary/95 to-secondary/95 text-white rounded-3xl p-8 md:p-12 shadow-card overflow-hidden">
+      <div className="relative bg-gradient-to-br from-[#1B2E1E] to-primary text-white rounded-3xl p-8 md:p-12 shadow-card overflow-hidden">
         <div className="relative z-10 space-y-4 max-w-3xl">
           <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/20">
-            <Sprout className="w-4 h-4 text-accent" />
+            <Sprout className="w-4 h-4 text-secondary" />
             <span>Verified Organic Producer</span>
           </div>
 
@@ -87,12 +87,12 @@ export default function ProducerDetail() {
 
           <div className="flex items-center space-x-4 text-xs font-medium text-white/90">
             <span className="flex items-center">
-              <MapPin className="w-4 h-4 mr-1 text-accent" />
+              <MapPin className="w-4 h-4 mr-1 text-secondary" />
               {producer.location}
             </span>
             <span>•</span>
             <span className="flex items-center">
-              <Award className="w-4 h-4 mr-1 text-accent" />
+              <Award className="w-4 h-4 mr-1 text-secondary" />
               {producer.products?.length || 0} Direct Sustainable Offerings
             </span>
           </div>

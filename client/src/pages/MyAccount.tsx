@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, useUser, useClerk } from '@clerk/clerk-react';
+import { formatRoleLabel } from "../utils/formatters";
 import { Link } from 'react-router-dom';
 import apiClient from '../api/axios';
 import Wishlist from './Wishlist';
@@ -83,7 +84,7 @@ interface SupportTicket {
 
 type TabType = 'identity' | 'orders' | 'addresses' | 'payments' | 'security' | 'wishlist' | 'support';
 
-const AVAILABLE_ROLES = ['CUSTOMER', 'SELLER', 'FARMER', 'ARTISAN', 'EDUCATOR', 'ADMIN'];
+const AVAILABLE_ROLES = ['CUSTOMER', 'SELLER', 'FARMER', 'ARTISAN', 'EDUCATOR', 'DELIVERY_PARTNER', 'ADMIN'];
 
 export default function MyAccount() {
   const { getToken } = useAuth();
@@ -523,8 +524,8 @@ export default function MyAccount() {
           <div className="space-y-1">
             <div className="flex items-center space-x-3">
               <h1 className="text-2xl sm:text-3xl font-bold font-heading text-primary">{dbUser?.name || 'My Account'}</h1>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold font-mono border uppercase tracking-wider ${roleBadgeStyle(dbUser?.role)}`}>
-                {dbUser?.role || 'CUSTOMER'}
+              <span className={`px-3 py-1 rounded-full text-xs font-bold font-mono border tracking-wider ${roleBadgeStyle(dbUser?.role)}`}>
+                {formatRoleLabel(dbUser?.role || 'CUSTOMER')}
               </span>
             </div>
             <p className="text-sm text-text-secondary flex items-center space-x-2">

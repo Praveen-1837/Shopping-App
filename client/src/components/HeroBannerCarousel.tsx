@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../api/axios';
 import { PromoBanner } from '../types/banner';
+import { optimizeCloudinaryUrl } from "../utils/formatters";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function HeroBannerCarousel() {
@@ -75,7 +76,7 @@ export default function HeroBannerCarousel() {
           >
             {/* Background Hero Image */}
             <img
-              src={banner.imageUrl}
+              src={optimizeCloudinaryUrl(banner.imageUrl, 1440, 600)}
               alt={banner.title}
               className="absolute inset-0 w-full h-full object-cover"
               loading={idx === 0 ? 'eager' : 'lazy'}

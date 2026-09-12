@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { formatRoleLabel } from "../utils/formatters";
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
 import { Users, Search, RefreshCw, AlertCircle, Ban, CheckCircle2, ShieldAlert } from 'lucide-react';
@@ -153,7 +154,7 @@ export default function AdminUsers() {
                     </td>
                     <td className="py-3.5 px-4">
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-light text-primary border border-primary/20">
-                        {usr.role}
+                        {formatRoleLabel(usr.role)}
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-text-secondary">

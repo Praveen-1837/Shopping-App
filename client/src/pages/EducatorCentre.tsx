@@ -265,7 +265,7 @@ export default function EducatorCentre() {
         <div className="flex items-center space-x-3">
           <Link
             to="/educator/courses/new"
-            className="px-5 py-2.5 bg-secondary text-white text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0 cursor-pointer"
+            className="px-5 py-2.5 bg-secondary text-text-primary text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Create New Course</span>
@@ -329,13 +329,13 @@ export default function EducatorCentre() {
             <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
               Average Course Rating
             </span>
-            <span className="text-3xl font-extrabold font-heading text-accent block flex items-center space-x-1">
-              <Star className="w-6 h-6 text-accent fill-accent" />
+            <span className="text-3xl font-extrabold font-heading text-secondary block flex items-center space-x-1">
+              <Star className="w-6 h-6 text-secondary fill-secondary" />
               <span>{stats.averageRating || 'N/A'}</span>
             </span>
             <span className="text-[11px] text-text-muted">Student feedback average</span>
           </div>
-          <div className="p-3.5 bg-accent/20 text-accent rounded-2xl">
+          <div className="p-3.5 bg-secondary/20 text-secondary rounded-2xl">
             <Star className="w-6 h-6" />
           </div>
         </div>
@@ -419,8 +419,8 @@ export default function EducatorCentre() {
                   className="p-4 rounded-2xl border border-text-muted/15 bg-background-muted/30 flex items-start justify-between text-xs"
                 >
                   <div className="flex items-start space-x-3">
-                    <div className={`p-2 rounded-xl mt-0.5 ${evt.type === 'ENROLLMENT' ? 'bg-primary-light text-primary' : 'bg-accent/20 text-accent'}`}>
-                      {evt.type === 'ENROLLMENT' ? <Users className="w-4 h-4" /> : <Star className="w-4 h-4 fill-accent" />}
+                    <div className={`p-2 rounded-xl mt-0.5 ${evt.type === 'ENROLLMENT' ? 'bg-primary-light text-primary' : 'bg-secondary/20 text-secondary'}`}>
+                      {evt.type === 'ENROLLMENT' ? <Users className="w-4 h-4" /> : <Star className="w-4 h-4 fill-secondary" />}
                     </div>
                     <div>
                       <p className="font-bold text-text-primary">{evt.title}</p>
@@ -447,7 +447,7 @@ export default function EducatorCentre() {
             </h3>
             <Link
               to="/educator/courses/new"
-              className="px-4 py-2 bg-secondary text-white text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-1"
+              className="px-4 py-2 bg-secondary text-text-primary text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-1"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>New Course</span>
@@ -775,7 +775,7 @@ export default function EducatorCentre() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-text-muted/10 pb-4">
             <div>
               <h3 className="font-heading font-bold text-lg text-text-primary flex items-center space-x-2">
-                <Star className="w-5 h-5 text-accent fill-accent" />
+                <Star className="w-5 h-5 text-secondary fill-secondary" />
                 <span>Student Reviews & Public Educator Responses</span>
               </h3>
               <p className="text-xs text-text-muted">
@@ -803,7 +803,7 @@ export default function EducatorCentre() {
           <div className="bg-background-muted/40 p-4 rounded-2xl border border-text-muted/15 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs">
             {[5, 4, 3, 2, 1].map((star) => (
               <div key={star} className="p-2 bg-background-card rounded-xl border border-text-muted/10">
-                <span className="font-bold text-accent flex items-center justify-center space-x-1">
+                <span className="font-bold text-secondary flex items-center justify-center space-x-1">
                   <span>{star} Stars:</span>
                   <strong>{breakdown[star] || 0}</strong>
                 </span>
@@ -829,9 +829,9 @@ export default function EducatorCentre() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <span className="font-bold text-text-primary">{rev.user?.name}</span>
-                      <div className="flex items-center text-accent">
+                      <div className="flex items-center text-secondary">
                         {Array.from({ length: rev.rating }).map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-accent" />
+                          <Star key={i} className="w-3.5 h-3.5 fill-secondary" />
                         ))}
                       </div>
                     </div>

@@ -31,10 +31,10 @@ export default function FarmerCentre() {
   return (
     <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
       {/* Friendly Farmer Header */}
-      <div className="bg-gradient-to-r from-secondary via-primary to-secondary text-white rounded-3xl p-8 md:p-12 shadow-card space-y-4 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-br from-[#1B2E1E] to-primary text-white rounded-3xl p-8 md:p-12 shadow-card space-y-4 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
           <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/20">
-            <Sprout className="w-4 h-4 text-accent" />
+            <Sprout className="w-4 h-4 text-secondary" />
             <span>Organic Farmer Portal</span>
           </div>
 
@@ -49,7 +49,7 @@ export default function FarmerCentre() {
 
         <Link
           to="/seller/products/new"
-          className="px-6 py-4 bg-accent text-text-primary text-base font-bold rounded-2xl hover:bg-accent-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0"
+          className="px-6 py-4 bg-secondary text-text-primary text-base font-bold rounded-2xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0"
         >
           <PlusCircle className="w-6 h-6" />
           <span>Add New Harvest</span>

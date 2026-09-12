@@ -1,3 +1,4 @@
+import { optimizeCloudinaryUrl } from "../utils/formatters";
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -50,7 +51,7 @@ export default function CourseCard({ course }: CourseCardProps) {
         {/* Course Thumbnail */}
         <div className="relative aspect-[16/9] bg-background-muted overflow-hidden">
           <img
-            src={thumbnail}
+            src={optimizeCloudinaryUrl(thumbnail, 600, 338)}
             alt={course.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"

@@ -1,3 +1,4 @@
+import { optimizeCloudinaryUrl } from "../utils/formatters";
 import { ArrowRight, Sprout, Leaf, Sun, Recycle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -104,7 +105,7 @@ export default function CategoryPreviewCard({
                 title={`Browse ${category}: ${realItem.title}`}
               >
                 <img
-                  src={realItem.image}
+                  src={optimizeCloudinaryUrl(realItem.image, 300, 300)}
                   alt={realItem.title}
                   className="w-full h-full object-cover group-hover/slot:scale-105 transition-transform duration-300"
                 />

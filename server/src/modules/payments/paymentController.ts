@@ -71,19 +71,26 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
     // Payment Succeeded — Execute Order Updates + Stock Decrements in a Transaction
     try {
       const updatedOrder = await prisma.$transaction(async (tx) => {
-        // 1. Decrement stock for physical products with bounds checking
-        for (const item of order.items) {
-          if (item.productId && item.itemType !== 'COURSE') {
-            const product = await tx.product.findUnique({ where: { id: item.productId } });
-            if (!product || product.stock < item.quantity) {
-              throw new Error(`Insufficient stock for product ${item.productId}`);
-            }
-            await tx.product.update({
-              where: { id: item.productId },
-              data: { stock: { decrement: item.quantity } }
-            });
+        // 1. Batch fetch products for stock bounds checking
+        const physicalItems = order.items.filter(item => item.productId && item.itemType !== 'COURSE');
+        const products = await Promise.all(
+          physicalItems.map(item => tx.product.findUnique({ where: { id: item.productId! } }))
+        );
+        
+        physicalItems.forEach((item, index) => {
+          const product = products[index];
+          if (!product || product.stock < item.quantity) {
+            throw new Error(`Insufficient stock for product ${item.productId}`);
           }
-        }
+        });
+
+        // 1.5 Batch update stock
+        await Promise.all(
+          physicalItems.map(item => tx.product.update({
+            where: { id: item.productId! },
+            data: { stock: { decrement: item.quantity } }
+          }))
+        );
 
         // 2. Update Order Status
         const orderUpdated = await tx.order.update({
@@ -103,30 +110,26 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
           },
         });
 
-        // 3. Course Activation on Purchase
-        for (const item of order.items) {
-          if (item.courseId || item.itemType === 'COURSE') {
-            const cId = item.courseId;
-            if (cId) {
-              await tx.courseProgress.upsert({
-                where: {
-                  userId_courseId: {
-                    userId: order.userId,
-                    courseId: cId,
-                  },
-                },
-                update: {}, // Keep existing progress if already enrolled
-                create: {
-                  userId: order.userId,
-                  courseId: cId,
-                  completedModules: [],
-                  progressPercent: 0,
-                  certificateIssued: false,
-                },
-              });
-            }
-          }
-        }
+        // 3. Course Activation on Purchase (batched)
+        const courseItems = order.items.filter(item => item.courseId || item.itemType === 'COURSE');
+        await Promise.all(
+          courseItems.map(item => tx.courseProgress.upsert({
+            where: {
+              userId_courseId: {
+                userId: order.userId,
+                courseId: item.courseId!,
+              },
+            },
+            update: {}, // Keep existing progress if already enrolled
+            create: {
+              userId: order.userId,
+              courseId: item.courseId!,
+              completedModules: [],
+              progressPercent: 0,
+              certificateIssued: false,
+            },
+          }))
+        );
 
         // 4. Clear user cart
         await tx.cart.updateMany({
@@ -135,6 +138,8 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
         });
 
         return orderUpdated;
+      }, {
+        timeout: 10000 // Increased safety net timeout
       });
 
       return res.status(200).json({

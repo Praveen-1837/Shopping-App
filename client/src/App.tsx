@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -5,50 +6,50 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import ScrollToTop from './components/ScrollToTop';
 import ChatWidget from './components/ChatWidget';
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import Login from './pages/Login';
-import SignUpPage from './pages/SignUp';
-import MyAccount from './pages/MyAccount';
-import ProductDetail from './pages/ProductDetail';
-import AddEditProduct from './pages/AddEditProduct';
-import MyProducts from './pages/MyProducts';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Payment from './pages/Payment';
-import OrderConfirmation from './pages/OrderConfirmation';
-import Courses from './pages/Courses';
-import CourseDetail from './pages/CourseDetail';
-import AddEditCourse from './pages/AddEditCourse';
-import MyLearning from './pages/MyLearning';
-import CoursePlayer from './pages/CoursePlayer';
-import MyOrders from './pages/MyOrders';
-import OrderDetail from './pages/OrderDetail';
-import Wishlist from './pages/Wishlist';
-import SellerFulfillmentQueue from './pages/SellerFulfillmentQueue';
-import ProducerDetail from './pages/ProducerDetail';
-import SellerCentre from './pages/SellerCentre';
-import FarmerCentre from './pages/FarmerCentre';
-import EducatorCentre from './pages/EducatorCentre';
-import ApplyRole from './pages/ApplyRole';
-import AdminOnboarding from './pages/AdminOnboarding';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminCategories from './pages/AdminCategories';
-import AdminBanners from './pages/AdminBanners';
-import AdminUsers from './pages/AdminUsers';
-import AdminStores from './pages/AdminStores';
-import AdminProducts from './pages/AdminProducts';
-import AdminOrders from './pages/AdminOrders';
-import AdminSettings from './pages/AdminSettings';
-import AdminCancellationRequests from './pages/AdminCancellationRequests';
-import DeliveryCentre from './pages/DeliveryCentre';
-import About from './pages/About';
-import Careers from './pages/Careers';
-import Help from './pages/Help';
-import Returns from './pages/Returns';
-import Contact from './pages/Contact';
-import Privacy from './pages/Privacy';
-import Terms from './pages/Terms';
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const Login = lazy(() => import('./pages/Login'));
+const SignUpPage = lazy(() => import('./pages/SignUp'));
+const MyAccount = lazy(() => import('./pages/MyAccount'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const AddEditProduct = lazy(() => import('./pages/AddEditProduct'));
+const MyProducts = lazy(() => import('./pages/MyProducts'));
+const Cart = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const Payment = lazy(() => import('./pages/Payment'));
+const OrderConfirmation = lazy(() => import('./pages/OrderConfirmation'));
+const Courses = lazy(() => import('./pages/Courses'));
+const CourseDetail = lazy(() => import('./pages/CourseDetail'));
+const AddEditCourse = lazy(() => import('./pages/AddEditCourse'));
+const MyLearning = lazy(() => import('./pages/MyLearning'));
+const CoursePlayer = lazy(() => import('./pages/CoursePlayer'));
+const MyOrders = lazy(() => import('./pages/MyOrders'));
+const OrderDetail = lazy(() => import('./pages/OrderDetail'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
+const SellerFulfillmentQueue = lazy(() => import('./pages/SellerFulfillmentQueue'));
+const ProducerDetail = lazy(() => import('./pages/ProducerDetail'));
+const SellerCentre = lazy(() => import('./pages/SellerCentre'));
+const FarmerCentre = lazy(() => import('./pages/FarmerCentre'));
+const EducatorCentre = lazy(() => import('./pages/EducatorCentre'));
+const ApplyRole = lazy(() => import('./pages/ApplyRole'));
+const AdminOnboarding = lazy(() => import('./pages/AdminOnboarding'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const AdminCategories = lazy(() => import('./pages/AdminCategories'));
+const AdminBanners = lazy(() => import('./pages/AdminBanners'));
+const AdminUsers = lazy(() => import('./pages/AdminUsers'));
+const AdminStores = lazy(() => import('./pages/AdminStores'));
+const AdminProducts = lazy(() => import('./pages/AdminProducts'));
+const AdminOrders = lazy(() => import('./pages/AdminOrders'));
+const AdminSettings = lazy(() => import('./pages/AdminSettings'));
+const AdminCancellationRequests = lazy(() => import('./pages/AdminCancellationRequests'));
+const DeliveryCentre = lazy(() => import('./pages/DeliveryCentre'));
+const About = lazy(() => import('./pages/About'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Help = lazy(() => import('./pages/Help'));
+const Returns = lazy(() => import('./pages/Returns'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
 
 const SELLER_ROLES = ['SELLER', 'FARMER', 'ARTISAN', 'ADMIN'];
 const FARMER_ROLES = ['FARMER', 'SELLER', 'ARTISAN', 'ADMIN'];
@@ -65,6 +66,7 @@ function App() {
           <Navbar />
           <main>
             <ErrorBoundary>
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><div className="mt-4 text-text-muted font-bold text-sm">Loading...</div></div></div>}>
               <Routes>
               {/* Public Catalog & Information Routes */}
               <Route path="/" element={<Home />} />
@@ -379,6 +381,7 @@ function App() {
                 }
               />
             </Routes>
+            </Suspense>
           </ErrorBoundary>
         </main>
         </div>
