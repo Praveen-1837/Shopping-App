@@ -15,7 +15,7 @@ A world-class platform combining commerce, learning, AI-powered discovery, produ
 
 ---
 
-## 🚀 Quick Start (Phase 1 — Foundation)
+## 🚀 Quick Start:
 
 ### 1. Prerequisites
 - Node.js `v18+` or `v22+` installed
