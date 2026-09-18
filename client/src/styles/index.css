@@ -14,7 +14,7 @@
 
 @layer components {
   .brand-wordmark {
-    @apply font-praise tracking-normal;
+    @apply font-logo tracking-wide font-bold;
   }
 
   /* Animated Checkmark Keyframes & Utilities */

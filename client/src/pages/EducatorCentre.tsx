@@ -509,7 +509,7 @@ export default function EducatorCentre() {
 
                   <div className="flex items-center justify-between border-t border-text-muted/10 pt-3">
                     <Link
-                      to={`/courses/${c.id}`}
+                      to={`/course/${c.id}`}
                       className="text-xs font-bold text-secondary hover:underline flex items-center space-x-1"
                     >
                       <Eye className="w-3.5 h-3.5" />

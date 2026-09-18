@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Router } from 'express';
 import { requireAuth } from '@clerk/express';
 import { roleGuard } from '../../middleware/roleGuard';
@@ -18,7 +19,7 @@ router.get('/courses', getCourses);
 router.get('/courses/:id', getCourseById);
 
 // Protected My Learning Routes
-router.get('/my-learning', requireAuth(), getMyLearning);
+router.get('/my-learning', requireAuth(), roleGuard([Role.CUSTOMER]), getMyLearning);
 router.patch('/courses/:id/progress', requireAuth(), updateCourseProgress);
 
 // Educator / Admin Management Routes

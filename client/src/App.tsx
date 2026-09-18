@@ -3,9 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import PartnerLockGuard from './components/PartnerLockGuard';
 import ErrorBoundary from './components/ErrorBoundary';
 import ScrollToTop from './components/ScrollToTop';
 import ChatWidget from './components/ChatWidget';
+import AdminLayout from './components/AdminLayout';
 const Home = lazy(() => import('./pages/Home'));
 const Shop = lazy(() => import('./pages/Shop'));
 const Login = lazy(() => import('./pages/Login'));
@@ -61,13 +63,14 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen bg-background text-text-primary flex flex-col justify-between font-body relative">
+      <div className="min-h-screen bg-background text-text-primary flex flex-col justify-between font-body relative max-w-full overflow-x-hidden">
         <div>
           <Navbar />
           <main>
             <ErrorBoundary>
               <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><div className="mt-4 text-text-muted font-bold text-sm">Loading...</div></div></div>}>
-              <Routes>
+              <PartnerLockGuard>
+            <Routes>
               {/* Public Catalog & Information Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/shop" element={<Shop />} />
@@ -281,86 +284,18 @@ function App() {
               />
 
               {/* Admin Dashboard & Management Routes */}
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/onboarding"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminOnboarding />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/categories"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminCategories />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/banners"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminBanners />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminUsers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/stores"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminStores />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/products"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminProducts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/orders"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminOrders />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/settings"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminSettings />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/cancellation-requests"
-                element={
-                  <ProtectedRoute allowedRoles={ADMIN_ROLES}>
-                    <AdminCancellationRequests />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={ADMIN_ROLES}><AdminLayout /></ProtectedRoute>}>
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="onboarding" element={<AdminOnboarding />} />
+                <Route path="categories" element={<AdminCategories />} />
+                <Route path="banners" element={<AdminBanners />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="stores" element={<AdminStores />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="settings" element={<AdminSettings />} />
+                <Route path="cancellation-requests" element={<AdminCancellationRequests />} />
+              </Route>
               <Route
                 path="*"
                 element={
@@ -381,6 +316,7 @@ function App() {
                 }
               />
             </Routes>
+            </PartnerLockGuard>
             </Suspense>
           </ErrorBoundary>
         </main>

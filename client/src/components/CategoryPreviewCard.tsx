@@ -67,26 +67,27 @@ export default function CategoryPreviewCard({
         }
       }}
       aria-label={`Explore ${category} category`}
-      className="relative z-10 w-full bg-white dark:bg-background-card border border-text-muted/15 rounded-3xl p-5 shadow-card hover:shadow-2xl hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full space-y-4 group cursor-pointer select-none"
+      className="relative z-10 w-full bg-white dark:bg-background-card border border-text-muted/15 rounded-xl sm:rounded-3xl p-2 sm:p-5 shadow-sm sm:shadow-card hover:shadow-md sm:hover:shadow-2xl hover:border-primary/40 hover:-translate-y-0.5 sm:hover:-translate-y-1 transition-all duration-300 flex flex-col items-center sm:items-stretch sm:justify-between h-full gap-1 sm:gap-0 sm:space-y-4 group cursor-pointer select-none text-center sm:text-left"
     >
       {/* Category Heading (Clickable target) */}
       <div
         onClick={handleCardClick}
-        className="flex items-center justify-between cursor-pointer"
+        className="flex flex-col sm:flex-row items-center sm:justify-between cursor-pointer w-full"
         title={`Explore ${category}`}
       >
-        <h3 className="font-heading font-extrabold text-sm sm:text-base text-text-primary tracking-tight group-hover:text-primary transition-colors line-clamp-1">
+        <span className="p-2 sm:p-1.5 bg-primary-light/50 sm:bg-primary-light text-primary rounded-full sm:rounded-xl shrink-0 group-hover:bg-primary group-hover:text-white transition-colors mb-1 sm:mb-0">
+          <Sprout className="w-5 h-5 sm:w-4 sm:h-4" />
+        </span>
+        <h3 className="font-heading font-bold sm:font-extrabold text-[10px] leading-tight sm:text-sm md:text-base text-text-primary tracking-tight group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-none break-words w-full">
           {category}
         </h3>
-        <span className="p-1.5 bg-primary-light text-primary rounded-xl shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-          <Sprout className="w-4 h-4" />
-        </span>
+        <span className="block sm:hidden text-[9px] text-text-muted mt-0.5">{items.length} items</span>
       </div>
 
       {/* 2x2 Quadrant Grid Container */}
       <div
         onClick={handleCardClick}
-        className="grid grid-cols-2 gap-3 aspect-square w-full rounded-2xl overflow-hidden bg-background-muted/40 p-2 border border-text-muted/10 cursor-pointer"
+        className="hidden sm:grid grid-cols-2 gap-3 aspect-square w-full rounded-2xl overflow-hidden bg-background-muted/40 p-2 border border-text-muted/10 cursor-pointer"
         title={`Browse all ${category} products`}
       >
         {Array.from({ length: totalSlots }).map((_, slotIndex) => {
@@ -110,7 +111,7 @@ export default function CategoryPreviewCard({
                   className="w-full h-full object-cover group-hover/slot:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-1.5">
-                  <p className="text-[10px] text-white font-bold leading-tight line-clamp-1 drop-shadow-xs">
+                  <p className="text-[10px] text-white font-bold leading-tight break-words drop-shadow-xs">
                     {realItem.title}
                   </p>
                 </div>
@@ -146,7 +147,7 @@ export default function CategoryPreviewCard({
       {/* Footer Link Action */}
       <div
         onClick={handleCardClick}
-        className="flex items-center justify-between text-xs sm:text-sm font-bold text-primary group-hover:text-primary-hover pt-1 cursor-pointer"
+        className="hidden sm:flex items-center justify-between text-xs sm:text-sm font-bold text-primary group-hover:text-primary-hover pt-1 cursor-pointer"
         title={`Shop ${category}`}
       >
         <span className="inline-flex items-center space-x-1.5">

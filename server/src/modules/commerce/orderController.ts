@@ -113,7 +113,7 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
           });
         }
       } else if (isDeliveryPartner) {
-        const deliveryAllowedStatuses: string[] = [OrderStatus.IN_TRANSIT, OrderStatus.OUT_FOR_DELIVERY, OrderStatus.DELIVERED];
+        const deliveryAllowedStatuses: string[] = [OrderStatus.SHIPPED, OrderStatus.IN_TRANSIT, OrderStatus.OUT_FOR_DELIVERY, OrderStatus.DELIVERED];
         if (!deliveryAllowedStatuses.includes(newStatus as string)) {
           return res.status(403).json({
             success: false,
@@ -152,6 +152,7 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
       where: { id },
       data: {
         status: newStatus as OrderStatus,
+        ...(newStatus === OrderStatus.DELIVERED ? { deliveredAt: new Date() } : {}),
         ...(newStatus === OrderStatus.CANCELLED && typeof cancellationReason === 'string'
           ? { cancellationReason: cancellationReason.trim() || null }
           : {}),

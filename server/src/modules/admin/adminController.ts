@@ -6,28 +6,50 @@ import { OrderStatus } from '@prisma/client';
 // GET /api/v1/admin/stats
 export const getAdminStats = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const revenueResult = await prisma.order.aggregate({
-      _sum: { total: true },
-      where: { paymentStatus: 'SUCCESS' },
-    });
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-    const totalRevenue = Number(revenueResult._sum.total || 0);
+    const revTotal = await prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'SUCCESS' } });
+    const revCurrent = await prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'SUCCESS', createdAt: { gte: currentMonthStart } } });
+    const revLast = await prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: 'SUCCESS', createdAt: { gte: lastMonthStart, lt: currentMonthStart } } });
+
+    const calcTrend = (curr: number, prev: number) => {
+      if (prev === 0) return null;
+      return ((curr - prev) / prev) * 100;
+    };
+
+    const revenueTrend = calcTrend(Number(revCurrent._sum.total || 0), Number(revLast._sum.total || 0));
+
     const totalOrders = await prisma.order.count();
+    const currOrders = await prisma.order.count({ where: { createdAt: { gte: currentMonthStart } } });
+    const lastOrders = await prisma.order.count({ where: { createdAt: { gte: lastMonthStart, lt: currentMonthStart } } });
+    const ordersTrend = calcTrend(currOrders, lastOrders);
+
     const totalProducts = await prisma.product.count();
+    const currProducts = await prisma.product.count({ where: { createdAt: { gte: currentMonthStart } } });
+    const lastProducts = await prisma.product.count({ where: { createdAt: { gte: lastMonthStart, lt: currentMonthStart } } });
+    const productsTrend = calcTrend(currProducts, lastProducts);
+
     const totalUsers = await prisma.user.count();
-    const totalStores = await prisma.user.count({
-      where: {
-        role: { in: ['SELLER', 'FARMER', 'ARTISAN'] },
-      },
-    });
+    const currUsers = await prisma.user.count({ where: { createdAt: { gte: currentMonthStart } } });
+    const lastUsers = await prisma.user.count({ where: { createdAt: { gte: lastMonthStart, lt: currentMonthStart } } });
+    const usersTrend = calcTrend(currUsers, lastUsers);
+
+    const totalStores = await prisma.user.count({ where: { role: { in: ['SELLER', 'FARMER', 'ARTISAN'] } } });
 
     res.status(200).json({
       success: true,
       data: {
-        totalRevenue,
+        totalRevenue: Number(revTotal._sum.total || 0),
+        revenueTrend,
+        currentMonthRevenue: Number(revCurrent._sum.total || 0),
         totalOrders,
+        ordersTrend,
         totalProducts,
+        productsTrend,
         totalUsers,
+        usersTrend,
         totalStores,
       },
     });
@@ -673,7 +695,7 @@ export const updateAdminSettings = async (req: Request, res: Response, next: Nex
           flatShippingFee: flatShippingFee !== undefined ? Number(flatShippingFee) : 0,
           estimatedDeliveryDays: estimatedDeliveryDays || '5-7 business days',
           legalDisclaimerText: legalDisclaimerText || 'Product information is provided by individual sellers and producers on this platform. Please review packaging and product details carefully before use. For food items, always check for allergens and storage instructions. This platform does not independently verify seller-provided claims.',
-        } as any,
+        },
       });
     } else {
       settings = await prisma.siteSettings.update({
@@ -685,7 +707,7 @@ export const updateAdminSettings = async (req: Request, res: Response, next: Nex
           ...(flatShippingFee !== undefined && { flatShippingFee: Number(flatShippingFee) }),
           ...(estimatedDeliveryDays !== undefined && { estimatedDeliveryDays: String(estimatedDeliveryDays).trim() }),
           ...(legalDisclaimerText !== undefined && { legalDisclaimerText: String(legalDisclaimerText).trim() }),
-        } as any,
+        },
       });
     }
 
@@ -850,6 +872,192 @@ export const rejectCancellation = async (req: Request, res: Response, next: Next
       success: true,
       message: 'Cancellation request rejected',
       data: updatedOrder,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/v1/admin/analytics
+export const getAdminAnalytics = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+
+    const orders = await prisma.order.findMany({
+      where: {
+        paymentStatus: 'SUCCESS',
+        createdAt: { gte: new Date(currentYear, 0, 1) }
+      },
+      select: { total: true, createdAt: true }
+    });
+
+    const monthlyRevenue = Array.from({ length: 12 }, (_, i) => ({
+      month: new Date(currentYear, i).toLocaleString('default', { month: 'short' }),
+      revenue: 0
+    }));
+
+    orders.forEach(order => {
+      const month = order.createdAt.getMonth();
+      monthlyRevenue[month].revenue += Number(order.total);
+    });
+
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const currentMonthOrders = await prisma.order.findMany({
+      where: { createdAt: { gte: currentMonthStart } },
+      select: { userId: true }
+    });
+
+    const uniqueUsersThisMonth = [...new Set(currentMonthOrders.map(o => o.userId).filter(Boolean))];
+    
+    let newCustomers = 0;
+    let returningCustomers = 0;
+
+    for (const userId of uniqueUsersThisMonth) {
+      if (!userId) continue;
+      const firstOrder = await prisma.order.findFirst({
+        where: { userId },
+        orderBy: { createdAt: 'asc' }
+      });
+      if (firstOrder && firstOrder.createdAt >= currentMonthStart) {
+        newCustomers++;
+      } else {
+        returningCustomers++;
+      }
+    }
+
+    const orderItems = await prisma.orderItem.findMany({
+      where: {
+        order: {
+          paymentStatus: 'SUCCESS',
+          createdAt: { gte: currentMonthStart }
+        }
+      },
+      include: {
+        product: true
+      }
+    });
+
+    const categoryMap: Record<string, number> = {};
+    orderItems.forEach(item => {
+      if (item.product && item.product.category) {
+        const cat = item.product.category;
+        const lineTotal = Number(item.price) * item.quantity;
+        categoryMap[cat] = (categoryMap[cat] || 0) + lineTotal;
+      }
+    });
+    
+    const topCategories = Object.keys(categoryMap).map(cat => ({ name: cat, revenue: categoryMap[cat] })).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+    // --- NEW ANALYTICS ---
+    const allOrderItems = await prisma.orderItem.findMany({
+      where: {
+        order: { paymentStatus: 'SUCCESS' },
+        product: { isNot: null }
+      },
+      include: { product: true }
+    });
+
+    const productSalesMap: Record<string, { id: string, title: string, category: string, image: string, totalOrders: number, revenue: number }> = {};
+    
+    allOrderItems.forEach(item => {
+      if (item.product) {
+        const pId = item.product.id;
+        const lineTotal = Number(item.price) * item.quantity;
+        
+        if (!productSalesMap[pId]) {
+          productSalesMap[pId] = {
+            id: pId,
+            title: item.product.title,
+            category: item.product.category,
+            image: item.product.images[0] || '',
+            totalOrders: 0,
+            revenue: 0
+          };
+        }
+        productSalesMap[pId].totalOrders += 1;
+        productSalesMap[pId].revenue += lineTotal;
+      }
+    });
+
+    const bestSellingProducts = Object.values(productSalesMap).sort((a, b) => b.totalOrders - a.totalOrders).slice(0, 10);
+
+    const totalItemsAgg = await prisma.orderItem.aggregate({
+      where: { order: { paymentStatus: 'SUCCESS' } },
+      _sum: { quantity: true }
+    });
+    const totalItemsSold = totalItemsAgg._sum.quantity || 0;
+
+    const successfulOrderCount = await prisma.order.count({
+      where: { paymentStatus: 'SUCCESS' }
+    });
+    
+    const settings = await prisma.siteSettings.findFirst();
+    const flatShippingFee = Number(settings?.flatShippingFee || 0);
+    const totalShippingCost = successfulOrderCount * flatShippingFee;
+
+    const pendingOrdersCount = await prisma.order.count({
+      where: {
+        status: { in: ['PENDING', 'CONFIRMED'] }
+      }
+    });
+
+    const cancelledOrdersCount = await prisma.order.count({
+      where: { status: 'CANCELLED' }
+    });
+
+    const pendingRoleApplications = await prisma.roleApplication.count({
+      where: { status: 'PENDING' }
+    });
+
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const weeklyOrders = await prisma.order.findMany({
+      where: {
+        paymentStatus: 'SUCCESS',
+        createdAt: { gte: sevenDaysAgo }
+      },
+      select: { total: true, createdAt: true }
+    });
+
+    const weeklySales: { day: string, revenue: number }[] = [];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      weeklySales.push({ day: dayNames[d.getDay()], revenue: 0 });
+    }
+
+    weeklyOrders.forEach(o => {
+      const dayName = dayNames[o.createdAt.getDay()];
+      const dayObj = weeklySales.find(ws => ws.day === dayName);
+      if (dayObj) {
+        dayObj.revenue += Number(o.total);
+      }
+    });
+
+    const totalCustomersThisMonth = uniqueUsersThisMonth.length;
+    // --- END NEW ANALYTICS ---
+
+    res.status(200).json({
+      success: true,
+      data: {
+        monthlyRevenue,
+        customerStats: [
+          { name: 'New Customers', value: newCustomers },
+          { name: 'Returning', value: returningCustomers },
+          { name: 'Total Customers This Month', value: totalCustomersThisMonth }
+        ],
+        topCategories,
+        bestSellingProducts,
+        totalItemsSold,
+        totalShippingCost,
+        pendingOrdersCount,
+        cancelledOrdersCount,
+        pendingRoleApplications,
+        weeklySales
+      }
     });
   } catch (error) {
     next(error);

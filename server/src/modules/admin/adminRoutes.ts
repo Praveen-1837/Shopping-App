@@ -20,6 +20,7 @@ import {
   getCancellationRequests,
   approveCancellation,
   rejectCancellation,
+  getAdminAnalytics,
 } from './adminController';
 
 const router = Router();
@@ -29,6 +30,7 @@ router.use('/admin', roleGuard(['ADMIN']));
 
 // Stats Endpoint
 router.get('/admin/stats', getAdminStats);
+router.get('/admin/analytics', getAdminAnalytics);
 
 // Stores Directory Endpoint
 router.get('/admin/stores', getAdminStores);

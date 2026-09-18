@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Router } from 'express';
 import { requireAuth } from '@clerk/express';
 import { roleGuard } from '../../middleware/roleGuard';
@@ -16,8 +17,8 @@ const router = Router();
 router.get('/order-transitions', getOrderTransitions);
 
 // Customer Order History & Detail
-router.get('/my-world/orders', requireAuth(), getMyOrders);
-router.get('/orders/:id', requireAuth(), getOrderDetail);
+router.get('/my-world/orders', requireAuth(), roleGuard([Role.CUSTOMER]), getMyOrders);
+router.get('/orders/:id', requireAuth(), roleGuard([Role.CUSTOMER]), getOrderDetail);
 
 // Seller Order Management Queue & Status Transition
 router.get('/seller/orders', requireAuth(), roleGuard(['SELLER', 'FARMER', 'ARTISAN', 'ADMIN']), getSellerOrders);

@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Router } from 'express';
 import { roleGuard } from '../../middleware/roleGuard';
 import { requireAuth } from '../../middleware/requireAuth';
@@ -31,7 +32,7 @@ router.get('/educator/courses/:id/reviews', roleGuard([...EDUCATOR_ROLES]), getC
 router.patch('/reviews/:id/reply', roleGuard([...EDUCATOR_ROLES]), replyToReview);
 
 // Public Student Review Routes
-router.post('/courses/:id/reviews', requireAuth, addCourseReview);
+router.post('/courses/:id/reviews', requireAuth, roleGuard([Role.CUSTOMER]), addCourseReview);
 router.get('/courses/:id/reviews', getPublicCourseReviews);
 
 export default router;

@@ -23,22 +23,54 @@ export const getDeliveryOrders = async (req: Request, res: Response, next: NextF
     }
 
     // For this demo, we use a shared pool of orders. Realistically, these would be assigned to specific riders.
-    const orders = await prisma.order.findMany({
-      where: {
-        status: {
-          in: [OrderStatus.SHIPPED, OrderStatus.IN_TRANSIT, OrderStatus.OUT_FOR_DELIVERY],
+    
+    // Pagination parameters
+    const page = parseInt((req.query.page as string) || '1');
+    const limit = parseInt((req.query.limit as string) || '20');
+    const skip = (page - 1) * limit;
+    const historyMode = req.query.history === 'true';
+
+    const whereClause: any = {};
+    
+    // TODO: add per-partner assignment before production
+    // For this demo, ANY approved Delivery Partner sees ALL orders platform-wide.
+    // if (dbUser.role === Role.DELIVERY_PARTNER) {
+    //   whereClause.deliveryPartnerId = dbUser.id;
+    // }
+
+    if (historyMode) {
+      whereClause.status = OrderStatus.DELIVERED;
+    } else {
+      whereClause.status = {
+        in: [OrderStatus.PACKED, OrderStatus.SHIPPED, OrderStatus.IN_TRANSIT, OrderStatus.OUT_FOR_DELIVERY],
+      };
+    }
+
+    const [orders, totalOrders] = await Promise.all([
+      prisma.order.findMany({
+        where: whereClause,
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          items: true,
         },
-      },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        items: true,
-      },
-    });
+        skip,
+        take: limit,
+      }),
+      prisma.order.count({ where: whereClause })
+    ]);
 
     return res.status(200).json({
       success: true,
       data: orders,
+      pagination: {
+        total: totalOrders,
+        page,
+        limit,
+        totalPages: Math.ceil(totalOrders / limit)
+      }
     });
+
+
   } catch (error) {
     next(error);
   }

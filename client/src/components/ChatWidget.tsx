@@ -21,6 +21,7 @@ interface ChatMessage {
 export default function ChatWidget() {
   const { isAdmin } = useUserRole();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const [isInitialEntrance, setIsInitialEntrance] = useState(true);
   const [showPulse, setShowPulse] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -201,7 +202,7 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className={`fixed right-4 sm:right-6 z-50 transition-all duration-300 ease-out ${isOpen ? 'bottom-4 sm:bottom-6' : 'bottom-20 sm:bottom-6'} ${isScrolling && !isOpen ? 'opacity-40 scale-75 translate-y-8 sm:translate-y-0 sm:opacity-100 sm:scale-100' : 'opacity-100 scale-100 translate-y-0'}`}>
       {/* Floating Trigger Button with Entrance & Attention Pulse */}
       {!isOpen && (
         <div className="relative group">
@@ -236,7 +237,7 @@ export default function ChatWidget() {
 
       {/* Chat Box Drawer */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[420px] h-[540px] bg-background-card/95 backdrop-blur-md border border-text-muted/20 rounded-3xl shadow-card flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="w-[calc(100vw-32px)] sm:w-[420px] max-w-full h-[540px] max-h-[85vh] bg-background-card/95 backdrop-blur-md border border-text-muted/20 rounded-3xl shadow-card flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
           <div className="bg-ai p-4 text-white flex items-center justify-between">
             <div className="flex items-center space-x-2.5">

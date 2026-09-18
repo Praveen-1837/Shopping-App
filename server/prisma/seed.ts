@@ -74,6 +74,8 @@ async function main() {
       stock: 45,
       images: [
         'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=800',
+        'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=600'
       ],
       sustainabilityTags: ['Organically Grown', 'Zero Pesticides', 'Direct Trade'],
     },
@@ -85,6 +87,8 @@ async function main() {
       stock: 20,
       images: [
         'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+        'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=600',
+        'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=600'
       ],
       sustainabilityTags: ['Handmade', 'Plastic-Free', 'Fair Wage'],
     },

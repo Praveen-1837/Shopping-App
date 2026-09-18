@@ -28,6 +28,7 @@ This produces a matched pattern, style, color palette, typography pairing, and a
 | Footer Text Muted | #B0C2B3 | Soft leaf text for footer sublinks |
 
 ## 4. Typography (placeholder — replace with generated pairing)
+- **Logo Wordmark:** Italiana (Elegant, graceful serif) — used for brand name in headers/footers.
 - **Headings:** A humanist serif or rounded sans (e.g., Fraunces or Sora) — conveys warmth + credibility.
 - **Body:** A clean, highly legible sans (e.g., Inter or Public Sans) — for product descriptions, course content, dashboards.
 

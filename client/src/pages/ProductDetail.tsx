@@ -748,40 +748,6 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Similar Items Widget */}
-              {product.similarProducts && product.similarProducts.length > 0 && (
-                <div className="space-y-3 pt-2">
-                  <h4 className="text-xs font-bold font-heading text-primary uppercase tracking-wider flex items-center space-x-1.5">
-                    <SparklesIcon className="w-4 h-4 text-primary" />
-                    <span>Consider A Similar Item</span>
-                  </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {product.similarProducts.map((item) => (
-                      <Link
-                        key={item.id}
-                        to={`/product/${item.id}`}
-                        className="group bg-background-card p-2.5 rounded-2xl border border-text-muted/15 hover:border-primary/40 shadow-soft transition-all space-y-2 flex flex-col justify-between"
-                      >
-                        <div className="aspect-square rounded-xl overflow-hidden bg-background-muted">
-                          <img
-                            src={item.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800'}
-                            alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <h5 className="text-[11px] font-semibold text-text-primary line-clamp-2 leading-snug group-hover:text-primary transition-colors">
-                            {item.title}
-                          </h5>
-                          <span className="text-xs font-bold font-heading text-primary block">
-                            ₹{Number(item.price).toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* COLUMN 3: STICKY FLOATING BUY BOX (3 Cols, Sticky on Desktop) */}
@@ -994,6 +960,40 @@ export default function ProductDetail() {
             </div>
           </div>
         </section>
+              {/* Similar Items Widget */}
+              {product.similarProducts && product.similarProducts.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-xs font-bold font-heading text-primary uppercase tracking-wider flex items-center space-x-1.5">
+                    <SparklesIcon className="w-4 h-4 text-primary" />
+                    <span>Consider A Similar Item</span>
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {product.similarProducts.map((item) => (
+                      <Link
+                        key={item.id}
+                        to={`/product/${item.id}`}
+                        className="group bg-background-card p-2.5 rounded-2xl border border-text-muted/15 hover:border-primary/40 shadow-soft transition-all space-y-2 flex flex-col justify-between"
+                      >
+                        <div className="aspect-square rounded-xl overflow-hidden bg-background-muted">
+                          <img
+                            src={item.images?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800'}
+                            alt={item.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <h5 className="text-[11px] font-semibold text-text-primary line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+                            {item.title}
+                          </h5>
+                          <span className="text-xs font-bold font-heading text-primary block">
+                            ₹{Number(item.price).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
         {/* SECTION 3: REVIEWS & CUSTOMER FEEDBACK */}
         <section id="reviews" className="scroll-mt-28 space-y-6">

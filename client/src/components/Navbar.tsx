@@ -24,6 +24,7 @@ import {
   Package,
   Settings,
   UserCheck,
+  User,
   Sparkles,
   ShieldAlert,
 } from 'lucide-react';
@@ -339,20 +340,27 @@ export default function Navbar({
             </button>
           </form>
 
-          {/* Right Action Icons: Account & Lists Dropdown + Shopping Cart */}
-          <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
-            {/* Amazon-Style Account & Lists Dropdown */}
-            <AccountListsDropdown />
+          {/* Right Action Icons: Account & Cart */}
+          <div className="flex items-center justify-end space-x-1 sm:space-x-4 shrink-0">
+            {/* Desktop Amazon-Style Account Dropdown */}
+            <div className="hidden md:block">
+              <AccountListsDropdown />
+            </div>
+
+            {/* Mobile simple Account Icon */}
+            <Link to={user ? "/my-account" : "/login"} className="md:hidden p-1.5 rounded-full text-text-primary hover:bg-background-muted flex items-center justify-center" aria-label="Account">
+               <User className="w-5 h-5 text-primary" />
+            </Link>
 
             {/* Shopping Cart Link */}
             <Link
               to="/cart"
-              className="relative p-2 rounded-xl text-text-primary hover:bg-background-muted hover:text-primary transition-colors flex items-center space-x-1"
+              className="relative p-1.5 sm:p-2 rounded-full sm:rounded-xl text-text-primary hover:bg-background-muted hover:text-primary transition-colors flex items-center justify-center"
               aria-label="View Shopping Cart"
             >
-              <ShoppingCart className="w-5.5 h-5.5 text-primary" />
+              <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-primary" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-secondary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-soft animate-scale-in">
+                <span className="absolute -top-1 -right-0 sm:-right-1 bg-secondary text-white text-[9px] sm:text-[10px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-soft animate-scale-in">
                   {cartItemCount}
                 </span>
               )}
@@ -360,7 +368,7 @@ export default function Navbar({
 
             {/* Clerk User Avatar (when signed in) */}
             <SignedIn>
-              <div className="hidden sm:flex items-center space-x-2 pl-2 border-l border-text-muted/20">
+              <div className="hidden md:flex items-center space-x-2 pl-2 border-l border-text-muted/20">
                 <UserButton
                   afterSignOutUrl="/"
                   appearance={{
@@ -401,7 +409,7 @@ export default function Navbar({
         {/* Secondary Category Shortcuts Tier (Horizontally Scrollable with Scroll Snap & Fade Cue) */}
         <div className="bg-background-muted/50 border-t border-text-muted/10 py-1.5 relative">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative after:pointer-events-none after:absolute after:right-0 after:top-0 after:bottom-0 after:w-10 after:bg-gradient-to-l after:from-background-card/90 after:to-transparent md:after:hidden">
-            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth text-xs font-medium text-text-secondary pr-8 md:pr-0">
+            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap scroll-smooth text-xs font-medium text-text-secondary pr-8 md:pr-0 w-full">
               <button
                 onClick={() => handleQuickCategoryClick('All Categories')}
                 className={`px-3 py-1 rounded-lg shrink-0 snap-start transition-colors cursor-pointer ${

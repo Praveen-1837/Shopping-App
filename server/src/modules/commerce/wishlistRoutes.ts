@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+import { roleGuard } from '../../middleware/roleGuard';
 import { Router } from 'express';
 import { requireAuth } from '@clerk/express';
 import {
@@ -8,8 +10,8 @@ import {
 
 const router = Router();
 
-router.get('/wishlist', requireAuth(), getWishlist);
-router.post('/wishlist', requireAuth(), addToWishlist);
-router.delete('/wishlist/:id', requireAuth(), removeFromWishlist);
+router.get('/wishlist', requireAuth(), roleGuard([Role.CUSTOMER]), getWishlist);
+router.post('/wishlist', requireAuth(), roleGuard([Role.CUSTOMER]), addToWishlist);
+router.delete('/wishlist/:id', requireAuth(), roleGuard([Role.CUSTOMER]), removeFromWishlist);
 
 export default router;

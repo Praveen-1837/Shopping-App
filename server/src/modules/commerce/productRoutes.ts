@@ -37,6 +37,6 @@ router.delete('/products/:id', requireAuth(), roleGuard(SELLER_ROLES), deletePro
 
 // Product Review Endpoints
 router.get('/products/:id/reviews', getProductReviews);
-router.post('/products/:id/reviews', requireAuth(), addProductReview);
+router.post('/products/:id/reviews', requireAuth(), roleGuard([Role.CUSTOMER]), addProductReview);
 
 export default router;

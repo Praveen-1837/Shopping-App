@@ -58,7 +58,7 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-[1480px] mx-auto py-6 px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+    <div className="max-w-[1480px] mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
       {/* Intro Header & Brand Messaging */}
       <div className="space-y-1.5 pt-1">
         <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
@@ -82,7 +82,7 @@ export default function Home() {
         <HeroBannerCarousel />
 
         {/* Category Quadrants Grid - Sitting directly inside the fade zone with zero dead space */}
-        <div className="relative z-20 mt-1 md:-mt-48 lg:-mt-72 px-3 sm:px-6 pb-6 sm:pb-8 space-y-4">
+        <div className="relative z-20 mt-4 sm:mt-6 px-3 sm:px-6 pb-6 sm:pb-8 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-heading font-extrabold text-text-primary tracking-tight bg-[#FAF7F2]/90 backdrop-blur-xs px-3 py-1 rounded-xl">
               Explore Eco Collections
@@ -98,7 +98,7 @@ export default function Home() {
 
           {/* Responsive Grid Layout */}
           <div className="relative">
-            <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-3 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 items-stretch scroll-smooth pb-2 md:pb-0">
+            <div className="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 items-stretch">
               {(previewData?.data || []).map((prev: any) => (
                 <CategoryPreviewCard
                   key={prev.category}
@@ -155,7 +155,7 @@ export default function Home() {
             <h3 className="text-base font-bold font-heading">No Featured Products</h3>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
