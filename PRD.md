@@ -1,7 +1,7 @@
 # PRD.md — Product Requirements Document
 
 ## 1. Product Name
-[YOUR PLATFORM NAME] — a multi-vendor e-commerce & digital learning ecosystem.
+EcoMarket— a multi-vendor e-commerce & digital learning ecosystem.
 
 ## 2. Vision
 Build a world-class platform combining commerce, learning, AI-powered discovery, producer stories, traceability, community and measurable sustainability impact — comparable in polish and scale to Amazon/Flipkart/Myntra, but differentiated by a focus on sustainable products, farmers, artisans, and knowledge.
