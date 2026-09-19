@@ -93,7 +93,7 @@ export default function Checkout() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Preparing checkout details...</p>
+        <p className="text-base font-medium">Preparing checkout details...</p>
       </div>
     );
   }
@@ -103,19 +103,19 @@ export default function Checkout() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-text-muted/15 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-primary font-semibold text-xs uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-primary font-semibold text-sm uppercase tracking-wider mb-1">
             <Truck className="w-4 h-4" />
             <span>Step 1 of 2</span>
           </div>
           <h1 className="text-3xl font-bold font-heading text-primary">Delivery Address</h1>
-          <p className="text-sm text-text-secondary">
+          <p className="text-base text-text-secondary">
             Enter or pick a saved shipping address for your physical marketplace items
           </p>
         </div>
 
         <Link
           to="/cart"
-          className="flex items-center space-x-1 text-xs text-text-secondary hover:text-primary transition-colors"
+          className="flex items-center space-x-1 text-sm text-text-secondary hover:text-primary transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Cart</span>
@@ -136,14 +136,14 @@ export default function Checkout() {
             {/* Pick Saved Address Selector */}
             {savedAddresses.length > 0 && (
               <div className="p-4 bg-primary-light/40 border border-primary/20 rounded-xl space-y-2">
-                <label className="block text-xs font-bold text-primary uppercase tracking-wider flex items-center space-x-1.5">
+                <label className="block text-sm font-bold text-primary uppercase tracking-wider flex items-center space-x-1.5">
                   <BookmarkCheck className="w-4 h-4" />
                   <span>Pick a Saved Address from Profile</span>
                 </label>
                 <select
                   value={selectedAddrId}
                   onChange={(e) => handleSelectSavedAddress(e.target.value)}
-                  className="w-full px-3 py-2 bg-background-card border border-primary/30 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+                  className="w-full px-3 py-2 bg-background-card border border-primary/30 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
                 >
                   <option value="">-- Choose a Saved Address --</option>
                   {savedAddresses.map((addr) => (
@@ -157,7 +157,7 @@ export default function Checkout() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-text-primary">
+                <label className="block text-sm font-semibold text-text-primary">
                   Full Recipient Name <span className="text-error">*</span>
                 </label>
                 <input
@@ -165,12 +165,12 @@ export default function Checkout() {
                   required
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-text-primary">
+                <label className="block text-sm font-semibold text-text-primary">
                   Contact Phone Number <span className="text-error">*</span>
                 </label>
                 <input
@@ -178,13 +178,13 @@ export default function Checkout() {
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Street Address <span className="text-error">*</span>
               </label>
               <input
@@ -193,13 +193,13 @@ export default function Checkout() {
                 placeholder="House No, Apartment, Street name"
                 value={streetAddress}
                 onChange={(e) => setStreetAddress(e.target.value)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-text-primary">
+                <label className="block text-sm font-semibold text-text-primary">
                   City <span className="text-error">*</span>
                 </label>
                 <input
@@ -207,12 +207,12 @@ export default function Checkout() {
                   required
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-text-primary">
+                <label className="block text-sm font-semibold text-text-primary">
                   State / Region <span className="text-error">*</span>
                 </label>
                 <input
@@ -220,12 +220,12 @@ export default function Checkout() {
                   required
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-semibold text-text-primary">
+                <label className="block text-sm font-semibold text-text-primary">
                   Postal Code (PIN) <span className="text-error">*</span>
                 </label>
                 <input
@@ -233,7 +233,7 @@ export default function Checkout() {
                   required
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
             </div>
@@ -241,7 +241,7 @@ export default function Checkout() {
 
           <button
             type="submit"
-            className="w-full py-4 bg-primary text-white hover:bg-primary-hover font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer"
+            className="w-full py-4 bg-primary text-white hover:bg-primary-hover font-semibold text-base rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>Proceed to Payment Method</span>
             <ArrowRight className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function Checkout() {
 
             <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
               {cartItems.map((item) => (
-                <div key={item.productId} className="flex items-center justify-between text-xs">
+                <div key={item.productId} className="flex items-center justify-between text-sm">
                   <div className="flex items-center space-x-3">
                     <img src={item.image} alt={item.title} className="w-10 h-10 rounded-lg object-cover border" />
                     <div>
@@ -272,7 +272,7 @@ export default function Checkout() {
               ))}
             </div>
 
-            <div className="border-t border-text-muted/10 pt-3 space-y-1.5 text-xs text-text-secondary">
+            <div className="border-t border-text-muted/10 pt-3 space-y-1.5 text-sm text-text-secondary">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span className="font-semibold text-text-primary">₹{subtotal.toFixed(2)}</span>
@@ -281,7 +281,7 @@ export default function Checkout() {
                 <span>Shipping</span>
                 <span className="font-semibold text-text-primary">{shipping === 0 ? 'FREE' : `₹${shipping.toFixed(2)}`}</span>
               </div>
-              <div className="flex justify-between text-sm font-bold text-text-primary pt-2 border-t">
+              <div className="flex justify-between text-base font-bold text-text-primary pt-2 border-t">
                 <span>Total</span>
                 <span className="text-primary font-heading text-lg">₹{total.toFixed(2)}</span>
               </div>

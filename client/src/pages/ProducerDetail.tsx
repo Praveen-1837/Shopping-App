@@ -36,7 +36,7 @@ export default function ProducerDetail() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Loading producer story & profile...</p>
+        <p className="text-base font-medium">Loading producer story & profile...</p>
       </div>
     );
   }
@@ -47,12 +47,12 @@ export default function ProducerDetail() {
         <div className="bg-error-light border border-error/30 rounded-2xl p-8 space-y-4">
           <AlertCircle className="w-10 h-10 mx-auto text-error" />
           <h2 className="text-2xl font-bold text-error font-heading">Producer Profile Not Found</h2>
-          <p className="text-xs text-error/90 max-w-md mx-auto">
+          <p className="text-sm text-error/90 max-w-md mx-auto">
             {(error as any)?.response?.data?.error?.message || 'The requested producer profile does not exist.'}
           </p>
           <Link
             to="/shop"
-            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors"
+            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Marketplace</span>
@@ -67,7 +67,7 @@ export default function ProducerDetail() {
       {/* Back Button */}
       <Link
         to="/shop"
-        className="inline-flex items-center space-x-2 text-sm font-medium text-text-secondary hover:text-primary transition-colors"
+        className="inline-flex items-center space-x-2 text-base font-medium text-text-secondary hover:text-primary transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         <span>Back to Marketplace</span>
@@ -76,7 +76,7 @@ export default function ProducerDetail() {
       {/* Hero Banner Header */}
       <div className="relative bg-gradient-to-br from-[#1B2E1E] to-primary text-white rounded-3xl p-8 md:p-12 shadow-card overflow-hidden">
         <div className="relative z-10 space-y-4 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/20">
+          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-sm font-semibold border border-white/20">
             <Sprout className="w-4 h-4 text-secondary" />
             <span>Verified Organic Producer</span>
           </div>
@@ -85,7 +85,7 @@ export default function ProducerDetail() {
             {producer.name}
           </h1>
 
-          <div className="flex items-center space-x-4 text-xs font-medium text-white/90">
+          <div className="flex items-center space-x-4 text-sm font-medium text-white/90">
             <span className="flex items-center">
               <MapPin className="w-4 h-4 mr-1 text-secondary" />
               {producer.location}
@@ -109,7 +109,7 @@ export default function ProducerDetail() {
               <h2 className="text-xl font-bold font-heading text-text-primary border-b border-text-muted/10 pb-3">
                 Our Story & Origins
               </h2>
-              <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+              <p className="text-base text-text-secondary leading-relaxed whitespace-pre-line">
                 {producer.story}
               </p>
             </div>
@@ -124,7 +124,7 @@ export default function ProducerDetail() {
                   Sustainable Practices & Methods
                 </h2>
               </div>
-              <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+              <p className="text-base text-text-secondary leading-relaxed whitespace-pre-line">
                 {producer.practices}
               </p>
             </div>
@@ -158,7 +158,7 @@ export default function ProducerDetail() {
               <Sprout className="w-5 h-5 text-secondary" />
               <span>Direct Producer Impact</span>
             </h3>
-            <p className="text-xs text-text-secondary leading-relaxed">
+            <p className="text-sm text-text-secondary leading-relaxed">
               When you purchase directly from <strong>{producer.name}</strong>, 100% of fair-trade earnings support local community farming, soil rejuvenation, and zero-chemical harvesting.
             </p>
           </div>
@@ -171,7 +171,7 @@ export default function ProducerDetail() {
           <h2 className="text-2xl font-bold font-heading text-text-primary">
             Products by {producer.name}
           </h2>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Direct farm-fresh & artisanal goods harvested locally
           </p>
         </div>
@@ -183,7 +183,7 @@ export default function ProducerDetail() {
             ))}
           </div>
         ) : (
-          <div className="bg-background-card rounded-2xl p-8 text-center text-xs text-text-muted border border-text-muted/15">
+          <div className="bg-background-card rounded-2xl p-8 text-center text-sm text-text-muted border border-text-muted/15">
             No products currently listed by this producer.
           </div>
         )}

@@ -179,7 +179,7 @@ function OrderDetailModal({
               Order #{order.id.slice(0, 8)}
               <StatusBadge status={order.status} />
             </h3>
-            <p className="text-xs text-text-muted flex items-center gap-1 mt-1">
+            <p className="text-sm text-text-muted flex items-center gap-1 mt-1">
               <Clock className="w-3.5 h-3.5" />
               Placed {new Date(order.createdAt).toLocaleString()}
             </p>
@@ -193,7 +193,7 @@ function OrderDetailModal({
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
             <span className="text-[10px] font-bold uppercase text-text-muted block">Customer</span>
             <p className="font-bold text-text-primary">{order.user?.name || 'Customer'}</p>
@@ -212,7 +212,7 @@ function OrderDetailModal({
 
         {/* Delivery Address */}
         {order.deliveryAddress && (
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1 text-xs">
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1 text-sm">
             <div className="flex items-center gap-1 text-primary font-bold">
               <MapPin className="w-4 h-4" /> Delivery Address
             </div>
@@ -226,7 +226,7 @@ function OrderDetailModal({
 
         {/* Line Items */}
         <div className="space-y-3">
-          <h4 className="font-heading font-bold text-xs uppercase text-text-muted tracking-wider">
+          <h4 className="font-heading font-bold text-sm uppercase text-text-muted tracking-wider">
             Line Items
           </h4>
           <div className="space-y-2">
@@ -236,7 +236,7 @@ function OrderDetailModal({
               return (
                 <div
                   key={it.id}
-                  className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100 text-xs"
+                  className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100 text-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center">
@@ -261,7 +261,7 @@ function OrderDetailModal({
         </div>
 
         {/* Total */}
-        <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-sm">
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-base">
           <span className="font-bold text-text-primary">Order Total</span>
           <span className="font-black font-heading text-xl text-secondary">
             ₹{Number(order.total).toFixed(2)}
@@ -380,7 +380,7 @@ export default function AdminDashboard() {
               <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-text-primary">
                 {getGreeting()}, {user?.firstName || 'Admin'}!
               </h1>
-              <p className="text-sm text-text-secondary mt-1">
+              <p className="text-base text-text-secondary mt-1">
                 Here's what's happening with your store today.
               </p>
             </div>
@@ -396,7 +396,7 @@ export default function AdminDashboard() {
                   <ClipboardCheck className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-text-muted">Pending Fulfillment</p>
+                  <p className="text-sm font-medium text-text-muted">Pending Fulfillment</p>
                   <p className="text-lg font-black font-heading text-text-primary">
                     {loading ? '—' : analytics.pendingOrdersCount}
                   </p>
@@ -413,7 +413,7 @@ export default function AdminDashboard() {
                   <ShieldAlert className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-text-muted">Role Approvals</p>
+                  <p className="text-sm font-medium text-text-muted">Role Approvals</p>
                   <p className="text-lg font-black font-heading text-text-primary">
                     {loading ? '—' : analytics.pendingRoleApplications}
                   </p>
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
                   <Ban className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-text-muted">Cancelled Orders</p>
+                  <p className="text-sm font-medium text-text-muted">Cancelled Orders</p>
                   <p className="text-lg font-black font-heading text-text-primary">
                     {loading ? '—' : analytics.cancelledOrdersCount}
                   </p>
@@ -497,9 +497,9 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between mb-5">
                 <div>
                   <h3 className="font-heading font-bold text-base text-text-primary">Weekly Sales</h3>
-                  <p className="text-xs text-text-muted mt-0.5">Revenue over the last 7 days</p>
+                  <p className="text-sm text-text-muted mt-0.5">Revenue over the last 7 days</p>
                 </div>
-                <span className="text-xs font-medium text-text-muted px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
+                <span className="text-sm font-medium text-text-muted px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
                   This Week
                 </span>
               </div>
@@ -537,7 +537,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between mb-5">
                 <div>
                   <h3 className="font-heading font-bold text-base text-text-primary">Monthly Revenue</h3>
-                  <p className="text-xs text-text-muted mt-0.5">Year-to-date</p>
+                  <p className="text-sm text-text-muted mt-0.5">Year-to-date</p>
                 </div>
               </div>
               <div className="h-[260px] w-full">
@@ -571,7 +571,7 @@ export default function AdminDashboard() {
             {/* New vs Returning Customer Donut */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 flex flex-col">
               <h3 className="font-heading font-bold text-base text-text-primary">Customer Breakdown</h3>
-              <p className="text-xs text-text-muted mt-0.5 mb-4">New vs. returning this month</p>
+              <p className="text-sm text-text-muted mt-0.5 mb-4">New vs. returning this month</p>
 
               <div className="flex-1 relative min-h-[200px]">
                 {loadingAnalytics ? (
@@ -613,7 +613,7 @@ export default function AdminDashboard() {
                   {(analytics.customerStats || []).map((item: any, i: number) => (
                     <div key={item.name} className="flex items-center gap-1.5">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
-                      <span className="text-xs font-medium text-text-secondary">{item.name} ({item.value})</span>
+                      <span className="text-sm font-medium text-text-secondary">{item.name} ({item.value})</span>
                     </div>
                   ))}
                 </div>
@@ -623,12 +623,12 @@ export default function AdminDashboard() {
             {/* Top Performing Categories */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
               <h3 className="font-heading font-bold text-base text-text-primary">Top Categories</h3>
-              <p className="text-xs text-text-muted mt-0.5 mb-5">Revenue by product category</p>
+              <p className="text-sm text-text-muted mt-0.5 mb-5">Revenue by product category</p>
 
               {loadingAnalytics ? (
-                <div className="py-10 text-center text-text-muted text-xs">Loading categories...</div>
+                <div className="py-10 text-center text-text-muted text-sm">Loading categories...</div>
               ) : !analytics.topCategories || analytics.topCategories.length === 0 ? (
-                <div className="py-10 text-center text-text-muted text-xs">No category data available.</div>
+                <div className="py-10 text-center text-text-muted text-sm">No category data available.</div>
               ) : (
                 <div className="space-y-4">
                   {analytics.topCategories.map((cat: any, i: number) => {
@@ -636,7 +636,7 @@ export default function AdminDashboard() {
                     const pct = maxRev > 0 ? (cat.revenue / maxRev) * 100 : 0;
                     return (
                       <div key={cat.name} className="space-y-1.5">
-                        <div className="flex justify-between items-baseline text-xs">
+                        <div className="flex justify-between items-baseline text-sm">
                           <span className="font-semibold text-text-primary">{cat.name}</span>
                           <span className="font-bold text-secondary">{fmtCurrency(cat.revenue)}</span>
                         </div>
@@ -657,7 +657,7 @@ export default function AdminDashboard() {
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
               <div>
                 <h3 className="font-heading font-bold text-base text-text-primary">Platform Overview</h3>
-                <p className="text-xs text-text-muted mt-0.5">Key operational metrics</p>
+                <p className="text-sm text-text-muted mt-0.5">Key operational metrics</p>
               </div>
               <div className="space-y-3">
                 {[
@@ -673,9 +673,9 @@ export default function AdminDashboard() {
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-base">{item.icon}</span>
-                      <span className="text-xs font-medium text-text-secondary">{item.label}</span>
+                      <span className="text-sm font-medium text-text-secondary">{item.label}</span>
                     </div>
-                    <span className="text-sm font-bold text-text-primary">{item.value}</span>
+                    <span className="text-base font-bold text-text-primary">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -692,11 +692,11 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between p-6 pb-0">
                 <div>
                   <h3 className="font-heading font-bold text-base text-text-primary">Best Selling Products</h3>
-                  <p className="text-xs text-text-muted mt-0.5">Top performers by order volume</p>
+                  <p className="text-sm text-text-muted mt-0.5">Top performers by order volume</p>
                 </div>
                 <Link
                   to="/admin/products"
-                  className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-0.5 transition-colors"
+                  className="text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-0.5 transition-colors"
                 >
                   View All <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
@@ -708,9 +708,9 @@ export default function AdminDashboard() {
                     <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading products...
                   </div>
                 ) : !analytics.bestSellingProducts || analytics.bestSellingProducts.length === 0 ? (
-                  <div className="py-12 text-center text-xs text-text-muted">No product sales data yet.</div>
+                  <div className="py-12 text-center text-sm text-text-muted">No product sales data yet.</div>
                 ) : (
-                  <table className="w-full text-left text-xs min-w-[480px]">
+                  <table className="w-full text-left text-sm min-w-[480px]">
                     <thead>
                       <tr className="border-b border-slate-100">
                         <th className="py-2.5 px-2 text-[10px] font-bold text-text-muted uppercase tracking-wider">Product</th>
@@ -759,11 +759,11 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between p-6 pb-0">
                 <div>
                   <h3 className="font-heading font-bold text-base text-text-primary">Recent Purchases</h3>
-                  <p className="text-xs text-text-muted mt-0.5">Latest customer transactions</p>
+                  <p className="text-sm text-text-muted mt-0.5">Latest customer transactions</p>
                 </div>
                 <Link
                   to="/admin/orders"
-                  className="text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-0.5 transition-colors"
+                  className="text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-0.5 transition-colors"
                 >
                   View All <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
@@ -775,9 +775,9 @@ export default function AdminDashboard() {
                     <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading orders...
                   </div>
                 ) : orders.length === 0 ? (
-                  <div className="py-12 text-center text-xs text-text-muted">No recent orders.</div>
+                  <div className="py-12 text-center text-sm text-text-muted">No recent orders.</div>
                 ) : (
-                  <table className="w-full text-left text-xs min-w-[520px]">
+                  <table className="w-full text-left text-sm min-w-[520px]">
                     <thead>
                       <tr className="border-b border-slate-100">
                         <th className="py-2.5 px-2 text-[10px] font-bold text-text-muted uppercase tracking-wider">Customer</th>

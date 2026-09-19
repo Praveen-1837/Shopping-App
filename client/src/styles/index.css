@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-text-primary font-body antialiased;
+    @apply bg-background text-text-primary dark:bg-slate-900 dark:text-white font-body antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {

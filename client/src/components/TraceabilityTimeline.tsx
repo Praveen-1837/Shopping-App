@@ -24,7 +24,7 @@ export default function TraceabilityTimeline({ stages }: TraceabilityTimelinePro
           <h3 className="font-heading font-bold text-base text-text-primary">
             Product Journey & Traceability
           </h3>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             100% verified supply chain transparency from farm to table
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function TraceabilityTimeline({ stages }: TraceabilityTimelinePro
 
             <div className="bg-background-muted/60 border border-text-muted/10 rounded-2xl p-4 flex-1 space-y-1.5 group-hover:border-primary/30 transition-colors">
               <div className="flex items-center justify-between">
-                <h4 className="font-heading font-bold text-sm text-text-primary">
+                <h4 className="font-heading font-bold text-base text-text-primary">
                   {stg.stage}
                 </h4>
                 {stg.date && (
@@ -53,14 +53,14 @@ export default function TraceabilityTimeline({ stages }: TraceabilityTimelinePro
               </div>
 
               {stg.location && (
-                <p className="inline-flex items-center text-xs text-primary font-medium">
+                <p className="inline-flex items-center text-sm text-primary font-medium">
                   <MapPin className="w-3.5 h-3.5 mr-1" />
                   {stg.location}
                 </p>
               )}
 
               {stg.note && (
-                <p className="text-xs text-text-muted leading-relaxed pt-1">
+                <p className="text-sm text-text-muted leading-relaxed pt-1">
                   {stg.note}
                 </p>
               )}

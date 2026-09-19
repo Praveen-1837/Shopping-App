@@ -15,7 +15,7 @@ export default function ProducerBadge({ producer }: ProducerBadgeProps) {
   return (
     <Link
       to={`/producer/${producer.id}`}
-      className="inline-flex items-center space-x-2 bg-secondary-light/60 hover:bg-secondary-light border border-secondary/30 rounded-xl px-3 py-1.5 transition-all text-xs font-semibold text-secondary group"
+      className="inline-flex items-center space-x-2 bg-secondary-light/60 hover:bg-secondary-light border border-secondary/30 rounded-xl px-3 py-1.5 transition-all text-sm font-semibold text-secondary group"
     >
       <Sprout className="w-4 h-4 text-secondary group-hover:scale-110 transition-transform" />
       <div>

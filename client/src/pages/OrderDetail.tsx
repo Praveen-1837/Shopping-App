@@ -54,7 +54,7 @@ export default function OrderDetail() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Fetching order receipt details...</p>
+        <p className="text-base font-medium">Fetching order receipt details...</p>
       </div>
     );
   }
@@ -65,12 +65,12 @@ export default function OrderDetail() {
         <div className="bg-error-light border border-error/30 rounded-2xl p-8 space-y-4">
           <AlertCircle className="w-10 h-10 mx-auto text-error" />
           <h2 className="text-2xl font-bold font-heading text-error">Order Not Found</h2>
-          <p className="text-xs text-error/90 max-w-md mx-auto">
+          <p className="text-sm text-error/90 max-w-md mx-auto">
             {(error as any)?.response?.data?.error?.message || 'The requested order details could not be loaded.'}
           </p>
           <Link
             to="/my-world/orders"
-            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl"
+            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to My Orders</span>
@@ -97,21 +97,21 @@ export default function OrderDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-primary font-semibold text-xs uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-primary font-semibold text-sm uppercase tracking-wider mb-1">
             <Package className="w-4 h-4" />
             <span>Order Summary & Delivery Tracking</span>
           </div>
           <h1 className="text-3xl font-bold font-heading text-primary">
             Order #{order.id.slice(0, 13)}
           </h1>
-          <p className="text-xs text-text-secondary">Placed on {dateStr}</p>
+          <p className="text-sm text-text-secondary">Placed on {dateStr}</p>
         </div>
 
         <div className="flex items-center space-x-3 shrink-0">
           <button
             onClick={() => handleDownloadInvoice(order.id)}
             disabled={isDownloading}
-            className="flex items-center space-x-1.5 px-4 py-2 bg-background-card border border-text-muted/20 hover:bg-background-muted disabled:opacity-50 text-xs font-semibold text-text-primary rounded-xl transition-colors shadow-xs cursor-pointer"
+            className="flex items-center space-x-1.5 px-4 py-2 bg-background-card border border-text-muted/20 hover:bg-background-muted disabled:opacity-50 text-sm font-semibold text-text-primary rounded-xl transition-colors shadow-xs cursor-pointer"
           >
             {isDownloading ? (
               <RefreshCw className="w-3.5 h-3.5 text-primary animate-spin" />
@@ -122,7 +122,7 @@ export default function OrderDetail() {
           </button>
           <Link
             to="/my-world/orders"
-            className="flex items-center space-x-1 text-xs text-text-secondary hover:text-primary transition-colors"
+            className="flex items-center space-x-1 text-sm text-text-secondary hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to All Orders</span>
@@ -139,7 +139,7 @@ export default function OrderDetail() {
           <div className="space-y-2 flex-1">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-error/15 pb-2">
               <h3 className="font-heading font-bold text-lg text-text-primary">This order was cancelled</h3>
-              <span className="text-xs text-text-muted">
+              <span className="text-sm text-text-muted">
                 Cancelled on{' '}
                 {new Date(order.updatedAt || order.createdAt).toLocaleDateString('en-IN', {
                   day: 'numeric',
@@ -151,7 +151,7 @@ export default function OrderDetail() {
               </span>
             </div>
 
-            <div className="pt-1 text-xs text-text-secondary leading-relaxed">
+            <div className="pt-1 text-sm text-text-secondary leading-relaxed">
               {order.cancellationReason ? (
                 <span>
                   <strong className="text-text-primary">Reason for cancellation:</strong>{' '}
@@ -217,16 +217,16 @@ export default function OrderDetail() {
                         )}
                       </div>
 
-                      <h4 className="font-heading font-bold text-sm text-text-primary">
+                      <h4 className="font-heading font-bold text-base text-text-primary">
                         {title}
                       </h4>
-                      <p className="text-xs text-text-muted">
+                      <p className="text-sm text-text-muted">
                         Qty: {item.quantity} × ₹{Number(item.price).toFixed(2)}
                       </p>
                     </div>
                   </div>
 
-                  <span className="font-heading font-bold text-sm text-primary">
+                  <span className="font-heading font-bold text-base text-primary">
                     ₹{(Number(item.price) * item.quantity).toFixed(2)}
                   </span>
                 </div>
@@ -239,13 +239,13 @@ export default function OrderDetail() {
         <div className="space-y-6">
           {/* Shipping Address */}
           <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-3">
-            <div className="flex items-center space-x-2 text-xs font-bold text-primary uppercase tracking-wider">
+            <div className="flex items-center space-x-2 text-sm font-bold text-primary uppercase tracking-wider">
               <MapPin className="w-4 h-4" />
               <span>Delivery Address</span>
             </div>
             {order.deliveryAddress ? (
-              <div className="text-xs text-text-secondary leading-relaxed space-y-0.5">
-                <strong className="block text-text-primary text-sm font-semibold">
+              <div className="text-sm text-text-secondary leading-relaxed space-y-0.5">
+                <strong className="block text-text-primary text-base font-semibold">
                   {(order.deliveryAddress as any).recipientName}
                 </strong>
                 <p>{(order.deliveryAddress as any).streetAddress}</p>
@@ -256,18 +256,18 @@ export default function OrderDetail() {
                 <p className="pt-1 text-text-muted">Ph: {(order.deliveryAddress as any).phone}</p>
               </div>
             ) : (
-              <p className="text-xs text-text-muted">Digital delivery / Default profile address</p>
+              <p className="text-sm text-text-muted">Digital delivery / Default profile address</p>
             )}
           </div>
 
           {/* Payment Summary */}
           <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-4">
-            <div className="flex items-center space-x-2 text-xs font-bold text-primary uppercase tracking-wider">
+            <div className="flex items-center space-x-2 text-sm font-bold text-primary uppercase tracking-wider">
               <CreditCard className="w-4 h-4" />
               <span>Payment Details</span>
             </div>
 
-            <div className="space-y-2 text-xs text-text-secondary border-t border-text-muted/10 pt-3">
+            <div className="space-y-2 text-sm text-text-secondary border-t border-text-muted/10 pt-3">
               <div className="flex justify-between">
                 <span>Payment Status:</span>
                 <span className="font-bold text-success uppercase">{order.paymentStatus}</span>
@@ -278,7 +278,7 @@ export default function OrderDetail() {
                   <span className="font-mono text-text-muted">{order.paymentId.slice(0, 16)}...</span>
                 </div>
               )}
-              <div className="flex justify-between pt-2 border-t border-text-muted/10 font-bold text-sm text-text-primary">
+              <div className="flex justify-between pt-2 border-t border-text-muted/10 font-bold text-base text-text-primary">
                 <span>Total Amount Paid:</span>
                 <span className="text-primary font-heading text-lg">₹{Number(order.total).toFixed(2)}</span>
               </div>

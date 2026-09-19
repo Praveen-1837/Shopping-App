@@ -12,7 +12,7 @@ export default function Login() {
           appearance={{
             elements: {
               card: 'shadow-soft border border-text-muted/15 rounded-2xl bg-background-card',
-              primaryButton: 'bg-primary hover:bg-primary-hover text-white text-sm font-medium',
+              primaryButton: 'bg-primary hover:bg-primary-hover text-white text-base font-medium',
               footerActionLink: 'text-primary hover:text-primary-hover font-semibold',
             },
           }}

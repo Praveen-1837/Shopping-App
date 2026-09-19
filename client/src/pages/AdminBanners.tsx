@@ -229,14 +229,14 @@ export default function AdminBanners() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div className="space-y-1">
-          <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
+          <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-sm font-bold border border-primary/20">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Homepage Marketing</span>
           </div>
           <h1 className="text-3xl font-extrabold font-heading text-text-primary">
             Hero Promotional Banners
           </h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             Manage full-width homepage hero carousel slides, CTA links, display order, and active status.
           </p>
         </div>
@@ -247,7 +247,7 @@ export default function AdminBanners() {
             setOrder(banners.length);
             setIsFormOpen(true);
           }}
-          className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-soft transition-colors cursor-pointer shrink-0"
+          className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-soft transition-colors cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Banner</span>
@@ -256,7 +256,7 @@ export default function AdminBanners() {
 
       {/* Error Alert */}
       {formError && (
-        <div className="p-4 bg-error-light border border-error/30 text-error rounded-2xl flex items-center justify-between text-xs">
+        <div className="p-4 bg-error-light border border-error/30 text-error rounded-2xl flex items-center justify-between text-sm">
           <div className="flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{formError}</span>
@@ -287,7 +287,7 @@ export default function AdminBanners() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Title */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-primary">
+                <label className="block text-sm font-bold text-text-primary">
                   Banner Heading / Title <span className="text-error">*</span>
                 </label>
                 <input
@@ -296,13 +296,13 @@ export default function AdminBanners() {
                   placeholder="e.g. Artisanal Organic Spices & Oils"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               {/* Subtitle */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-primary">
+                <label className="block text-sm font-bold text-text-primary">
                   Subtitle / Tagline (Optional)
                 </label>
                 <input
@@ -310,13 +310,13 @@ export default function AdminBanners() {
                   placeholder="e.g. Handcrafted directly by local organic micro-farmers"
                   value={subtitle}
                   onChange={(e) => setSubtitle(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               {/* CTA Text */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-primary">
+                <label className="block text-sm font-bold text-text-primary">
                   Button Label (Optional)
                 </label>
                 <input
@@ -324,13 +324,13 @@ export default function AdminBanners() {
                   placeholder="e.g. Shop Collection →"
                   value={ctaText}
                   onChange={(e) => setCtaText(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               {/* CTA Link */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-primary">
+                <label className="block text-sm font-bold text-text-primary">
                   Button Destination Link (Optional)
                 </label>
                 <input
@@ -338,13 +338,13 @@ export default function AdminBanners() {
                   placeholder="e.g. /shop?category=Food%20%26%20Spices"
                   value={ctaLink}
                   onChange={(e) => setCtaLink(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               {/* Order */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-text-primary">
+                <label className="block text-sm font-bold text-text-primary">
                   Display Order Position
                 </label>
                 <input
@@ -352,13 +352,13 @@ export default function AdminBanners() {
                   min="0"
                   value={order}
                   onChange={(e) => setOrder(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
               </div>
 
               {/* Is Active Toggle */}
               <div className="space-y-1.5 flex flex-col justify-center">
-                <label className="block text-xs font-bold text-text-primary mb-1">
+                <label className="block text-sm font-bold text-text-primary mb-1">
                   Active Status
                 </label>
                 <label className="inline-flex items-center space-x-3 cursor-pointer">
@@ -368,7 +368,7 @@ export default function AdminBanners() {
                     onChange={(e) => setIsActive(e.target.checked)}
                     className="w-4 h-4 text-primary rounded focus:ring-primary"
                   />
-                  <span className="text-xs text-text-secondary font-medium">
+                  <span className="text-sm text-text-secondary font-medium">
                     {isActive ? 'Published (Visible in Carousel)' : 'Hidden (Draft / Inactive)'}
                   </span>
                 </label>
@@ -377,7 +377,7 @@ export default function AdminBanners() {
 
             {/* Banner Image Selection & Upload */}
             <div className="space-y-2 pt-2 border-t border-text-muted/10">
-              <label className="block text-xs font-bold text-text-primary">
+              <label className="block text-sm font-bold text-text-primary">
                 Banner Image <span className="text-error">*</span>
               </label>
 
@@ -385,7 +385,7 @@ export default function AdminBanners() {
                 {/* Upload File Input */}
                 <div className="space-y-1.5">
                   <span className="text-[11px] text-text-muted block">Upload image file:</span>
-                  <label className="flex items-center justify-center space-x-2 px-4 py-3 bg-background-muted border border-dashed border-text-muted/40 rounded-xl text-xs font-bold text-text-primary hover:border-primary transition-colors cursor-pointer">
+                  <label className="flex items-center justify-center space-x-2 px-4 py-3 bg-background-muted border border-dashed border-text-muted/40 rounded-xl text-sm font-bold text-text-primary hover:border-primary transition-colors cursor-pointer">
                     {isUploading ? (
                       <RefreshCw className="w-4 h-4 animate-spin text-primary" />
                     ) : (
@@ -409,7 +409,7 @@ export default function AdminBanners() {
                     placeholder="https://images.unsplash.com/..."
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                   />
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function AdminBanners() {
                 <div className="relative mt-3 rounded-2xl overflow-hidden h-36 border border-text-muted/20 shadow-inner group">
                   <img src={imageUrl} alt="Banner Preview" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-white text-xs font-bold px-3 py-1 bg-black/60 rounded-lg backdrop-blur-xs">
+                    <span className="text-white text-sm font-bold px-3 py-1 bg-black/60 rounded-lg backdrop-blur-xs">
                       Banner Preview
                     </span>
                   </div>
@@ -432,14 +432,14 @@ export default function AdminBanners() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-5 py-2.5 bg-background-muted hover:bg-text-muted/10 text-text-secondary text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                className="px-5 py-2.5 bg-background-muted hover:bg-text-muted/10 text-text-secondary text-sm font-bold rounded-xl transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saveMutation.isPending || !title.trim() || !imageUrl.trim()}
-                className="inline-flex items-center space-x-1.5 px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-soft transition-colors disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center space-x-1.5 px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-soft transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {saveMutation.isPending ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
@@ -458,21 +458,21 @@ export default function AdminBanners() {
         <div className="flex items-center justify-between border-b border-text-muted/10 pb-4">
           <h2 className="font-heading font-bold text-xl text-text-primary flex items-center space-x-2">
             <span>Configured Banners</span>
-            <span className="text-xs font-normal text-text-muted">({banners.length} total)</span>
+            <span className="text-sm font-normal text-text-muted">({banners.length} total)</span>
           </h2>
         </div>
 
         {isLoading ? (
           <div className="py-12 flex flex-col items-center justify-center space-y-2 text-text-muted">
             <RefreshCw className="w-6 h-6 animate-spin text-primary" />
-            <p className="text-xs">Loading promotional banners...</p>
+            <p className="text-sm">Loading promotional banners...</p>
           </div>
         ) : isError ? (
-          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-xs font-bold">
+          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-sm font-bold">
             {(error as any)?.response?.data?.error?.message || 'Failed to load banners'}
           </div>
         ) : banners.length === 0 ? (
-          <div className="py-12 text-center text-xs text-text-muted space-y-2">
+          <div className="py-12 text-center text-sm text-text-muted space-y-2">
             <p className="font-semibold text-text-primary">No promotional banners configured yet.</p>
             <p>The homepage hero carousel will stay hidden until you create your first active banner.</p>
           </div>
@@ -500,7 +500,7 @@ export default function AdminBanners() {
                   {/* Text details */}
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-heading font-bold text-sm text-text-primary">{b.title}</h3>
+                      <h3 className="font-heading font-bold text-base text-text-primary">{b.title}</h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                           b.isActive
@@ -512,7 +512,7 @@ export default function AdminBanners() {
                       </span>
                     </div>
 
-                    {b.subtitle && <p className="text-xs text-text-secondary line-clamp-1">{b.subtitle}</p>}
+                    {b.subtitle && <p className="text-sm text-text-secondary line-clamp-1">{b.subtitle}</p>}
 
                     {b.ctaText && b.ctaLink && (
                       <div className="flex items-center space-x-1.5 text-[11px] text-primary font-medium pt-0.5">

@@ -59,12 +59,12 @@ export default function Courses() {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-secondary font-semibold text-xs uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-secondary font-semibold text-sm uppercase tracking-wider mb-1">
             <BookOpen className="w-4 h-4" />
             <span>Digital Learning Engine</span>
           </div>
           <h1 className="text-3xl font-bold font-heading text-primary">Sustainable Knowledge & Masterclasses</h1>
-          <p className="text-sm text-text-secondary">
+          <p className="text-base text-text-secondary">
             Master organic farming techniques, zero-waste lifestyle, and eco-agriculture from certified educators
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function Courses() {
         {isEducator && (
           <Link
             to="/educator/courses/new"
-            className="flex items-center space-x-2 px-5 py-2.5 bg-secondary text-white hover:bg-secondary-hover font-semibold text-xs rounded-xl shadow-soft transition-colors cursor-pointer shrink-0"
+            className="flex items-center space-x-2 px-5 py-2.5 bg-secondary text-white hover:bg-secondary-hover font-semibold text-sm rounded-xl shadow-soft transition-colors cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Course</span>
@@ -93,7 +93,7 @@ export default function Courses() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-10 pr-4 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-secondary/40"
+            className="w-full pl-10 pr-4 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
           />
         </div>
 
@@ -107,7 +107,7 @@ export default function Courses() {
                 setSelectedCategory(cat);
                 setPage(1);
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 selectedCategory === cat
                   ? 'bg-secondary text-white shadow-soft'
                   : 'bg-background-muted/60 text-text-secondary hover:bg-background-muted border border-text-muted/15'
@@ -123,16 +123,16 @@ export default function Courses() {
       {isLoading ? (
         <div className="min-h-[40vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
           <RefreshCw className="w-8 h-8 animate-spin text-secondary" />
-          <p className="text-sm font-medium">Loading course catalog...</p>
+          <p className="text-base font-medium">Loading course catalog...</p>
         </div>
       ) : isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-error text-center space-y-3">
-          <p className="text-sm font-medium">
+          <p className="text-base font-medium">
             {(error as any)?.response?.data?.error?.message || 'Failed to load course catalog'}
           </p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-error text-white text-xs font-bold rounded-xl"
+            className="px-4 py-2 bg-error text-white text-sm font-bold rounded-xl"
           >
             Retry
           </button>
@@ -141,7 +141,7 @@ export default function Courses() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-3">
           <BookOpen className="w-12 h-12 mx-auto text-text-muted opacity-40" />
           <h3 className="text-xl font-bold font-heading">No Courses Found</h3>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             Try adjusting your search query or selecting a different course category.
           </p>
         </div>
@@ -156,7 +156,7 @@ export default function Courses() {
       {/* Pagination Controls */}
       {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-between pt-6 border-t border-text-muted/15">
-          <span className="text-xs text-text-secondary">
+          <span className="text-sm text-text-secondary">
             Showing page <strong className="text-text-primary">{pagination.page}</strong> of{' '}
             <strong className="text-text-primary">{pagination.totalPages}</strong>
           </span>

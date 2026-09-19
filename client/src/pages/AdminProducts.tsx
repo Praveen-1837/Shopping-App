@@ -93,12 +93,12 @@ export default function AdminProducts() {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-heading text-text-primary">Platform Products Catalog</h1>
-            <p className="text-xs text-text-secondary">
+            <p className="text-sm text-text-secondary">
               Manage platform-wide product listings, archive/activate status, or permanently delete items.
             </p>
           </div>
         </div>
-        <div className="text-xs font-semibold px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-text-secondary shrink-0">
+        <div className="text-sm font-semibold px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-text-secondary shrink-0">
           Total Products: <strong className="text-primary">{total}</strong>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function AdminProducts() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full pl-9 pr-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
         </div>
 
@@ -128,7 +128,7 @@ export default function AdminProducts() {
               setSelectedCategory(e.target.value);
               setPage(1);
             }}
-            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none cursor-pointer"
+            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none cursor-pointer"
           >
             {CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
@@ -146,7 +146,7 @@ export default function AdminProducts() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none cursor-pointer"
+            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none cursor-pointer"
           >
             <option value="ALL">All Statuses (Active & Archived)</option>
             <option value="ACTIVE">Active Only</option>
@@ -159,16 +159,16 @@ export default function AdminProducts() {
       {isLoading ? (
         <div className="py-20 text-center text-text-secondary space-y-3">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-          <p className="text-sm font-medium">Loading products catalog...</p>
+          <p className="text-base font-medium">Loading products catalog...</p>
         </div>
       ) : isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-center space-y-3">
           <AlertCircle className="w-8 h-8 mx-auto text-error" />
-          <p className="text-sm font-bold text-error">Failed to load admin products</p>
-          <p className="text-xs text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
+          <p className="text-base font-bold text-error">Failed to load admin products</p>
+          <p className="text-sm text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
+            className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
           >
             Retry
           </button>
@@ -177,12 +177,12 @@ export default function AdminProducts() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-3">
           <Package className="w-12 h-12 mx-auto text-text-muted opacity-50" />
           <h3 className="text-lg font-bold font-heading">No Products Found</h3>
-          <p className="text-xs text-text-secondary">Try adjusting your search query or filters.</p>
+          <p className="text-sm text-text-secondary">Try adjusting your search query or filters.</p>
         </div>
       ) : (
         <div className="bg-background-card rounded-2xl border border-text-muted/15 overflow-hidden shadow-soft">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-sm">
               <thead className="bg-background-muted/60 text-text-secondary border-b border-text-muted/15 font-semibold uppercase tracking-wider">
                 <tr>
                   <th className="py-3.5 px-4">Product</th>
@@ -290,7 +290,7 @@ export default function AdminProducts() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="p-4 border-t border-text-muted/15 flex items-center justify-between text-xs">
+            <div className="p-4 border-t border-text-muted/15 flex items-center justify-between text-sm">
               <span className="text-text-secondary">
                 Page <strong className="text-text-primary">{page}</strong> of{' '}
                 <strong className="text-text-primary">{totalPages}</strong>
@@ -300,14 +300,14 @@ export default function AdminProducts() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-semibold disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-semibold disabled:opacity-40 cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4 inline" /> Previous
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-semibold disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-semibold disabled:opacity-40 cursor-pointer"
                 >
                   Next <ChevronRight className="w-4 h-4 inline" />
                 </button>
@@ -325,20 +325,20 @@ export default function AdminProducts() {
               <AlertCircle className="w-6 h-6 shrink-0" />
               <h3 className="font-heading font-bold text-base text-text-primary">Confirm Deletion</h3>
             </div>
-            <p className="text-xs text-text-secondary leading-relaxed">
+            <p className="text-sm text-text-secondary leading-relaxed">
               Are you sure you want to permanently delete this product? This action cannot be undone.
             </p>
             <div className="flex items-center justify-end space-x-3 pt-2">
               <button
                 onClick={() => setDeletingId(null)}
-                className="px-4 py-2 bg-background-muted text-text-primary text-xs font-semibold rounded-xl hover:bg-background-muted/80 transition-colors"
+                className="px-4 py-2 bg-background-muted text-text-primary text-sm font-semibold rounded-xl hover:bg-background-muted/80 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => deleteMutation.mutate(deletingId)}
                 disabled={deleteMutation.isPending}
-                className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-xl hover:bg-error/90 transition-colors flex items-center space-x-1"
+                className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-xl hover:bg-error/90 transition-colors flex items-center space-x-1"
               >
                 {deleteMutation.isPending && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                 <span>Delete Permanently</span>

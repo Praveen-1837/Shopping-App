@@ -104,7 +104,7 @@ export default function AccountListsDropdown() {
           <span className="text-[10px] text-text-muted leading-tight">
             {user ? `Hello, ${user.firstName || 'Customer'}` : 'Hello, sign in'}
           </span>
-          <span className="font-bold text-xs text-text-primary flex items-center space-x-0.5 leading-tight">
+          <span className="font-bold text-sm text-text-primary flex items-center space-x-0.5 leading-tight">
             <span>Account & Lists</span>
             <ChevronDown className={`w-3 h-3 text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
           </span>
@@ -113,7 +113,7 @@ export default function AccountListsDropdown() {
 
       {/* Dropdown Panel Container */}
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-72 sm:w-80 bg-background-card rounded-2xl border border-text-muted/15 shadow-card z-50 p-5 space-y-4 animate-scale-in text-xs">
+        <div className="absolute right-0 mt-1 w-72 sm:w-80 bg-background-card rounded-2xl border border-text-muted/15 shadow-card z-50 p-5 space-y-4 animate-scale-in text-sm">
           <SignedOut>
             {/* Signed Out View: Sign In Call-to-Action */}
             <div className="text-center space-y-3 pb-3 border-b border-text-muted/15">
@@ -143,7 +143,7 @@ export default function AccountListsDropdown() {
             <div className="grid grid-cols-2 gap-4 border-b border-text-muted/15 pb-4">
               {/* Column 1: Your Lists (Genuinely Wishlist) */}
               <div className="space-y-2 border-r border-text-muted/15 pr-3">
-                <h4 className="font-heading font-bold text-xs text-text-primary uppercase tracking-wider">
+                <h4 className="font-heading font-bold text-sm text-text-primary uppercase tracking-wider">
                   Your Lists
                 </h4>
                 <ul className="space-y-2 text-text-secondary">
@@ -189,7 +189,7 @@ export default function AccountListsDropdown() {
 
               {/* Column 2: Your Account */}
               <div className="space-y-2 pl-1">
-                <h4 className="font-heading font-bold text-xs text-text-primary uppercase tracking-wider">
+                <h4 className="font-heading font-bold text-sm text-text-primary uppercase tracking-wider">
                   Your Account
                 </h4>
                 <ul className="space-y-2 text-text-secondary">
@@ -287,7 +287,7 @@ export default function AccountListsDropdown() {
             <div className="pt-1 text-right">
               <button
                 onClick={handleSignOut}
-                className="inline-flex items-center space-x-1.5 text-xs text-error font-semibold hover:underline cursor-pointer"
+                className="inline-flex items-center space-x-1.5 text-sm text-error font-semibold hover:underline cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>

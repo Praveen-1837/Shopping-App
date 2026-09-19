@@ -149,7 +149,7 @@ export default function CoursePlayer() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-secondary" />
-        <p className="text-sm font-medium">Preparing learning player...</p>
+        <p className="text-base font-medium">Preparing learning player...</p>
       </div>
     );
   }
@@ -160,10 +160,10 @@ export default function CoursePlayer() {
         <div className="bg-error-light border border-error/30 rounded-2xl p-8 space-y-4">
           <AlertCircle className="w-10 h-10 mx-auto text-error" />
           <h2 className="text-2xl font-bold font-heading text-error">Course Session Error</h2>
-          <p className="text-xs text-error/90">Could not initialize course player.</p>
+          <p className="text-sm text-error/90">Could not initialize course player.</p>
           <Link
             to="/my-world/courses"
-            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-secondary text-white text-xs font-semibold rounded-xl"
+            className="inline-flex items-center space-x-2 px-5 py-2.5 bg-secondary text-white text-sm font-semibold rounded-xl"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to My Learning</span>
@@ -180,20 +180,20 @@ export default function CoursePlayer() {
         <div className="flex items-center space-x-4">
           <Link
             to="/my-world/courses"
-            className="flex items-center space-x-1.5 text-xs text-text-secondary hover:text-secondary transition-colors"
+            className="flex items-center space-x-1.5 text-sm text-text-secondary hover:text-secondary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
           </Link>
           <span className="text-text-muted">|</span>
-          <h1 className="font-heading font-bold text-sm text-text-primary line-clamp-1">
+          <h1 className="font-heading font-bold text-base text-text-primary line-clamp-1">
             {course.title}
           </h1>
         </div>
 
         {/* Progress Bar & Certificate Pill */}
         <div className="flex items-center space-x-4">
-          <div className="hidden sm:flex items-center space-x-2 text-xs">
+          <div className="hidden sm:flex items-center space-x-2 text-sm">
             <span className="text-text-muted">Progress:</span>
             <strong className="text-secondary font-mono">
               {currentProgress?.progressPercent || 0}%
@@ -201,7 +201,7 @@ export default function CoursePlayer() {
           </div>
 
           {currentProgress?.certificateIssued && (
-            <div className="bg-primary-light text-primary border border-primary/30 px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1">
+            <div className="bg-primary-light text-primary border border-primary/30 px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1">
               <Award className="w-4 h-4 text-primary" />
               <span>Certificate Earned</span>
             </div>
@@ -228,7 +228,7 @@ export default function CoursePlayer() {
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-text-muted space-y-2">
                     <PlayCircle className="w-16 h-16 text-secondary opacity-60" />
-                    <p className="text-sm font-medium">Select a video lesson from the sidebar</p>
+                    <p className="text-base font-medium">Select a video lesson from the sidebar</p>
                   </div>
                 )}
               </div>
@@ -236,12 +236,12 @@ export default function CoursePlayer() {
 
             {currentLesson?.type === 'article' && (
               <div className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-4 min-h-[400px]">
-                <div className="flex items-center space-x-2 text-secondary font-bold text-xs uppercase tracking-wider">
+                <div className="flex items-center space-x-2 text-secondary font-bold text-sm uppercase tracking-wider">
                   <FileText className="w-4 h-4" />
                   <span>Reading Article Lesson</span>
                 </div>
                 <h2 className="text-2xl font-bold font-heading text-primary">{currentLesson.title}</h2>
-                <div className="prose max-w-none text-text-primary text-sm leading-relaxed border-t border-text-muted/10 pt-4 whitespace-pre-wrap">
+                <div className="prose max-w-none text-text-primary text-base leading-relaxed border-t border-text-muted/10 pt-4 whitespace-pre-wrap">
                   {currentLesson.content || 'No article content provided for this lesson.'}
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function CoursePlayer() {
 
             {currentLesson?.type === 'resource' && (
               <div className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-6 min-h-[350px]">
-                <div className="flex items-center space-x-2 text-secondary font-bold text-xs uppercase tracking-wider">
+                <div className="flex items-center space-x-2 text-secondary font-bold text-sm uppercase tracking-wider">
                   <Download className="w-4 h-4" />
                   <span>Downloadable Learning Resource</span>
                 </div>
@@ -261,8 +261,8 @@ export default function CoursePlayer() {
                       <FileText className="w-8 h-8" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-text-primary text-sm">{currentLesson.title}</h4>
-                      <p className="text-xs text-text-muted">PDF / Slides / Resource File</p>
+                      <h4 className="font-bold text-text-primary text-base">{currentLesson.title}</h4>
+                      <p className="text-sm text-text-muted">PDF / Slides / Resource File</p>
                     </div>
                   </div>
 
@@ -271,13 +271,13 @@ export default function CoursePlayer() {
                       href={currentLesson.resourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-secondary text-white text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-2 cursor-pointer"
+                      className="px-5 py-2.5 bg-secondary text-white text-sm font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-2 cursor-pointer"
                     >
                       <Download className="w-4 h-4" />
                       <span>Download Resource</span>
                     </a>
                   ) : (
-                    <span className="text-xs text-text-muted italic">No resource URL attached</span>
+                    <span className="text-sm text-text-muted italic">No resource URL attached</span>
                   )}
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function CoursePlayer() {
             {/* Active Lesson Header & Mark Complete Action */}
             <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-bold text-secondary uppercase tracking-wider block mb-1">
+                <span className="text-sm font-bold text-secondary uppercase tracking-wider block mb-1">
                   Active Lesson: {currentLesson?.type.toUpperCase()}
                 </span>
                 <h2 className="text-xl font-bold font-heading text-text-primary">
@@ -298,7 +298,7 @@ export default function CoursePlayer() {
                 <button
                   onClick={() => markCompleteMutation.mutate(currentLesson.id)}
                   disabled={markCompleteMutation.isPending || isCurrentLessonCompleted}
-                  className={`px-6 py-3 font-semibold text-xs rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer ${
+                  className={`px-6 py-3 font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer ${
                     isCurrentLessonCompleted
                       ? 'bg-success-light text-success border border-success/30 cursor-default'
                       : 'bg-secondary text-white hover:bg-secondary-hover'
@@ -329,7 +329,7 @@ export default function CoursePlayer() {
               <h3 className="text-xl font-bold font-heading text-success">
                 🎓 Congratulations! Masterclass Completed!
               </h3>
-              <p className="text-xs text-text-secondary max-w-lg mx-auto">
+              <p className="text-sm text-text-secondary max-w-lg mx-auto">
                 You have successfully completed all lessons for <strong>{course.title}</strong>. Your digital certificate of eco-sustainability completion has been officially issued.
               </p>
             </div>
@@ -340,7 +340,7 @@ export default function CoursePlayer() {
         <div className="bg-background-card border-t lg:border-t-0 lg:border-l border-text-muted/15 p-6 space-y-6">
           <div className="border-b border-text-muted/10 pb-3">
             <h3 className="font-heading font-bold text-base text-primary">Curriculum Outline</h3>
-            <span className="text-xs text-text-muted">
+            <span className="text-sm text-text-muted">
               {completedSet.size} of {allLessons.length} lessons finished
             </span>
           </div>
@@ -348,7 +348,7 @@ export default function CoursePlayer() {
           <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-200px)] pr-1">
             {sections.map((sec) => (
               <div key={sec.id} className="space-y-2">
-                <h4 className="text-xs font-bold text-secondary uppercase tracking-wider border-b border-text-muted/10 pb-1">
+                <h4 className="text-sm font-bold text-secondary uppercase tracking-wider border-b border-text-muted/10 pb-1">
                   {sec.title}
                 </h4>
 
@@ -361,7 +361,7 @@ export default function CoursePlayer() {
                       <button
                         key={les.id}
                         onClick={() => setActiveLessonId(les.id)}
-                        className={`w-full text-left p-3 rounded-xl border text-xs flex items-center justify-between transition-all cursor-pointer ${
+                        className={`w-full text-left p-3 rounded-xl border text-sm flex items-center justify-between transition-all cursor-pointer ${
                           isActive
                             ? 'border-secondary bg-secondary-light/40 ring-2 ring-secondary/20 font-bold'
                             : 'border-text-muted/15 bg-background-muted/30 hover:border-secondary/40'

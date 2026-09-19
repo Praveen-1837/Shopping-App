@@ -57,7 +57,7 @@ export default function OrderConfirmation() {
           <h3 className="font-heading font-bold text-base text-text-primary">
             Confirming Your Order...
           </h3>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Retrieving payment receipt and updating fulfillment status.
           </p>
         </div>
@@ -72,21 +72,21 @@ export default function OrderConfirmation() {
         <div className="bg-error-light border border-error/30 rounded-2xl p-8 space-y-4 shadow-soft">
           <AlertCircle className="w-10 h-10 mx-auto text-error" />
           <h2 className="text-2xl font-bold font-heading text-error">Order Not Found</h2>
-          <p className="text-xs text-error/90 max-w-md mx-auto">
+          <p className="text-sm text-error/90 max-w-md mx-auto">
             {(error as any)?.response?.data?.error?.message ||
               'We were unable to locate your order details. If your payment went through, please check your orders list or try again.'}
           </p>
           <div className="flex items-center justify-center space-x-3 pt-2">
             <button
               onClick={() => refetch()}
-              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-background-card border border-text-muted/20 hover:bg-background-muted text-xs font-semibold text-text-primary rounded-xl cursor-pointer transition-colors"
+              className="inline-flex items-center space-x-2 px-4 py-2.5 bg-background-card border border-text-muted/20 hover:bg-background-muted text-sm font-semibold text-text-primary rounded-xl cursor-pointer transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Retry</span>
             </button>
             <Link
               to="/my-world/orders"
-              className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-xl cursor-pointer transition-colors shadow-soft"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-xl cursor-pointer transition-colors shadow-soft"
             >
               <Package className="w-3.5 h-3.5" />
               <span>My Orders</span>
@@ -155,13 +155,13 @@ export default function OrderConfirmation() {
           <h1 className="text-3xl sm:text-4xl font-bold font-heading text-text-primary tracking-tight">
             Order Confirmed!
           </h1>
-          <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
+          <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
             Thank you for supporting ethical, sustainable producers and creators. Your order has been placed and payment confirmed.
           </p>
         </div>
 
         {/* Order Identifier & Copy Snippet */}
-        <div className="inline-flex items-center space-x-2 bg-background-card border border-text-muted/20 px-3.5 py-1.5 rounded-full text-xs shadow-xs">
+        <div className="inline-flex items-center space-x-2 bg-background-card border border-text-muted/20 px-3.5 py-1.5 rounded-full text-sm shadow-xs">
           <span className="text-text-muted font-medium">Order Reference:</span>
           <span className="font-mono font-bold text-text-primary">{order.id}</span>
           <button
@@ -188,21 +188,21 @@ export default function OrderConfirmation() {
             </div>
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
-                <h3 className="font-heading font-bold text-sm text-text-primary">
+                <h3 className="font-heading font-bold text-base text-text-primary">
                   Digital Masterclass Activated
                 </h3>
                 <span className="bg-secondary text-text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                   Instant Access
                 </span>
               </div>
-              <p className="text-xs text-text-secondary leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed">
                 Your course enrollment is live! You can immediately start watching video lessons, download learning materials, and track your progress.
               </p>
             </div>
           </div>
           <Link
             to="/my-world/courses"
-            className="shrink-0 inline-flex items-center space-x-1.5 px-4 py-2 bg-secondary hover:bg-secondary-hover text-text-primary text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer"
+            className="shrink-0 inline-flex items-center space-x-1.5 px-4 py-2 bg-secondary hover:bg-secondary-hover text-text-primary text-sm font-bold rounded-xl transition-all shadow-xs cursor-pointer"
           >
             <span>Go to My Learning</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -214,14 +214,14 @@ export default function OrderConfirmation() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Delivery Address or Digital Access */}
         <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-4">
-          <div className="flex items-center space-x-2 text-primary font-bold font-heading text-sm border-b border-text-muted/10 pb-3">
+          <div className="flex items-center space-x-2 text-primary font-bold font-heading text-base border-b border-text-muted/10 pb-3">
             <MapPin className="w-4 h-4 text-primary" />
             <h3>Delivery Details</h3>
           </div>
 
           {hasPhysicalItems && order.deliveryAddress ? (
-            <div className="text-xs text-text-secondary space-y-1.5 leading-relaxed">
-              <strong className="block text-text-primary text-sm font-bold">
+            <div className="text-sm text-text-secondary space-y-1.5 leading-relaxed">
+              <strong className="block text-text-primary text-base font-bold">
                 {(order.deliveryAddress as any).recipientName}
               </strong>
               <p>{(order.deliveryAddress as any).streetAddress}</p>
@@ -234,11 +234,11 @@ export default function OrderConfirmation() {
               </p>
             </div>
           ) : hasPhysicalItems ? (
-            <p className="text-xs text-text-muted italic">
+            <p className="text-sm text-text-muted italic">
               Standard profile address on file.
             </p>
           ) : (
-            <div className="text-xs text-text-secondary space-y-1">
+            <div className="text-sm text-text-secondary space-y-1">
               <span className="font-semibold text-text-primary block">
                 Direct Digital Delivery
               </span>
@@ -251,12 +251,12 @@ export default function OrderConfirmation() {
 
         {/* Right Column: Payment Summary */}
         <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-4">
-          <div className="flex items-center space-x-2 text-primary font-bold font-heading text-sm border-b border-text-muted/10 pb-3">
+          <div className="flex items-center space-x-2 text-primary font-bold font-heading text-base border-b border-text-muted/10 pb-3">
             <CreditCard className="w-4 h-4 text-primary" />
             <h3>Payment Summary</h3>
           </div>
 
-          <div className="text-xs space-y-2 text-text-secondary">
+          <div className="text-sm space-y-2 text-text-secondary">
             <div className="flex justify-between items-center">
               <span>Payment Status:</span>
               <span className="font-bold text-success bg-success-light px-2.5 py-0.5 rounded-full text-[11px] uppercase tracking-wide flex items-center space-x-1">
@@ -281,7 +281,7 @@ export default function OrderConfirmation() {
               <span className="text-text-primary">{formattedDate}</span>
             </div>
             <div className="flex justify-between items-center pt-2.5 border-t border-text-muted/10 font-bold text-text-primary">
-              <span className="text-sm">Total Paid:</span>
+              <span className="text-base">Total Paid:</span>
               <span className="text-primary font-heading text-lg">
                 ₹{Number(order.total).toFixed(2)}
               </span>
@@ -296,7 +296,7 @@ export default function OrderConfirmation() {
           <h2 className="text-base font-bold font-heading text-primary">
             Purchased Items ({order.items?.length || 0})
           </h2>
-          <span className="text-xs text-text-muted">
+          <span className="text-sm text-text-muted">
             Status: <strong className="text-text-primary uppercase">{order.status}</strong>
           </span>
         </div>
@@ -311,7 +311,7 @@ export default function OrderConfirmation() {
               'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=600';
 
             return (
-              <div key={item.id} className="py-3.5 flex items-center justify-between gap-4 text-xs">
+              <div key={item.id} className="py-3.5 flex items-center justify-between gap-4 text-sm">
                 <div className="flex items-center space-x-3.5">
                   <img
                     src={imgUrl}
@@ -332,7 +332,7 @@ export default function OrderConfirmation() {
                         </span>
                       )}
                     </div>
-                    <h4 className="font-heading font-bold text-sm text-text-primary">
+                    <h4 className="font-heading font-bold text-base text-text-primary">
                       {title}
                     </h4>
                     <p className="text-text-muted text-[11px]">
@@ -342,7 +342,7 @@ export default function OrderConfirmation() {
                 </div>
 
                 <div className="text-right shrink-0">
-                  <span className="font-heading font-bold text-sm text-primary block">
+                  <span className="font-heading font-bold text-base text-primary block">
                     ₹{(Number(item.price) * item.quantity).toFixed(2)}
                   </span>
                   {isCourse && item.courseId && (
@@ -365,7 +365,7 @@ export default function OrderConfirmation() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-text-muted/15">
         <Link
           to="/"
-          className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-background-card border border-text-muted/20 hover:bg-background-muted text-xs font-semibold text-text-primary rounded-xl transition-colors cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-background-card border border-text-muted/20 hover:bg-background-muted text-sm font-semibold text-text-primary rounded-xl transition-colors cursor-pointer"
         >
           <ShoppingBag className="w-4 h-4 text-primary" />
           <span>Continue Shopping</span>
@@ -375,7 +375,7 @@ export default function OrderConfirmation() {
           {hasCourseItems && (
             <Link
               to="/my-world/courses"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 bg-secondary-light border border-secondary/30 hover:bg-secondary-light/80 text-xs font-bold text-text-primary rounded-xl transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-3 bg-secondary-light border border-secondary/30 hover:bg-secondary-light/80 text-sm font-bold text-text-primary rounded-xl transition-colors cursor-pointer"
             >
               <BookOpen className="w-4 h-4 text-secondary" />
               <span>Access My Learning</span>
@@ -384,7 +384,7 @@ export default function OrderConfirmation() {
 
           <Link
             to={`/order/${order.id}`}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-all shadow-soft cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-all shadow-soft cursor-pointer"
           >
             <Package className="w-4 h-4" />
             <span>Track Your Order</span>

@@ -87,14 +87,14 @@ export default function AdminSettings() {
         </div>
         <div>
           <h1 className="text-2xl font-bold font-heading text-text-primary">Platform Site Settings</h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             Configure global store identity, customer contact email, currency display, and flat shipping fee.
           </p>
         </div>
       </div>
 
       {successMsg && (
-        <div className="bg-success-light text-success border border-success/30 rounded-2xl p-4 flex items-center space-x-2 text-xs font-bold animate-in fade-in">
+        <div className="bg-success-light text-success border border-success/30 rounded-2xl p-4 flex items-center space-x-2 text-sm font-bold animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{successMsg}</span>
         </div>
@@ -103,16 +103,16 @@ export default function AdminSettings() {
       {isLoading ? (
         <div className="py-20 text-center text-text-secondary space-y-3">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-          <p className="text-sm font-medium">Loading platform site settings...</p>
+          <p className="text-base font-medium">Loading platform site settings...</p>
         </div>
       ) : isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-center space-y-3">
           <AlertCircle className="w-8 h-8 mx-auto text-error" />
-          <p className="text-sm font-bold text-error">Failed to load site settings</p>
-          <p className="text-xs text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
+          <p className="text-base font-bold text-error">Failed to load site settings</p>
+          <p className="text-sm text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
+            className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
           >
             Retry
           </button>
@@ -127,7 +127,7 @@ export default function AdminSettings() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Store Name */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-text-primary flex items-center space-x-1.5">
+                <label className="block text-sm font-semibold text-text-primary flex items-center space-x-1.5">
                   <Store className="w-3.5 h-3.5 text-primary" />
                   <span>Platform Store Name</span>
                 </label>
@@ -136,13 +136,13 @@ export default function AdminSettings() {
                   required
                   value={storeName}
                   onChange={(e) => setStoreName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-medium"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-medium"
                 />
               </div>
 
               {/* Contact Email */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-text-primary flex items-center space-x-1.5">
+                <label className="block text-sm font-semibold text-text-primary flex items-center space-x-1.5">
                   <Mail className="w-3.5 h-3.5 text-primary" />
                   <span>Customer Support Contact Email</span>
                 </label>
@@ -151,13 +151,13 @@ export default function AdminSettings() {
                   required
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-medium"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-medium"
                 />
               </div>
 
               {/* Currency Symbol */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-text-primary flex items-center space-x-1.5">
+                <label className="block text-sm font-semibold text-text-primary flex items-center space-x-1.5">
                   <IndianRupee className="w-3.5 h-3.5 text-primary" />
                   <span>Display Currency Symbol</span>
                 </label>
@@ -166,13 +166,13 @@ export default function AdminSettings() {
                   required
                   value={currencySymbol}
                   onChange={(e) => setCurrencySymbol(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-bold"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-bold"
                 />
               </div>
 
               {/* Flat Shipping Fee */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-text-primary flex items-center space-x-1.5">
+                <label className="block text-sm font-semibold text-text-primary flex items-center space-x-1.5">
                   <Truck className="w-3.5 h-3.5 text-secondary" />
                   <span>Flat Shipping Fee (₹)</span>
                 </label>
@@ -183,7 +183,7 @@ export default function AdminSettings() {
                   required
                   value={flatShippingFee}
                   onChange={(e) => setFlatShippingFee(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-bold"
+                  className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-bold"
                 />
                 <p className="text-[11px] text-text-muted">
                   Wired into live checkout shipping calculation (overrides standard ₹70 fee when set &gt; 0).
@@ -197,7 +197,7 @@ export default function AdminSettings() {
             <button
               type="submit"
               disabled={updateSettingsMutation.isPending}
-              className="px-6 py-3 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+              className="px-6 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
             >
               {updateSettingsMutation.isPending ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />

@@ -41,7 +41,7 @@ export default function Wishlist() {
     return (
       <div className="max-w-6xl mx-auto py-16 px-4 text-center space-y-4">
         <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-        <p className="text-sm text-text-muted">Loading your saved wishlist items...</p>
+        <p className="text-base text-text-muted">Loading your saved wishlist items...</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ export default function Wishlist() {
         <div className="p-6 bg-error-light border border-error/20 rounded-3xl text-error space-y-2">
           <AlertCircle className="w-8 h-8 mx-auto" />
           <p className="font-bold text-base">Failed to load wishlist</p>
-          <p className="text-xs">{(error as any)?.response?.data?.error?.message || 'An error occurred.'}</p>
+          <p className="text-sm">{(error as any)?.response?.data?.error?.message || 'An error occurred.'}</p>
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ export default function Wishlist() {
         </div>
         <div>
           <h1 className="text-3xl font-extrabold font-heading text-primary">Your Wishlist</h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             {wishlistItems.length} {wishlistItems.length === 1 ? 'saved item' : 'saved items'} in your personal list
           </p>
         </div>
@@ -80,13 +80,13 @@ export default function Wishlist() {
           </div>
           <div className="space-y-1">
             <h3 className="text-xl font-bold font-heading text-text-primary">Your Wishlist is Empty</h3>
-            <p className="text-xs text-text-muted max-w-sm mx-auto">
+            <p className="text-sm text-text-muted max-w-sm mx-auto">
               Save your favorite organic harvests, handcrafted goods, and masterclasses to revisit anytime.
             </p>
           </div>
           <Link
             to="/"
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>Explore Catalog</span>
@@ -103,7 +103,7 @@ export default function Wishlist() {
               <button
                 onClick={() => removeMutation.mutate(item.id)}
                 disabled={removeMutation.isPending}
-                className="mt-2 w-full py-1.5 bg-background-card hover:bg-error-light hover:text-error border border-text-muted/20 rounded-xl text-xs font-semibold text-text-secondary transition-colors flex items-center justify-center space-x-1 cursor-pointer"
+                className="mt-2 w-full py-1.5 bg-background-card hover:bg-error-light hover:text-error border border-text-muted/20 rounded-xl text-sm font-semibold text-text-secondary transition-colors flex items-center justify-center space-x-1 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Remove from Wishlist</span>

@@ -27,7 +27,7 @@ export default function Help() {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8">
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-semibold">
+        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-sm font-semibold">
           <HelpCircle className="w-4 h-4" />
           <span>Support Center</span>
         </div>
@@ -46,7 +46,7 @@ export default function Help() {
               >
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between font-heading font-bold text-sm text-text-primary hover:bg-background-muted/50 transition-colors cursor-pointer"
+                  className="w-full p-5 text-left flex items-center justify-between font-heading font-bold text-base text-text-primary hover:bg-background-muted/50 transition-colors cursor-pointer"
                 >
                   <span>{faq.q}</span>
                   {isOpen ? (
@@ -57,7 +57,7 @@ export default function Help() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-text-muted/10 pt-3">
+                  <div className="px-5 pb-5 text-sm text-text-secondary leading-relaxed border-t border-text-muted/10 pt-3">
                     {faq.a}
                   </div>
                 )}

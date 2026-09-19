@@ -43,12 +43,12 @@ export default function MyOrders() {
         <div className="bg-background-card rounded-2xl p-10 border border-text-muted/15 shadow-soft space-y-4">
           <Package className="w-12 h-12 mx-auto text-primary" />
           <h2 className="text-2xl font-bold font-heading text-primary">Sign in to View Order History</h2>
-          <p className="text-xs text-text-secondary max-w-md mx-auto">
+          <p className="text-sm text-text-secondary max-w-md mx-auto">
             Please log in to your account to view your past orders, active shipments, and fulfillment status.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl shadow-soft"
+            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-soft"
           >
             <span>Sign In Now</span>
             <ArrowRight className="w-4 h-4" />
@@ -62,7 +62,7 @@ export default function MyOrders() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Fetching your order history...</p>
+        <p className="text-base font-medium">Fetching your order history...</p>
       </div>
     );
   }
@@ -86,12 +86,12 @@ export default function MyOrders() {
     <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
       {/* Page Header */}
       <div className="border-b border-text-muted/15 pb-6">
-        <div className="flex items-center space-x-2 text-primary font-semibold text-xs uppercase tracking-wider mb-1">
+        <div className="flex items-center space-x-2 text-primary font-semibold text-sm uppercase tracking-wider mb-1">
           <Package className="w-4 h-4 text-primary" />
           <span>My World — Orders & Purchasing</span>
         </div>
         <h1 className="text-3xl font-bold font-heading text-primary">Order History & Tracking</h1>
-        <p className="text-sm text-text-secondary">
+        <p className="text-base text-text-secondary">
           Track active deliveries, view receipt summaries, and check digital course activations
         </p>
       </div>
@@ -99,7 +99,7 @@ export default function MyOrders() {
       {isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-error flex items-center space-x-3">
           <AlertCircle className="w-6 h-6 shrink-0" />
-          <p className="text-sm font-medium">
+          <p className="text-base font-medium">
             {(error as any)?.response?.data?.error?.message || 'Failed to load order history'}
           </p>
         </div>
@@ -107,12 +107,12 @@ export default function MyOrders() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-4">
           <ShoppingBag className="w-14 h-14 mx-auto text-text-muted opacity-40" />
           <h3 className="text-2xl font-bold font-heading">No Orders Placed Yet</h3>
-          <p className="text-xs text-text-secondary max-w-md mx-auto">
+          <p className="text-sm text-text-secondary max-w-md mx-auto">
             You haven't placed any marketplace orders or enrolled in courses yet.
           </p>
           <Link
             to="/shop"
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
           >
             <span>Start Shopping</span>
             <ArrowRight className="w-4 h-4" />
@@ -142,12 +142,12 @@ export default function MyOrders() {
                     <span className="text-[11px] font-mono text-text-muted uppercase block">
                       Order ID: {order.id}
                     </span>
-                    <span className="text-xs text-text-secondary">Placed on {dateStr}</span>
+                    <span className="text-sm text-text-secondary">Placed on {dateStr}</span>
                   </div>
 
                   <div className="flex items-center space-x-3">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusBadge(
+                      className={`px-3 py-1 rounded-full text-sm font-bold border ${getStatusBadge(
                         order.status
                       )}`}
                     >
@@ -161,7 +161,7 @@ export default function MyOrders() {
 
                 {/* Cancellation Notice Banner */}
                 {order.status === 'CANCELLED' && (
-                  <div className="bg-error-light/80 border border-error/25 rounded-xl px-4 py-2.5 text-xs text-error flex items-start space-x-2">
+                  <div className="bg-error-light/80 border border-error/25 rounded-xl px-4 py-2.5 text-sm text-error flex items-start space-x-2">
                     <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
                     <div>
                       <span className="font-bold">Order Cancelled:</span>{' '}
@@ -196,7 +196,7 @@ export default function MyOrders() {
                             alt={title}
                             className="w-10 h-10 rounded-lg object-cover"
                           />
-                          <div className="text-xs max-w-[140px]">
+                          <div className="text-sm max-w-[140px]">
                             <span className="font-semibold text-text-primary block truncate">
                               {title}
                             </span>
@@ -211,7 +211,7 @@ export default function MyOrders() {
 
                   <Link
                     to={`/order/${order.id}`}
-                    className="flex items-center space-x-1 px-4 py-2 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft shrink-0 ml-4"
+                    className="flex items-center space-x-1 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft shrink-0 ml-4"
                   >
                     <span>Track Order</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -224,7 +224,7 @@ export default function MyOrders() {
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-between pt-6 border-t border-text-muted/15">
-              <span className="text-xs text-text-secondary">
+              <span className="text-sm text-text-secondary">
                 Page {pagination.page} of {pagination.totalPages}
               </span>
               <div className="flex items-center space-x-2">

@@ -257,7 +257,7 @@ export default function EducatorCentre() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div>
           <h1 className="text-3xl font-bold font-heading text-secondary">Educator Masterclass Studio</h1>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Build multi-format course curricula, track student completion progress, monitor revenue trends, and engage with reviews.
           </p>
         </div>
@@ -265,7 +265,7 @@ export default function EducatorCentre() {
         <div className="flex items-center space-x-3">
           <Link
             to="/educator/courses/new"
-            className="px-5 py-2.5 bg-secondary text-text-primary text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0 cursor-pointer"
+            className="px-5 py-2.5 bg-secondary text-text-primary text-sm font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Create New Course</span>
@@ -278,7 +278,7 @@ export default function EducatorCentre() {
         {/* Card 1: Active Courses */}
         <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
               Active Courses
             </span>
             <span className="text-3xl font-extrabold font-heading text-secondary block">
@@ -294,7 +294,7 @@ export default function EducatorCentre() {
         {/* Card 2: Enrolled Students */}
         <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
               Enrolled Students
             </span>
             <span className="text-3xl font-extrabold font-heading text-primary block">
@@ -310,7 +310,7 @@ export default function EducatorCentre() {
         {/* Card 3: Gross Revenue */}
         <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
               Total Course Earnings
             </span>
             <span className="text-3xl font-extrabold font-heading text-text-primary block">
@@ -326,7 +326,7 @@ export default function EducatorCentre() {
         {/* Card 4: Avg Rating */}
         <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
               Average Course Rating
             </span>
             <span className="text-3xl font-extrabold font-heading text-secondary block flex items-center space-x-1">
@@ -345,7 +345,7 @@ export default function EducatorCentre() {
       <div className="flex flex-wrap items-center gap-1.5 bg-background-muted p-1 rounded-2xl border border-text-muted/10">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'overview'
               ? 'bg-secondary text-white shadow-soft'
               : 'text-text-secondary hover:text-text-primary'
@@ -355,7 +355,7 @@ export default function EducatorCentre() {
         </button>
         <button
           onClick={() => setActiveTab('courses')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'courses'
               ? 'bg-secondary text-white shadow-soft'
               : 'text-text-secondary hover:text-text-primary'
@@ -365,7 +365,7 @@ export default function EducatorCentre() {
         </button>
         <button
           onClick={() => setActiveTab('revenue')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'revenue'
               ? 'bg-secondary text-white shadow-soft'
               : 'text-text-secondary hover:text-text-primary'
@@ -375,7 +375,7 @@ export default function EducatorCentre() {
         </button>
         <button
           onClick={() => setActiveTab('students')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'students'
               ? 'bg-secondary text-white shadow-soft'
               : 'text-text-secondary hover:text-text-primary'
@@ -385,7 +385,7 @@ export default function EducatorCentre() {
         </button>
         <button
           onClick={() => setActiveTab('reviews')}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
             activeTab === 'reviews'
               ? 'bg-secondary text-white shadow-soft'
               : 'text-text-secondary hover:text-text-primary'
@@ -408,7 +408,7 @@ export default function EducatorCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-secondary" />
             </div>
           ) : activityEvents.length === 0 ? (
-            <div className="py-8 text-center text-xs text-text-muted">
+            <div className="py-8 text-center text-sm text-text-muted">
               No recent student activity logged yet across your masterclasses.
             </div>
           ) : (
@@ -416,7 +416,7 @@ export default function EducatorCentre() {
               {activityEvents.map((evt) => (
                 <div
                   key={evt.id}
-                  className="p-4 rounded-2xl border border-text-muted/15 bg-background-muted/30 flex items-start justify-between text-xs"
+                  className="p-4 rounded-2xl border border-text-muted/15 bg-background-muted/30 flex items-start justify-between text-sm"
                 >
                   <div className="flex items-start space-x-3">
                     <div className={`p-2 rounded-xl mt-0.5 ${evt.type === 'ENROLLMENT' ? 'bg-primary-light text-primary' : 'bg-secondary/20 text-secondary'}`}>
@@ -447,7 +447,7 @@ export default function EducatorCentre() {
             </h3>
             <Link
               to="/educator/courses/new"
-              className="px-4 py-2 bg-secondary text-text-primary text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-1"
+              className="px-4 py-2 bg-secondary text-text-primary text-sm font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center space-x-1"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>New Course</span>
@@ -459,7 +459,7 @@ export default function EducatorCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-secondary" />
             </div>
           ) : coursesList.length === 0 ? (
-            <div className="py-8 text-center text-xs text-text-muted">
+            <div className="py-8 text-center text-sm text-text-muted">
               You haven't created any masterclass courses yet.
             </div>
           ) : (
@@ -471,7 +471,7 @@ export default function EducatorCentre() {
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold text-secondary uppercase">
+                      <span className="text-sm font-mono font-bold text-secondary uppercase">
                         {c.category}
                       </span>
 
@@ -496,8 +496,8 @@ export default function EducatorCentre() {
                     </div>
 
                     <h4 className="text-base font-bold font-heading text-text-primary">{c.title}</h4>
-                    <p className="text-xs text-text-muted line-clamp-2">{c.description}</p>
-                    <p className="text-xs font-bold text-primary">
+                    <p className="text-sm text-text-muted line-clamp-2">{c.description}</p>
+                    <p className="text-sm font-bold text-primary">
                       Price: ₹{Number(c.price).toFixed(2)}{' '}
                       {c.discountPrice && (
                         <span className="line-through text-text-muted text-[11px] ml-1">
@@ -510,7 +510,7 @@ export default function EducatorCentre() {
                   <div className="flex items-center justify-between border-t border-text-muted/10 pt-3">
                     <Link
                       to={`/course/${c.id}`}
-                      className="text-xs font-bold text-secondary hover:underline flex items-center space-x-1"
+                      className="text-sm font-bold text-secondary hover:underline flex items-center space-x-1"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Preview</span>
@@ -522,14 +522,14 @@ export default function EducatorCentre() {
                           setSelectedCourseId(c.id);
                           setActiveTab('students');
                         }}
-                        className="px-3 py-1.5 bg-background-muted text-text-primary text-xs font-semibold rounded-xl border border-text-muted/20 hover:bg-secondary-light/40"
+                        className="px-3 py-1.5 bg-background-muted text-text-primary text-sm font-semibold rounded-xl border border-text-muted/20 hover:bg-secondary-light/40"
                       >
                         Roster
                       </button>
 
                       <Link
                         to={`/educator/courses/edit/${c.id}`}
-                        className="px-3 py-1.5 bg-secondary text-white text-xs font-semibold rounded-xl hover:bg-secondary-hover transition-colors flex items-center space-x-1"
+                        className="px-3 py-1.5 bg-secondary text-white text-sm font-semibold rounded-xl hover:bg-secondary-hover transition-colors flex items-center space-x-1"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>Edit Curriculum</span>
@@ -552,7 +552,7 @@ export default function EducatorCentre() {
                 <TrendingUp className="w-5 h-5 text-secondary" />
                 <span>Masterclass Revenue Trend</span>
               </h3>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Gross earnings aggregated by {period} period from student course purchases
               </p>
             </div>
@@ -560,7 +560,7 @@ export default function EducatorCentre() {
             <div className="flex items-center space-x-1 bg-background-muted/80 p-1 rounded-xl border border-text-muted/15">
               <button
                 onClick={() => setPeriod('daily')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                   period === 'daily' ? 'bg-secondary text-white shadow-soft' : 'text-text-muted'
                 }`}
               >
@@ -568,7 +568,7 @@ export default function EducatorCentre() {
               </button>
               <button
                 onClick={() => setPeriod('weekly')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                   period === 'weekly' ? 'bg-secondary text-white shadow-soft' : 'text-text-muted'
                 }`}
               >
@@ -576,7 +576,7 @@ export default function EducatorCentre() {
               </button>
               <button
                 onClick={() => setPeriod('monthly')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                   period === 'monthly' ? 'bg-secondary text-white shadow-soft' : 'text-text-muted'
                 }`}
               >
@@ -590,7 +590,7 @@ export default function EducatorCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-secondary" />
             </div>
           ) : revenueAnalytics.chartData.length === 0 ? (
-            <div className="py-12 text-center text-xs text-text-muted">
+            <div className="py-12 text-center text-sm text-text-muted">
               No revenue recorded for the selected period yet.
             </div>
           ) : (
@@ -626,7 +626,7 @@ export default function EducatorCentre() {
                 <Users className="w-5 h-5 text-secondary" />
                 <span>Student Roster & Progress Breakdown</span>
               </h3>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Track lesson completion progress and issued certificates for enrolled students
               </p>
             </div>
@@ -636,7 +636,7 @@ export default function EducatorCentre() {
               <select
                 value={activeCourseIdForRoster}
                 onChange={(e) => setSelectedCourseId(e.target.value)}
-                className="px-4 py-2 bg-background-muted/80 border border-text-muted/20 rounded-xl text-xs font-bold text-text-primary cursor-pointer"
+                className="px-4 py-2 bg-background-muted/80 border border-text-muted/20 rounded-xl text-sm font-bold text-text-primary cursor-pointer"
               >
                 {coursesList.map((c: any) => (
                   <option key={c.id} value={c.id}>
@@ -652,12 +652,12 @@ export default function EducatorCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-secondary" />
             </div>
           ) : rosterList.length === 0 ? (
-            <div className="py-8 text-center text-xs text-text-muted">
+            <div className="py-8 text-center text-sm text-text-muted">
               No students enrolled in this course yet.
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-sm">
                 <thead className="bg-background-muted text-text-muted font-semibold border-b">
                   <tr>
                     <th className="py-3 px-4">Student</th>
@@ -719,7 +719,7 @@ export default function EducatorCentre() {
                 <div className="flex items-center justify-between border-b border-text-muted/10 pb-3">
                   <div>
                     <h3 className="font-heading font-bold text-lg text-primary">Student Progress Breakdown</h3>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-sm text-text-muted">
                       {studentDetailData?.data?.student?.name} ({studentDetailData?.data?.student?.email})
                     </p>
                   </div>
@@ -737,12 +737,12 @@ export default function EducatorCentre() {
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
-                    <div className="flex items-center justify-between bg-background-muted/40 p-3 rounded-xl border border-text-muted/10 text-xs">
+                    <div className="flex items-center justify-between bg-background-muted/40 p-3 rounded-xl border border-text-muted/10 text-sm">
                       <span>Overall Progress: <strong>{studentDetailData?.data?.progressPercent}%</strong></span>
                       <span>Certificate: {studentDetailData?.data?.certificateIssued ? 'Issued ✓' : 'Pending'}</span>
                     </div>
 
-                    <div className="space-y-2 text-xs">
+                    <div className="space-y-2 text-sm">
                       <h4 className="font-bold text-text-primary uppercase text-[11px] tracking-wider">Lesson Status Checklist:</h4>
                       {studentDetailData?.data?.lessons.map((les) => (
                         <div
@@ -778,7 +778,7 @@ export default function EducatorCentre() {
                 <Star className="w-5 h-5 text-secondary fill-secondary" />
                 <span>Student Reviews & Public Educator Responses</span>
               </h3>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Review student feedback and publish responses shown on course landing pages
               </p>
             </div>
@@ -788,7 +788,7 @@ export default function EducatorCentre() {
               <select
                 value={activeCourseIdForReviews}
                 onChange={(e) => setSelectedCourseId(e.target.value)}
-                className="px-4 py-2 bg-background-muted/80 border border-text-muted/20 rounded-xl text-xs font-bold text-text-primary cursor-pointer"
+                className="px-4 py-2 bg-background-muted/80 border border-text-muted/20 rounded-xl text-sm font-bold text-text-primary cursor-pointer"
               >
                 {coursesList.map((c: any) => (
                   <option key={c.id} value={c.id}>
@@ -800,7 +800,7 @@ export default function EducatorCentre() {
           </div>
 
           {/* Star Breakdown Chart */}
-          <div className="bg-background-muted/40 p-4 rounded-2xl border border-text-muted/15 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs">
+          <div className="bg-background-muted/40 p-4 rounded-2xl border border-text-muted/15 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-sm">
             {[5, 4, 3, 2, 1].map((star) => (
               <div key={star} className="p-2 bg-background-card rounded-xl border border-text-muted/10">
                 <span className="font-bold text-secondary flex items-center justify-center space-x-1">
@@ -816,7 +816,7 @@ export default function EducatorCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-secondary" />
             </div>
           ) : reviewsList.length === 0 ? (
-            <div className="py-8 text-center text-xs text-text-muted">
+            <div className="py-8 text-center text-sm text-text-muted">
               No student reviews received for this course yet.
             </div>
           ) : (
@@ -824,7 +824,7 @@ export default function EducatorCentre() {
               {reviewsList.map((rev) => (
                 <div
                   key={rev.id}
-                  className="p-5 rounded-2xl border border-text-muted/15 bg-background-card shadow-soft space-y-3 text-xs"
+                  className="p-5 rounded-2xl border border-text-muted/15 bg-background-card shadow-soft space-y-3 text-sm"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
@@ -840,7 +840,7 @@ export default function EducatorCentre() {
                     </span>
                   </div>
 
-                  <p className="text-text-primary text-xs">{rev.comment || 'No comment text provided.'}</p>
+                  <p className="text-text-primary text-sm">{rev.comment || 'No comment text provided.'}</p>
 
                   {/* Public Educator Reply Display */}
                   {rev.reply ? (
@@ -857,7 +857,7 @@ export default function EducatorCentre() {
                           Edit Reply
                         </button>
                       </div>
-                      <p className="text-xs text-text-primary">{rev.reply}</p>
+                      <p className="text-sm text-text-primary">{rev.reply}</p>
                     </div>
                   ) : replyingReviewId !== rev.id ? (
                     <button
@@ -880,12 +880,12 @@ export default function EducatorCentre() {
                         placeholder="Write a public response to this student review..."
                         value={replyTextMap[rev.id] || ''}
                         onChange={(e) => setReplyTextMap({ ...replyTextMap, [rev.id]: e.target.value })}
-                        className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs"
+                        className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
                       ></textarea>
                       <div className="flex items-center justify-end space-x-2">
                         <button
                           onClick={() => setReplyingReviewId(null)}
-                          className="px-3 py-1 bg-background-muted text-text-muted text-xs rounded-lg hover:bg-text-muted/10"
+                          className="px-3 py-1 bg-background-muted text-text-muted text-sm rounded-lg hover:bg-text-muted/10"
                         >
                           Cancel
                         </button>
@@ -897,7 +897,7 @@ export default function EducatorCentre() {
                             })
                           }
                           disabled={replyMutation.isPending}
-                          className="px-4 py-1 bg-secondary text-white text-xs font-bold rounded-lg hover:bg-secondary-hover flex items-center space-x-1 cursor-pointer"
+                          className="px-4 py-1 bg-secondary text-white text-sm font-bold rounded-lg hover:bg-secondary-hover flex items-center space-x-1 cursor-pointer"
                         >
                           <Send className="w-3 h-3" />
                           <span>Publish Reply</span>

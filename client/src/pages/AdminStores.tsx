@@ -104,14 +104,14 @@ export default function AdminStores() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div>
-          <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 mb-2">
+          <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-sm font-bold border border-primary/20 mb-2">
             <Store className="w-4 h-4" />
             <span>Storefront Directory</span>
           </div>
           <h1 className="text-3xl font-extrabold font-heading text-primary">
             Active Marketplace Stores
           </h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-sm text-text-secondary">
             Manage and view all approved Seller, Farmer, and Artisan stores operating on the platform.
           </p>
         </div>
@@ -124,13 +124,13 @@ export default function AdminStores() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by store name or seller..."
-              className="w-full pl-9 pr-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-xs focus:ring-2 focus:ring-primary focus:outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none"
             />
             <Search className="w-4 h-4 text-text-muted absolute left-3 top-2.5" />
           </div>
           <button
             type="submit"
-            className="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+            className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
           >
             Search
           </button>
@@ -141,19 +141,19 @@ export default function AdminStores() {
       {isLoading ? (
         <div className="min-h-[40vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
           <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-sm font-medium">Loading store directory...</p>
+          <p className="text-base font-medium">Loading store directory...</p>
         </div>
       ) : isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-error flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <AlertCircle className="w-6 h-6 shrink-0" />
-            <p className="text-sm font-medium">
+            <p className="text-base font-medium">
               {(error as any)?.response?.data?.error?.message || 'Failed to load active stores'}
             </p>
           </div>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-xl"
+            className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-xl"
           >
             Retry
           </button>
@@ -162,7 +162,7 @@ export default function AdminStores() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-4">
           <Store className="w-12 h-12 mx-auto text-text-muted opacity-40" />
           <h3 className="text-xl font-bold font-heading">No Active Stores Found</h3>
-          <p className="text-xs text-text-secondary max-w-md mx-auto">
+          <p className="text-sm text-text-secondary max-w-md mx-auto">
             {search ? `No seller store matching "${search}" was found.` : 'No approved sellers are currently active.'}
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function AdminStores() {
           {/* Table Container */}
           <div className="bg-background-card rounded-2xl border border-text-muted/15 overflow-hidden shadow-soft">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-sm border-collapse">
                 <thead>
                   <tr className="bg-background-muted/60 text-text-muted uppercase text-[10px] tracking-wider border-b border-text-muted/15">
                     <th className="py-3.5 px-5 font-bold">Store / Seller Details</th>
@@ -204,13 +204,13 @@ export default function AdminStores() {
                                 className="w-10 h-10 rounded-xl object-cover border border-text-muted/20"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center font-heading font-extrabold text-sm border border-primary/20">
+                              <div className="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center font-heading font-extrabold text-base border border-primary/20">
                                 {store.storeName.charAt(0).toUpperCase()}
                               </div>
                             )}
 
                             <div className="space-y-0.5 max-w-xs">
-                              <span className="font-heading font-bold text-sm text-text-primary block truncate">
+                              <span className="font-heading font-bold text-base text-text-primary block truncate">
                                 {store.storeName}
                               </span>
                               <span className="text-text-secondary text-[11px] block truncate">
@@ -266,7 +266,7 @@ export default function AdminStores() {
                             <Link
                               to={`/producer/${store.producerId}`}
                               target="_blank"
-                              className="inline-flex items-center space-x-1 px-3 py-1.5 bg-background-muted hover:bg-primary-light text-primary hover:text-primary text-xs font-semibold rounded-lg transition-colors border border-text-muted/15"
+                              className="inline-flex items-center space-x-1 px-3 py-1.5 bg-background-muted hover:bg-primary-light text-primary hover:text-primary text-sm font-semibold rounded-lg transition-colors border border-text-muted/15"
                             >
                               <span>View Storefront</span>
                               <ExternalLink className="w-3 h-3" />
@@ -274,7 +274,7 @@ export default function AdminStores() {
                           ) : (
                             <Link
                               to={`/?producerRole=${store.role}`}
-                              className="inline-flex items-center space-x-1 px-3 py-1.5 bg-background-muted hover:bg-primary-light text-text-secondary hover:text-primary text-xs font-semibold rounded-lg transition-colors border border-text-muted/15"
+                              className="inline-flex items-center space-x-1 px-3 py-1.5 bg-background-muted hover:bg-primary-light text-text-secondary hover:text-primary text-sm font-semibold rounded-lg transition-colors border border-text-muted/15"
                             >
                               <span>View Products ({store.productCount})</span>
                               <ExternalLink className="w-3 h-3" />
@@ -292,7 +292,7 @@ export default function AdminStores() {
           {/* Pagination Controls */}
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-text-secondary">
+              <span className="text-sm text-text-secondary">
                 Showing Page {pagination.page} of {pagination.totalPages} ({pagination.total} total stores)
               </span>
               <div className="flex items-center space-x-2">

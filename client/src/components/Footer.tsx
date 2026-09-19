@@ -20,7 +20,7 @@ export default function Footer() {
   if (isAdmin) {
     return (
       <footer className="mt-16 bg-[#1B2E1E] text-white font-body py-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-[#B0C2B3]">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-sm text-[#B0C2B3]">
           <div className="flex items-center space-x-2">
             <div className="bg-white rounded-md p-0.5 overflow-hidden">
               <img src={logo} alt="EcoMarket" className="h-5 w-auto object-contain" />
@@ -48,13 +48,13 @@ export default function Footer() {
 
       {/* Main Footer Body — 4 Column Amazon Pattern */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 py-6 sm:py-8 border-b border-white/10 text-xs">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 py-6 sm:py-8 border-b border-white/10 text-sm">
           {/* Column 1 — Get to Know Us */}
           <div className="space-y-2 sm:space-y-3 pb-2 sm:pb-0">
-            <h3 className="font-heading font-bold text-[10px] sm:text-sm text-primary sm:text-white uppercase tracking-wider">
+            <h3 className="font-heading font-bold text-[10px] sm:text-base text-primary sm:text-white uppercase tracking-wider">
               Get to Know Us
             </h3>
-            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-sm">
               <li>
                 <Link to="/about" className="block py-1 sm:py-0 hover:text-accent hover:underline transition-colors">
                   About EcoMarket
@@ -85,10 +85,10 @@ export default function Footer() {
 
           {/* Column 2 — Make Money with Us */}
           <div className="space-y-2 sm:space-y-3 pb-2 sm:pb-0">
-            <h3 className="font-heading font-bold text-[10px] sm:text-sm text-primary sm:text-white uppercase tracking-wider">
+            <h3 className="font-heading font-bold text-[10px] sm:text-base text-primary sm:text-white uppercase tracking-wider">
               Make Money with Us
             </h3>
-            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-sm">
               {!hasAnyPartnerRole && (
                 <>
                   <li>
@@ -123,10 +123,10 @@ export default function Footer() {
 
           {/* Column 3 — Eco-Learning & Features */}
           <div className="space-y-2 sm:space-y-3 pb-2 sm:pb-0">
-            <h3 className="font-heading font-bold text-[10px] sm:text-sm text-primary sm:text-white uppercase tracking-wider">
+            <h3 className="font-heading font-bold text-[10px] sm:text-base text-primary sm:text-white uppercase tracking-wider">
               Eco-Learning
             </h3>
-            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-sm">
               <li>
                 <Link to="/courses" className="block py-1 sm:py-0 hover:text-accent hover:underline transition-colors">
                   Browse Masterclasses
@@ -152,10 +152,10 @@ export default function Footer() {
 
           {/* Column 4 — Let Us Help You */}
           <div className="space-y-2 sm:space-y-3 pb-2 sm:pb-0">
-            <h3 className="font-heading font-bold text-[10px] sm:text-sm text-primary sm:text-white uppercase tracking-wider">
+            <h3 className="font-heading font-bold text-[10px] sm:text-base text-primary sm:text-white uppercase tracking-wider">
               Let Us Help You
             </h3>
-            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-xs">
+            <ul className="space-y-1.5 sm:space-y-2 text-[#B0C2B3] text-[11px] sm:text-sm">
               <li>
                 <Link to="/my-account" className="block py-1 sm:py-0 hover:text-accent hover:underline transition-colors">
                   Your Account Settings
@@ -196,12 +196,12 @@ export default function Footer() {
         </div>
 
         {/* Compact Bottom Bar (Logo + Copyright) */}
-        <div className="pt-5 pb-3 flex items-center justify-between gap-2 text-[10px] sm:text-xs text-[#B0C2B3]">
+        <div className="pt-5 pb-3 flex items-center justify-between gap-2 text-[10px] sm:text-sm text-[#B0C2B3]">
           <Link to="/" className="flex items-center space-x-1 sm:space-x-2 group shrink-0">
             <div className="p-0.5 sm:p-1 bg-white/10 rounded-md sm:rounded-xl group-hover:bg-white/20 transition-colors">
               <img src={logo} alt="EcoMarket" className="h-4 sm:h-9 w-auto object-contain" />
             </div>
-            <span className="brand-wordmark font-praise text-sm sm:text-3xl text-white leading-none">
+            <span className="brand-wordmark font-praise text-base sm:text-3xl text-white leading-none">
               EcoMarket
             </span>
           </Link>

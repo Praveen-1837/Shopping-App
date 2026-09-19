@@ -3,7 +3,6 @@ import { getAuth } from '@clerk/express';
 import { prisma } from '../../config/db';
 import { Role } from '@prisma/client';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Anthropic from '@anthropic-ai/sdk';
 import { getEmbedding } from './scripts/generateEmbeddings';
 
 async function getDbUser(clerkId: string) {
@@ -165,6 +164,23 @@ export const chatWithAssistant = async (req: Request, res: Response, next: NextF
       return;
     }
 
+    // 0. Check for Greeting/Small Talk
+    if (/^(hi|hello|hey|greetings|what's up|how are you)/i.test(message.trim())) {
+      const greetingText = `Hi there! 👋 Welcome to EcoMarket. What would you like to explore today? I can help you find:
+• Sustainable products
+• Eco-friendly masterclasses
+• Products in a specific category`;
+
+      const tokens = greetingText.split(' ');
+      for (const token of tokens) {
+        res.write(`data: ${JSON.stringify({ type: 'delta', text: token + ' ' })}\n\n`);
+        await new Promise((resolve) => setTimeout(resolve, 30));
+      }
+      res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
+      res.end();
+      return;
+    }
+
     // Retrieve Top Grounded Catalog Context
     const retrievedItems = await findSimilarItems(message, 6);
     const isAddRequest = /add|buy|cart|order/i.test(message);
@@ -188,7 +204,7 @@ export const chatWithAssistant = async (req: Request, res: Response, next: NextF
       try {
         const genAI = new GoogleGenerativeAI(geminiKey.trim());
         const model = genAI.getGenerativeModel({
-          model: 'gemini-3.6-flash',
+          model: 'gemini-2.0-flash',
           systemInstruction: `You are the EcoMarket AI Shopping Assistant.
 Your job is to recommend eco-friendly products and masterclasses strictly grounded in the database catalog context provided below.
 
@@ -231,69 +247,7 @@ ${catalogContextText}`,
       }
     }
 
-    // 2. Check Anthropic Claude API Key
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
-    const isValidAnthropicKey =
-      anthropicKey &&
-      anthropicKey.trim().startsWith('sk-ant-') &&
-      !anthropicKey.includes('your_') &&
-      !anthropicKey.includes('placeholder');
-
-    if (isValidAnthropicKey) {
-      try {
-        const anthropic = new Anthropic({ apiKey: anthropicKey.trim() });
-        const systemPrompt = `You are the EcoMarket AI Shopping Assistant.
-Your job is to recommend eco-friendly products and masterclasses strictly grounded in the database context provided below.
-
-STRICT GROUNDING RULES:
-1. You MUST NEVER invent, fabricate, or recommend products/courses that are not in the context.
-2. If no items in context match the user query, state honestly that no relevant catalog items were found.
-
-RETRIEVED CATALOG CONTEXT:
-${catalogContextText}`;
-
-        const messages: any[] = [
-          ...conversationHistory.map((h: any) => ({
-            role: h.role,
-            content: h.content,
-          })),
-          { role: 'user', content: message },
-        ];
-
-        const stream = await anthropic.messages.create({
-          model: 'claude-3-5-sonnet-20241022',
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages,
-          stream: true,
-        });
-
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-            res.write(`data: ${JSON.stringify({ type: 'delta', text: chunk.delta.text })}\n\n`);
-          }
-        }
-
-        if (isAddRequest && retrievedItems.length > 0) {
-          const itemToAdd = retrievedItems[0];
-          await executeAddToCart(dbUser.id, [{ id: itemToAdd.id, type: itemToAdd.type, quantity: 1 }]);
-          res.write(
-            `data: ${JSON.stringify({
-              type: 'cart_action',
-              addedItems: [{ id: itemToAdd.id, title: itemToAdd.title, price: Number(itemToAdd.price), type: itemToAdd.type }],
-            })}\n\n`
-          );
-        }
-
-        res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
-        res.end();
-        return;
-      } catch (anthropicError: any) {
-        console.warn('Anthropic API key returned error, falling back to Grounded Engine:', anthropicError?.message);
-      }
-    }
-
-    // 3. Fallback Grounded Intelligence Engine (when external LLM APIs fail or key format is unrecognized)
+    // 2. Fallback Grounded Intelligence Engine (when external LLM APIs fail or key format is unrecognized)
     const topItems = retrievedItems.slice(0, 3);
 
     let replyText = `Hello! Based on our verified sustainable catalog, here are top recommended items matching your request:\n\n`;

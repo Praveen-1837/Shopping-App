@@ -44,11 +44,11 @@ export default function SmartCartItem({ item, onUpdateQuantity, onRemove }: Cart
             </span>
           </div>
 
-          <h4 className="font-heading font-bold text-sm text-text-primary line-clamp-1">
+          <h4 className="font-heading font-bold text-base text-text-primary line-clamp-1">
             {item.title}
           </h4>
 
-          <span className="text-xs font-semibold text-primary block">
+          <span className="text-sm font-semibold text-primary block">
             ₹{Number(item.price).toFixed(2)}
           </span>
         </div>
@@ -71,7 +71,7 @@ export default function SmartCartItem({ item, onUpdateQuantity, onRemove }: Cart
               <Minus className="w-3.5 h-3.5" />
             </button>
 
-            <span className="text-xs font-bold w-6 text-center text-text-primary">
+            <span className="text-sm font-bold w-6 text-center text-text-primary">
               {item.quantity}
             </span>
 
@@ -89,7 +89,7 @@ export default function SmartCartItem({ item, onUpdateQuantity, onRemove }: Cart
         )}
 
         <div className="flex items-center space-x-4">
-          <span className="text-sm font-extrabold font-heading text-text-primary">
+          <span className="text-base font-extrabold font-heading text-text-primary">
             ₹{(Number(item.price) * (item.quantity || 1)).toFixed(2)}
           </span>
 

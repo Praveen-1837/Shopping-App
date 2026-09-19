@@ -28,12 +28,12 @@ export default function MyLearning() {
         <div className="bg-background-card rounded-2xl p-10 border border-text-muted/15 shadow-soft space-y-4">
           <BookOpen className="w-12 h-12 mx-auto text-secondary" />
           <h2 className="text-2xl font-bold font-heading text-primary">Sign in to Access My Learning</h2>
-          <p className="text-xs text-text-secondary max-w-md mx-auto">
+          <p className="text-sm text-text-secondary max-w-md mx-auto">
             Please log in to your account to access your purchased courses and learning progress.
           </p>
           <Link
             to="/login"
-            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-secondary text-white text-xs font-semibold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft"
+            className="inline-flex items-center space-x-2 px-6 py-2.5 bg-secondary text-white text-sm font-semibold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft"
           >
             <span>Sign In Now</span>
             <ArrowRight className="w-4 h-4" />
@@ -47,7 +47,7 @@ export default function MyLearning() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-secondary" />
-        <p className="text-sm font-medium">Fetching your enrolled courses...</p>
+        <p className="text-base font-medium">Fetching your enrolled courses...</p>
       </div>
     );
   }
@@ -56,12 +56,12 @@ export default function MyLearning() {
     <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-8">
       {/* Header */}
       <div className="border-b border-text-muted/15 pb-6">
-        <div className="flex items-center space-x-2 text-secondary font-semibold text-xs uppercase tracking-wider mb-1">
+        <div className="flex items-center space-x-2 text-secondary font-semibold text-sm uppercase tracking-wider mb-1">
           <BookOpen className="w-4 h-4 text-secondary" />
           <span>My World — Learning Engine</span>
         </div>
         <h1 className="text-3xl font-bold font-heading text-primary">My Enrolled Masterclasses</h1>
-        <p className="text-sm text-text-secondary">
+        <p className="text-base text-text-secondary">
           Track your course completion, resume modules, and download completion certificates
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function MyLearning() {
       {isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-error flex items-center space-x-3">
           <AlertCircle className="w-6 h-6 shrink-0" />
-          <p className="text-sm font-medium">
+          <p className="text-base font-medium">
             {(error as any)?.response?.data?.error?.message || 'Failed to load your learning dashboard'}
           </p>
         </div>
@@ -77,12 +77,12 @@ export default function MyLearning() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-4">
           <BookOpen className="w-14 h-14 mx-auto text-text-muted opacity-40" />
           <h3 className="text-2xl font-bold font-heading">No Enrolled Courses Yet</h3>
-          <p className="text-xs text-text-secondary max-w-md mx-auto">
+          <p className="text-sm text-text-secondary max-w-md mx-auto">
             You haven't enrolled in any eco-masterclasses or sustainable farming workshops yet.
           </p>
           <Link
             to="/courses"
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-secondary text-white text-xs font-semibold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-secondary text-white text-sm font-semibold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft"
           >
             <span>Explore Course Catalog</span>
             <ArrowRight className="w-4 h-4" />
@@ -112,7 +112,7 @@ export default function MyLearning() {
                       alt={c?.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-3 left-3 bg-background-card/90 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-semibold text-secondary border border-text-muted/10">
+                    <div className="absolute top-3 left-3 bg-background-card/90 backdrop-blur-md px-2.5 py-1 rounded-full text-sm font-semibold text-secondary border border-text-muted/10">
                       {c?.category || 'Course'}
                     </div>
 
@@ -132,7 +132,7 @@ export default function MyLearning() {
 
                     {/* Progress Bar Component */}
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs text-text-secondary">
+                      <div className="flex justify-between text-sm text-text-secondary">
                         <span>Progress ({completedCount}/{totalMods} modules)</span>
                         <strong className="text-secondary font-mono">{prog.progressPercent}%</strong>
                       </div>
@@ -146,7 +146,7 @@ export default function MyLearning() {
 
                     {/* Certificate Badge State */}
                     {prog.certificateIssued && (
-                      <div className="bg-primary-light/50 border border-primary/30 rounded-xl p-3 text-xs text-primary flex items-center space-x-2">
+                      <div className="bg-primary-light/50 border border-primary/30 rounded-xl p-3 text-sm text-primary flex items-center space-x-2">
                         <Award className="w-5 h-5 text-primary shrink-0" />
                         <div>
                           <strong className="block font-bold">Certificate Unlocked!</strong>
@@ -161,7 +161,7 @@ export default function MyLearning() {
                 <div className="p-5 pt-0 border-t border-text-muted/10 mt-3 pt-3">
                   <Link
                     to={`/my-world/courses/${c?.id}/learn`}
-                    className="w-full py-3 bg-secondary text-white hover:bg-secondary-hover font-semibold text-xs rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2"
+                    className="w-full py-3 bg-secondary text-white hover:bg-secondary-hover font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2"
                   >
                     <PlayCircle className="w-4 h-4" />
                     <span>{isCompleted ? 'Review Course Lessons' : 'Continue Learning'}</span>

@@ -127,17 +127,17 @@ export default function Payment() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-text-muted/15 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-secondary font-semibold text-xs uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-secondary font-semibold text-sm uppercase tracking-wider mb-1">
             <Lock className="w-4 h-4 text-secondary" />
             <span>Step 2 of 2 — Secure Checkout</span>
           </div>
           <h1 className="text-3xl font-bold font-heading text-primary">Payment Portal</h1>
-          <p className="text-sm text-text-secondary">Select your preferred mock payment channel</p>
+          <p className="text-base text-text-secondary">Select your preferred mock payment channel</p>
         </div>
 
         <Link
           to="/checkout"
-          className="flex items-center space-x-1 text-xs text-text-secondary hover:text-primary transition-colors"
+          className="flex items-center space-x-1 text-sm text-text-secondary hover:text-primary transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Edit Address</span>
@@ -146,10 +146,10 @@ export default function Payment() {
 
       {/* Mandatory TEST MODE Banner per Rules.md Section 4 */}
       <div className="bg-warning-light/90 border-2 border-warning/40 rounded-2xl p-4 text-warning font-semibold flex items-center justify-between shadow-soft">
-        <div className="flex items-center space-x-3 text-xs sm:text-sm">
+        <div className="flex items-center space-x-3 text-sm sm:text-base">
           <AlertTriangle className="w-6 h-6 text-warning shrink-0" />
           <div>
-            <strong className="block font-heading text-sm uppercase tracking-wide">
+            <strong className="block font-heading text-base uppercase tracking-wide">
               Test Mode — No Real Payment Will Be Processed
             </strong>
             <span>All transaction outcomes are simulated via an isolated payment service. No real money will be charged.</span>
@@ -163,8 +163,8 @@ export default function Payment() {
           <div className="flex items-center space-x-3">
             <XCircle className="w-6 h-6 shrink-0 text-error" />
             <div>
-              <h4 className="font-bold text-sm font-heading">Payment Failed</h4>
-              <p className="text-xs">{paymentError}</p>
+              <h4 className="font-bold text-base font-heading">Payment Failed</h4>
+              <p className="text-sm">{paymentError}</p>
             </div>
           </div>
           <p className="text-[11px] text-error/80 pt-1 border-t border-error/20">
@@ -177,7 +177,7 @@ export default function Payment() {
       <form onSubmit={handlePayNow} className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-8">
         {/* Payment Method Selector Tabs */}
         <div className="space-y-3">
-          <label className="block text-xs font-semibold text-text-primary uppercase tracking-wider">
+          <label className="block text-sm font-semibold text-text-primary uppercase tracking-wider">
             Select Payment Method
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -192,7 +192,7 @@ export default function Payment() {
             >
               <CreditCard className="w-5 h-5 text-primary" />
               <div>
-                <span className="block font-bold text-xs text-text-primary">Card Payment</span>
+                <span className="block font-bold text-sm text-text-primary">Card Payment</span>
                 <span className="text-[10px] text-text-muted">Visa, Mastercard, RuPay</span>
               </div>
             </button>
@@ -208,7 +208,7 @@ export default function Payment() {
             >
               <QrCode className="w-5 h-5 text-primary" />
               <div>
-                <span className="block font-bold text-xs text-text-primary">UPI QR / VPA</span>
+                <span className="block font-bold text-sm text-text-primary">UPI QR / VPA</span>
                 <span className="text-[10px] text-text-muted">GPay, PhonePe, Paytm</span>
               </div>
             </button>
@@ -224,7 +224,7 @@ export default function Payment() {
             >
               <Building2 className="w-5 h-5 text-primary" />
               <div>
-                <span className="block font-bold text-xs text-text-primary">Net Banking</span>
+                <span className="block font-bold text-sm text-text-primary">Net Banking</span>
                 <span className="text-[10px] text-text-muted">HDFC, SBI, ICICI</span>
               </div>
             </button>
@@ -235,36 +235,36 @@ export default function Payment() {
         <div className="bg-background-muted/50 rounded-xl p-5 border border-text-muted/10 space-y-3">
           {paymentMethod === 'CARD' && (
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-text-secondary">Simulated Test Card Details:</div>
+              <div className="text-sm font-semibold text-text-secondary">Simulated Test Card Details:</div>
               <input
                 type="text"
                 disabled
                 value="4242 •••• •••• 4242 (Test Card)"
-                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-xs font-mono"
+                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-sm font-mono"
               />
             </div>
           )}
 
           {paymentMethod === 'UPI' && (
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-text-secondary">Simulated Virtual Payment Address:</div>
+              <div className="text-sm font-semibold text-text-secondary">Simulated Virtual Payment Address:</div>
               <input
                 type="text"
                 disabled
                 value="user@okhdfcbank (Test UPI ID)"
-                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-xs font-mono"
+                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-sm font-mono"
               />
             </div>
           )}
 
           {paymentMethod === 'NETBANKING' && (
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-text-secondary">Simulated Bank Selection:</div>
+              <div className="text-sm font-semibold text-text-secondary">Simulated Bank Selection:</div>
               <input
                 type="text"
                 disabled
                 value="HDFC Bank — NetBanking Gateway"
-                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-xs font-mono"
+                className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-lg text-sm font-mono"
               />
             </div>
           )}
@@ -272,10 +272,10 @@ export default function Payment() {
 
         {/* Developer Simulation Toggle Controls */}
         <div className="bg-background-muted/80 rounded-xl p-4 border border-text-muted/15 space-y-2">
-          <span className="text-xs font-bold text-text-primary uppercase tracking-wider block">
+          <span className="text-sm font-bold text-text-primary uppercase tracking-wider block">
             🧪 Test Simulation Mode:
           </span>
-          <div className="flex items-center space-x-6 text-xs text-text-secondary">
+          <div className="flex items-center space-x-6 text-sm text-text-secondary">
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
                 type="radio"
@@ -309,14 +309,14 @@ export default function Payment() {
         {/* Submit Payment CTA */}
         <div className="flex items-center justify-between pt-4 border-t border-text-muted/10">
           <div>
-            <span className="text-xs text-text-muted block">Total Payable Amount</span>
+            <span className="text-sm text-text-muted block">Total Payable Amount</span>
             <span className="text-2xl font-bold font-heading text-primary">₹{totalAmount.toFixed(2)}</span>
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting || processPaymentMutation.isPending || createOrderMutation.isPending}
-            className="px-8 py-3.5 bg-primary text-white hover:bg-primary-hover font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+            className="px-8 py-3.5 bg-primary text-white hover:bg-primary-hover font-semibold text-base rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting || processPaymentMutation.isPending || createOrderMutation.isPending ? (
               <>

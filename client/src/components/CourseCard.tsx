@@ -56,7 +56,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             loading="lazy"
           />
-          <div className="absolute top-3 left-3 bg-secondary/90 text-white backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm flex items-center space-x-1">
+          <div className="absolute top-3 left-3 bg-secondary/90 text-white backdrop-blur-md px-2.5 py-1 rounded-full text-sm font-semibold shadow-sm flex items-center space-x-1">
             <BookOpen className="w-3.5 h-3.5" />
             <span>Digital Course</span>
           </div>
@@ -71,7 +71,7 @@ export default function CourseCard({ course }: CourseCardProps) {
 
         {/* Content Body */}
         <div className="p-5 space-y-3">
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-sm text-text-secondary">
             <span className="flex items-center space-x-1 text-primary font-semibold">
               <User className="w-3.5 h-3.5" />
               <span>{course.educator?.name || 'Expert Educator'}</span>
@@ -86,7 +86,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             <Link to={`/course/${course.id}`}>{course.title}</Link>
           </h3>
 
-          <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
+          <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
             {course.description}
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function CourseCard({ course }: CourseCardProps) {
       {/* Footer */}
       <div className="p-5 pt-0 flex items-center justify-between border-t border-text-muted/10 mt-3 pt-3">
         <div>
-          <span className="text-xs text-text-muted block">Tuition Fee</span>
+          <span className="text-sm text-text-muted block">Tuition Fee</span>
           <span className="text-xl font-bold font-heading text-primary">
             ₹{Number(course.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </span>
@@ -117,7 +117,7 @@ export default function CourseCard({ course }: CourseCardProps) {
 
           <Link
             to={`/course/${course.id}`}
-            className="flex items-center space-x-1 px-3.5 py-2 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+            className="flex items-center space-x-1 px-3.5 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
           >
             <span>Details</span>
             <ArrowRight className="w-3.5 h-3.5" />

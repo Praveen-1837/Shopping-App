@@ -130,7 +130,7 @@ export default function AdminSidebar() {
               placeholder="Search admin..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black/20 border border-white/10 rounded-xl pl-9 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all text-white placeholder:text-white/40 shadow-inner"
+              className="w-full bg-black/20 border border-white/10 rounded-xl pl-9 pr-10 py-2 text-base focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all text-white placeholder:text-white/40 shadow-inner"
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-0.5 pointer-events-none text-white/50 bg-black/40 px-1.5 py-0.5 rounded-md border border-white/10 shadow-xs">
               <Command className="w-3 h-3" />
@@ -183,7 +183,7 @@ export default function AdminSidebar() {
                         }`}
                       >
                         <Icon className={`shrink-0 ${isCollapsed ? 'w-5 h-5' : 'w-4 h-4'} ${isActive ? 'text-white' : ''}`} />
-                        {!isCollapsed && <span className="text-sm truncate">{item.label}</span>}
+                        {!isCollapsed && <span className="text-base truncate">{item.label}</span>}
                       </Link>
                     );
                   })}
@@ -214,7 +214,7 @@ export default function AdminSidebar() {
               </div>
               {!isCollapsed && (
                 <div className="text-left min-w-0 flex-1">
-                  <p className="text-sm font-bold text-white truncate">{user?.fullName || 'Admin User'}</p>
+                  <p className="text-base font-bold text-white truncate">{user?.fullName || 'Admin User'}</p>
                   <p className="text-[10px] text-white/50 truncate">{user?.primaryEmailAddress?.emailAddress || 'admin@ecomarket.com'}</p>
                 </div>
               )}
@@ -232,7 +232,7 @@ export default function AdminSidebar() {
               <Link
                 to="/admin/settings"
                 onClick={() => setIsProfileOpen(false)}
-                className="flex items-center space-x-2 px-3 py-2.5 rounded-xl text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                className="flex items-center space-x-2 px-3 py-2.5 rounded-xl text-base font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors"
               >
                 <Settings className="w-4 h-4 shrink-0" />
                 <span>Settings</span>
@@ -242,7 +242,7 @@ export default function AdminSidebar() {
                   setIsProfileOpen(false);
                   signOut();
                 }}
-                className="w-full flex items-center space-x-2 px-3 py-2.5 rounded-xl text-sm font-bold text-[#f87171] hover:bg-[#f87171]/10 transition-colors text-left"
+                className="w-full flex items-center space-x-2 px-3 py-2.5 rounded-xl text-base font-bold text-[#f87171] hover:bg-[#f87171]/10 transition-colors text-left"
               >
                 <LogOut className="w-4 h-4 shrink-0" />
                 <span>Log out</span>

@@ -113,19 +113,19 @@ export default function AdminOrders() {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-heading text-text-primary">Platform Orders Management</h1>
-            <p className="text-xs text-text-secondary">
+            <p className="text-sm text-text-secondary">
               View customer orders platform-wide, inspect item details & delivery addresses, and update status.
             </p>
           </div>
         </div>
-        <div className="text-xs font-semibold px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-text-secondary shrink-0">
+        <div className="text-sm font-semibold px-3.5 py-2 bg-background-card border border-text-muted/20 rounded-xl text-text-secondary shrink-0">
           Total Orders: <strong className="text-primary">{total}</strong>
         </div>
       </div>
 
       {/* Filter Toolbar */}
       <div className="flex items-center justify-between bg-background-card p-4 rounded-2xl border border-text-muted/15 shadow-soft">
-        <div className="flex items-center space-x-2 text-xs font-semibold text-text-secondary">
+        <div className="flex items-center space-x-2 text-sm font-semibold text-text-secondary">
           <span>Filter by Order Status:</span>
         </div>
         <select
@@ -134,7 +134,7 @@ export default function AdminOrders() {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          className="px-3.5 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs font-semibold focus:outline-none cursor-pointer min-w-[200px]"
+          className="px-3.5 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm font-semibold focus:outline-none cursor-pointer min-w-[200px]"
         >
           {ORDER_STATUSES.map((st) => (
             <option key={st} value={st}>
@@ -148,16 +148,16 @@ export default function AdminOrders() {
       {isLoading ? (
         <div className="py-20 text-center text-text-secondary space-y-3">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-          <p className="text-sm font-medium">Loading platform orders...</p>
+          <p className="text-base font-medium">Loading platform orders...</p>
         </div>
       ) : isError ? (
         <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-center space-y-3">
           <AlertCircle className="w-8 h-8 mx-auto text-error" />
-          <p className="text-sm font-bold text-error">Failed to load platform orders</p>
-          <p className="text-xs text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
+          <p className="text-base font-bold text-error">Failed to load platform orders</p>
+          <p className="text-sm text-error/80 font-mono max-w-md mx-auto">{errorMessage}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
+            className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
           >
             Retry
           </button>
@@ -166,12 +166,12 @@ export default function AdminOrders() {
         <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-3">
           <ShoppingBag className="w-12 h-12 mx-auto text-text-muted opacity-50" />
           <h3 className="text-lg font-bold font-heading">No Orders Found</h3>
-          <p className="text-xs text-text-secondary">No customer orders match the selected filter criteria.</p>
+          <p className="text-sm text-text-secondary">No customer orders match the selected filter criteria.</p>
         </div>
       ) : (
         <div className="bg-background-card rounded-2xl border border-text-muted/15 overflow-hidden shadow-soft">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-sm">
               <thead className="bg-background-muted/60 text-text-secondary border-b border-text-muted/15 font-semibold uppercase tracking-wider">
                 <tr>
                   <th className="py-3.5 px-4">Order ID & Date</th>
@@ -202,7 +202,7 @@ export default function AdminOrders() {
                         <p className="text-[11px] text-text-muted">{order.user?.email}</p>
                       </td>
 
-                      <td className="py-3 px-4 font-extrabold text-primary text-sm">
+                      <td className="py-3 px-4 font-extrabold text-primary text-base">
                         ₹{Number(order.total).toFixed(2)}
                       </td>
 
@@ -252,7 +252,7 @@ export default function AdminOrders() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="p-4 border-t border-text-muted/15 flex items-center justify-between text-xs">
+            <div className="p-4 border-t border-text-muted/15 flex items-center justify-between text-sm">
               <span className="text-text-secondary">
                 Page <strong className="text-text-primary">{page}</strong> of{' '}
                 <strong className="text-text-primary">{totalPages}</strong>
@@ -262,14 +262,14 @@ export default function AdminOrders() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-semibold disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-semibold disabled:opacity-40 cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4 inline" /> Previous
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-semibold disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-semibold disabled:opacity-40 cursor-pointer"
                 >
                   Next <ChevronRight className="w-4 h-4 inline" />
                 </button>
@@ -288,9 +288,9 @@ export default function AdminOrders() {
               <div>
                 <h2 className="font-heading font-extrabold text-lg text-text-primary flex items-center space-x-2">
                   <span>Order Details</span>
-                  <span className="font-mono text-xs text-text-muted">({selectedOrderId})</span>
+                  <span className="font-mono text-sm text-text-muted">({selectedOrderId})</span>
                 </h2>
-                <p className="text-xs text-text-secondary">Inspection & status controls platform-wide.</p>
+                <p className="text-sm text-text-secondary">Inspection & status controls platform-wide.</p>
               </div>
               <button
                 onClick={() => setSelectedOrderId(null)}
@@ -303,10 +303,10 @@ export default function AdminOrders() {
             {isDetailLoading || !orderDetailData ? (
               <div className="py-12 text-center text-text-secondary space-y-2">
                 <RefreshCw className="w-6 h-6 animate-spin mx-auto text-primary" />
-                <p className="text-xs font-medium">Fetching order details...</p>
+                <p className="text-sm font-medium">Fetching order details...</p>
               </div>
             ) : (
-              <div className="space-y-5 text-xs">
+              <div className="space-y-5 text-sm">
                 {/* Customer & Address Details */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-background-muted/40 p-4 rounded-2xl border border-text-muted/15">
                   <div className="space-y-1.5">
@@ -380,7 +380,7 @@ export default function AdminOrders() {
                               })
                             }
                             disabled={updateStatusMutation.isPending}
-                            className={`ml-2 px-3 py-1 font-bold text-xs rounded-lg shadow-soft transition-all cursor-pointer disabled:opacity-50 ${primaryNext.color}`}
+                            className={`ml-2 px-3 py-1 font-bold text-sm rounded-lg shadow-soft transition-all cursor-pointer disabled:opacity-50 ${primaryNext.color}`}
                           >
                             {updateStatusMutation.isPending ? 'Updating...' : primaryNext.label}
                           </button>
@@ -420,7 +420,7 @@ export default function AdminOrders() {
                 </div>
 
                 {/* Order Summary Total */}
-                <div className="border-t border-text-muted/15 pt-3 flex items-center justify-between text-sm font-bold text-text-primary">
+                <div className="border-t border-text-muted/15 pt-3 flex items-center justify-between text-base font-bold text-text-primary">
                   <span>Grand Total</span>
                   <span className="text-base text-primary">₹{Number(orderDetailData.total).toFixed(2)}</span>
                 </div>

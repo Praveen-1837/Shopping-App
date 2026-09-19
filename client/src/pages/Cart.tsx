@@ -156,7 +156,7 @@ export default function Cart() {
     return (
       <div className="max-w-4xl mx-auto py-16 px-4 flex flex-col items-center justify-center space-y-4">
         <RefreshCw className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-medium text-text-muted">Loading your sustainable cart...</p>
+        <p className="text-base font-medium text-text-muted">Loading your sustainable cart...</p>
       </div>
     );
   }
@@ -166,7 +166,7 @@ export default function Cart() {
       <div className="max-w-4xl mx-auto py-16 px-4 text-center">
         <div className="p-6 bg-error-light border border-error/20 rounded-3xl text-error space-y-2">
           <p className="font-bold text-base">Failed to load shopping cart</p>
-          <p className="text-xs">{(error as any)?.response?.data?.error?.message || 'Please check your connection and try again.'}</p>
+          <p className="text-sm">{(error as any)?.response?.data?.error?.message || 'Please check your connection and try again.'}</p>
         </div>
       </div>
     );
@@ -180,13 +180,13 @@ export default function Cart() {
         </div>
         <div className="space-y-2">
           <h2 className="text-2xl font-bold font-heading text-text-primary">Your Shopping Cart is Empty</h2>
-          <p className="text-xs text-text-muted max-w-sm mx-auto">
+          <p className="text-sm text-text-muted max-w-sm mx-auto">
             Discover verified organic harvests, eco-friendly goods, and sustainable masterclasses!
           </p>
         </div>
         <button
           onClick={() => navigate('/')}
-          className="px-6 py-3 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary-hover transition-colors shadow-soft cursor-pointer"
+          className="px-6 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-hover transition-colors shadow-soft cursor-pointer"
         >
           Explore Sustainable Catalog
         </button>
@@ -200,14 +200,18 @@ export default function Cart() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-text-muted/15 pb-4">
         <div>
           <h1 className="text-3xl font-extrabold font-heading text-primary">Shopping Cart</h1>
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-sm text-text-secondary mt-0.5">
             Deselect items or adjust quantities before proceeding to checkout.
           </p>
         </div>
         <button
-          onClick={() => clearCartMutation.mutate()}
+          onClick={() => {
+            if (window.confirm('Are you sure you want to clear your entire cart?')) {
+              clearCartMutation.mutate();
+            }
+          }}
           disabled={clearCartMutation.isPending}
-          className="text-xs font-semibold text-text-muted hover:text-error transition-colors flex items-center space-x-1 cursor-pointer w-fit"
+          className="text-sm font-semibold text-text-muted hover:text-error transition-colors flex items-center space-x-1 cursor-pointer w-fit"
         >
           <Trash2 className="w-3.5 h-3.5" />
           <span>Clear All Items</span>
@@ -216,12 +220,12 @@ export default function Cart() {
 
       {/* Free Shipping Banner */}
       {subtotal >= 1000 ? (
-        <div className="bg-success-light/80 border border-success/30 rounded-2xl p-3.5 flex items-center space-x-2 text-xs text-success font-semibold">
+        <div className="bg-success-light/80 border border-success/30 rounded-2xl p-3.5 flex items-center space-x-2 text-sm text-success font-semibold">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>Your order qualifies for FREE Eco-Standard Delivery!</span>
         </div>
       ) : (
-        <div className="bg-secondary-light/60 border border-secondary/30 rounded-2xl p-3.5 text-xs text-text-primary font-medium">
+        <div className="bg-secondary-light/60 border border-secondary/30 rounded-2xl p-3.5 text-sm text-text-primary font-medium">
           Add <strong className="text-primary font-bold">₹{(1000 - subtotal).toFixed(2)}</strong> more of eligible items to qualify for FREE Delivery.
         </div>
       )}
@@ -231,7 +235,7 @@ export default function Cart() {
         {/* Left Side: Cart Line Items */}
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-background-card rounded-3xl p-5 border border-text-muted/15 shadow-soft space-y-4">
-            <h3 className="font-heading font-bold text-sm text-text-primary border-b border-text-muted/10 pb-2">
+            <h3 className="font-heading font-bold text-base text-text-primary border-b border-text-muted/10 pb-2">
               Cart Items ({totalItemCount})
             </h3>
             <div className="space-y-4 divide-y divide-text-muted/10">
@@ -260,7 +264,7 @@ export default function Cart() {
             Subtotal ({totalItemCount} {totalItemCount === 1 ? 'item' : 'items'})
           </h3>
 
-          <div className="space-y-3 text-xs">
+          <div className="space-y-3 text-sm">
             <div className="flex justify-between text-text-secondary">
               <span>Items Subtotal</span>
               <span className="font-bold text-text-primary">₹{subtotal.toFixed(2)}</span>
@@ -281,7 +285,7 @@ export default function Cart() {
 
           <button
             onClick={() => navigate('/checkout')}
-            className="w-full py-3.5 bg-secondary text-white font-extrabold text-xs rounded-xl hover:bg-secondary-dark transition-colors shadow-card flex items-center justify-center space-x-2 cursor-pointer"
+            className="w-full py-3.5 bg-secondary text-white font-extrabold text-sm rounded-xl hover:bg-secondary-dark transition-colors shadow-card flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>Proceed to Checkout</span>
             <ArrowRight className="w-4 h-4" />

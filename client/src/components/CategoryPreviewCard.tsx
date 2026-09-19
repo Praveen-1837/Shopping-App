@@ -78,7 +78,7 @@ export default function CategoryPreviewCard({
         <span className="p-2 sm:p-1.5 bg-primary-light/50 sm:bg-primary-light text-primary rounded-full sm:rounded-xl shrink-0 group-hover:bg-primary group-hover:text-white transition-colors mb-1 sm:mb-0">
           <Sprout className="w-5 h-5 sm:w-4 sm:h-4" />
         </span>
-        <h3 className="font-heading font-bold sm:font-extrabold text-[10px] leading-tight sm:text-sm md:text-base text-text-primary tracking-tight group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-none break-words w-full">
+        <h3 className="font-heading font-bold sm:font-extrabold text-[10px] leading-tight sm:text-base md:text-base text-text-primary tracking-tight group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-none break-words w-full">
           {category}
         </h3>
         <span className="block sm:hidden text-[9px] text-text-muted mt-0.5">{items.length} items</span>
@@ -147,7 +147,7 @@ export default function CategoryPreviewCard({
       {/* Footer Link Action */}
       <div
         onClick={handleCardClick}
-        className="hidden sm:flex items-center justify-between text-xs sm:text-sm font-bold text-primary group-hover:text-primary-hover pt-1 cursor-pointer"
+        className="hidden sm:flex items-center justify-between text-sm sm:text-base font-bold text-primary group-hover:text-primary-hover pt-1 cursor-pointer"
         title={`Shop ${category}`}
       >
         <span className="inline-flex items-center space-x-1.5">

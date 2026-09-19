@@ -67,7 +67,7 @@ function CurriculumAccordion({ modules, totalDuration }: { modules: any[]; total
       >
         <div className="flex items-center gap-3">
           <h3 className="font-heading font-bold text-text-primary text-base">Course Modules</h3>
-          <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+          <span className="text-sm font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
             {modules.length} lessons
           </span>
         </div>
@@ -82,10 +82,10 @@ function CurriculumAccordion({ modules, totalDuration }: { modules: any[]; total
                 {i === 0 ? <Unlock className="w-4 h-4 text-secondary" /> : <Lock className="w-4 h-4" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-semibold ${i === 0 ? 'text-primary' : 'text-text-primary'}`}>
+                <p className={`text-base font-semibold ${i === 0 ? 'text-primary' : 'text-text-primary'}`}>
                   {i + 1}. {mod.title}
                 </p>
-                <div className="flex items-center gap-3 mt-1 text-xs text-text-muted">
+                <div className="flex items-center gap-3 mt-1 text-sm text-text-muted">
                   <span className="flex items-center gap-1"><MonitorPlay className="w-3.5 h-3.5" /> Video</span>
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {avgMins} mins</span>
                 </div>
@@ -93,7 +93,7 @@ function CurriculumAccordion({ modules, totalDuration }: { modules: any[]; total
             </div>
           ))}
           {modules.length === 0 && (
-            <div className="p-6 text-center text-sm text-text-muted">
+            <div className="p-6 text-center text-base text-text-muted">
               Curriculum is currently being updated.
             </div>
           )}
@@ -219,7 +219,7 @@ export default function CourseDetail() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-4 text-text-secondary bg-background">
         <RefreshCw className="w-10 h-10 animate-spin text-secondary" />
-        <p className="text-sm font-semibold">Loading course architecture...</p>
+        <p className="text-base font-semibold">Loading course architecture...</p>
       </div>
     );
   }
@@ -232,12 +232,12 @@ export default function CourseDetail() {
             <AlertCircle className="w-8 h-8 text-error" />
           </div>
           <h2 className="text-2xl font-bold font-heading text-text-primary">Course Unavailable</h2>
-          <p className="text-sm text-text-muted">
+          <p className="text-base text-text-muted">
             {(error as any)?.response?.data?.error?.message || 'This course may have been removed or is currently private.'}
           </p>
           <Link
             to="/courses"
-            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white text-sm font-bold rounded-xl transition-transform hover:scale-105"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-white text-base font-bold rounded-xl transition-transform hover:scale-105"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Catalog</span>
@@ -266,7 +266,7 @@ export default function CourseDetail() {
         <div className="max-w-[1200px] mx-auto relative z-10">
           {/* Breadcrumb & Actions */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <Link to="/courses" className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-white transition-colors">
+            <Link to="/courses" className="flex items-center gap-1.5 text-base font-medium text-white/80 hover:text-white transition-colors">
               <ArrowLeft className="w-4 h-4" /> Back to Courses
             </Link>
             
@@ -274,24 +274,24 @@ export default function CourseDetail() {
               <div className="flex items-center gap-3">
                 <Link
                   to={`/educator/courses/edit/${course.id}`}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-xs font-bold rounded-lg transition-colors backdrop-blur-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-white/10 hover:bg-white/20 text-sm font-bold rounded-lg transition-colors backdrop-blur-sm"
                 >
                   <Edit3 className="w-4 h-4" /> Edit Course
                 </Link>
                 {!deleteConfirm ? (
                   <button
                     onClick={() => setDeleteConfirm(true)}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-error/80 hover:bg-error text-white text-xs font-bold rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-error/80 hover:bg-error text-white text-sm font-bold rounded-lg transition-colors"
                   >
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 ) : (
                   <div className="flex items-center gap-2 bg-error p-1 rounded-lg">
-                    <span className="text-xs font-bold px-2">Sure?</span>
-                    <button onClick={() => deleteMutation.mutate()} className="px-3 py-1.5 bg-white text-error text-xs font-black rounded-md hover:bg-slate-100">
+                    <span className="text-sm font-bold px-2">Sure?</span>
+                    <button onClick={() => deleteMutation.mutate()} className="px-3 py-1.5 bg-white text-error text-sm font-black rounded-md hover:bg-slate-100">
                       {deleteMutation.isPending ? '...' : 'Yes'}
                     </button>
-                    <button onClick={() => setDeleteConfirm(false)} className="px-3 py-1.5 bg-black/20 text-white text-xs font-bold rounded-md hover:bg-black/30">
+                    <button onClick={() => setDeleteConfirm(false)} className="px-3 py-1.5 bg-black/20 text-white text-sm font-bold rounded-md hover:bg-black/30">
                       No
                     </button>
                   </div>
@@ -302,7 +302,7 @@ export default function CourseDetail() {
 
           {/* Hero Content */}
           <div className="max-w-3xl space-y-5">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-secondary">
               <BookOpen className="w-4 h-4" /> {course.category}
             </div>
             
@@ -315,7 +315,7 @@ export default function CourseDetail() {
             </p>
             
             {/* Meta Stats */}
-            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-white/90 pt-2">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-base text-white/90 pt-2">
               <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
                 <Star className="w-4 h-4 text-secondary fill-secondary" />
                 <span className="font-bold">{avgRating.toFixed(1)}</span>
@@ -356,10 +356,10 @@ export default function CourseDetail() {
               
               {/* Learning Objectives Mock UI */}
               <div className="bg-slate-50 border border-slate-100 rounded-xl p-6 mt-6">
-                <h3 className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
+                <h3 className="text-base font-bold text-text-primary mb-4 flex items-center gap-2">
                   <Check className="w-4 h-4 text-secondary" /> What you'll learn
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-text-secondary">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base text-text-secondary">
                   <div className="flex items-start gap-2"><Check className="w-4 h-4 text-success shrink-0 mt-0.5" /> Understand core concepts deeply.</div>
                   <div className="flex items-start gap-2"><Check className="w-4 h-4 text-success shrink-0 mt-0.5" /> Apply knowledge in real-world scenarios.</div>
                   <div className="flex items-start gap-2"><Check className="w-4 h-4 text-success shrink-0 mt-0.5" /> Build sustainable practices.</div>
@@ -386,14 +386,14 @@ export default function CourseDetail() {
                 <div className="space-y-3">
                   <div>
                     <h3 className="text-lg font-bold text-text-primary">{course.educator?.name || 'Expert Educator'}</h3>
-                    <p className="text-sm text-secondary font-semibold">{course.educator?.role?.replace('_', ' ') || 'Content Creator'}</p>
+                    <p className="text-base text-secondary font-semibold">{course.educator?.role?.replace('_', ' ') || 'Content Creator'}</p>
                   </div>
-                  <div className="flex flex-wrap gap-4 text-xs font-medium text-text-muted">
+                  <div className="flex flex-wrap gap-4 text-sm font-medium text-text-muted">
                     <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5 fill-accent text-accent" /> 4.8 Instructor Rating</span>
                     <span className="flex items-center gap-1.5"><MessageSquare className="w-3.5 h-3.5" /> {reviews.length * 3 + 12} Reviews</span>
                     <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {enrolledCount + 800} Students</span>
                   </div>
-                  <p className="text-sm text-text-secondary leading-relaxed">
+                  <p className="text-base text-text-secondary leading-relaxed">
                     A dedicated professional committed to sustainable development and eco-conscious education. Passionate about delivering high-quality, actionable insights to empower the next generation.
                   </p>
                 </div>
@@ -412,9 +412,9 @@ export default function CourseDetail() {
 
               {isSignedIn && (
                 <form onSubmit={(e) => { e.preventDefault(); addReviewMutation.mutate(); }} className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
-                  <h4 className="text-sm font-bold text-text-primary">Write a Review</h4>
+                  <h4 className="text-base font-bold text-text-primary">Write a Review</h4>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-text-muted">Rating:</span>
+                    <span className="text-sm font-semibold text-text-muted">Rating:</span>
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button key={star} type="button" onClick={() => setNewRating(star)} className="p-1 hover:scale-110 transition-transform">
@@ -428,10 +428,10 @@ export default function CourseDetail() {
                     placeholder="How was your learning experience?"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="w-full px-4 py-3 bg-white border border-slate-200 focus:border-secondary focus:ring-1 focus:ring-secondary rounded-xl text-sm transition-shadow outline-none"
+                    className="w-full px-4 py-3 bg-white border border-slate-200 focus:border-secondary focus:ring-1 focus:ring-secondary rounded-xl text-base transition-shadow outline-none"
                     required
                   />
-                  <button type="submit" disabled={addReviewMutation.isPending} className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-hover flex items-center gap-2 transition-colors disabled:opacity-50">
+                  <button type="submit" disabled={addReviewMutation.isPending} className="px-5 py-2.5 bg-primary text-white text-base font-bold rounded-xl hover:bg-primary-hover flex items-center gap-2 transition-colors disabled:opacity-50">
                     <Send className="w-4 h-4" /> {addReviewMutation.isPending ? 'Submitting...' : 'Submit Review'}
                   </button>
                 </form>
@@ -441,29 +441,29 @@ export default function CourseDetail() {
                 {loadingReviews ? (
                   <div className="py-8 flex justify-center text-slate-400"><RefreshCw className="w-6 h-6 animate-spin" /></div>
                 ) : reviews.length === 0 ? (
-                  <p className="text-sm text-text-muted italic py-4">No reviews written for this course yet.</p>
+                  <p className="text-base text-text-muted italic py-4">No reviews written for this course yet.</p>
                 ) : (
                   reviews.map((r) => (
                     <div key={r.id} className="pb-5 border-b border-slate-50 last:border-0 last:pb-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                             {r.user?.name?.charAt(0) || 'U'}
                           </div>
                           <div>
-                            <span className="font-bold text-text-primary text-sm block">{r.user?.name}</span>
+                            <span className="font-bold text-text-primary text-base block">{r.user?.name}</span>
                             <span className="text-[10px] text-text-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
                           </div>
                         </div>
                         <StarRating rating={r.rating} />
                       </div>
-                      <p className="text-text-secondary text-sm mt-2">{r.comment}</p>
+                      <p className="text-text-secondary text-base mt-2">{r.comment}</p>
                       {r.reply && (
                         <div className="mt-3 ml-4 bg-slate-50 border-l-2 border-secondary p-4 rounded-r-xl">
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-text-primary mb-1">
+                          <div className="flex items-center gap-1.5 text-sm font-bold text-text-primary mb-1">
                             <MessageSquare className="w-3.5 h-3.5 text-secondary" /> Educator Response
                           </div>
-                          <p className="text-xs text-text-secondary">{r.reply}</p>
+                          <p className="text-sm text-text-secondary">{r.reply}</p>
                         </div>
                       )}
                     </div>
@@ -487,7 +487,7 @@ export default function CourseDetail() {
                     <div className="relative z-10 w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                       <PlayCircle className="w-8 h-8 text-white fill-white/20" />
                     </div>
-                    <span className="relative z-10 text-white font-bold text-sm mt-3 tracking-wide drop-shadow-md">Preview Course</span>
+                    <span className="relative z-10 text-white font-bold text-base mt-3 tracking-wide drop-shadow-md">Preview Course</span>
                   </>
                 )}
               </div>
@@ -499,15 +499,15 @@ export default function CourseDetail() {
                     <span className="text-3xl font-black font-heading text-text-primary">
                       ₹{Number(course.price).toLocaleString('en-IN', { minimumFractionDigits: 0 })}
                     </span>
-                    {course.price > 0 && <span className="text-sm text-text-muted line-through mb-1">₹{(Number(course.price) * 1.5).toFixed(0)}</span>}
+                    {course.price > 0 && <span className="text-base text-text-muted line-through mb-1">₹{(Number(course.price) * 1.5).toFixed(0)}</span>}
                   </div>
-                  <p className="text-xs font-semibold text-success flex items-center gap-1"><Award className="w-3.5 h-3.5" /> 33% Off Today</p>
+                  <p className="text-sm font-semibold text-success flex items-center gap-1"><Award className="w-3.5 h-3.5" /> 33% Off Today</p>
                 </div>
 
                 <button
                   onClick={() => addToCartMutation.mutate()}
                   disabled={addToCartMutation.isPending}
-                  className={`w-full py-4 text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ${
+                  className={`w-full py-4 text-base font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ${
                     added ? 'bg-success text-white' : 'bg-primary text-white hover:bg-primary-hover hover:-translate-y-0.5'
                   }`}
                 >
@@ -518,35 +518,35 @@ export default function CourseDetail() {
                   )}
                 </button>
 
-                <div className="text-center text-xs text-text-muted">
+                <div className="text-center text-sm text-text-muted">
                   30-Day Money-Back Guarantee
                 </div>
 
                 {/* Features Checklist */}
                 <div className="space-y-3 pt-4 border-t border-slate-100">
-                  <h4 className="text-sm font-bold text-text-primary mb-2">This course includes:</h4>
-                  <div className="flex items-center gap-3 text-sm text-text-secondary">
+                  <h4 className="text-base font-bold text-text-primary mb-2">This course includes:</h4>
+                  <div className="flex items-center gap-3 text-base text-text-secondary">
                     <MonitorPlay className="w-4 h-4 text-text-muted" /> {durationText} on-demand video
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-text-secondary">
+                  <div className="flex items-center gap-3 text-base text-text-secondary">
                     <FileText className="w-4 h-4 text-text-muted" /> {flatModules.length + 2} downloadable resources
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-text-secondary">
+                  <div className="flex items-center gap-3 text-base text-text-secondary">
                     <Lock className="w-4 h-4 text-text-muted" /> Full lifetime access
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-text-secondary">
+                  <div className="flex items-center gap-3 text-base text-text-secondary">
                     <MonitorPlay className="w-4 h-4 text-text-muted" /> Access on mobile and TV
                   </div>
                   {course.certificate && (
-                    <div className="flex items-center gap-3 text-sm text-text-secondary">
+                    <div className="flex items-center gap-3 text-base text-text-secondary">
                       <Award className="w-4 h-4 text-text-muted" /> Certificate of completion
                     </div>
                   )}
                 </div>
                 
                 <div className="pt-4 border-t border-slate-100 flex gap-3">
-                  <button className="flex-1 py-2 text-xs font-bold text-text-primary bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Share</button>
-                  <button className="flex-1 py-2 text-xs font-bold text-text-primary bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Gift this course</button>
+                  <button className="flex-1 py-2 text-sm font-bold text-text-primary bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Share</button>
+                  <button className="flex-1 py-2 text-sm font-bold text-text-primary bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Gift this course</button>
                 </div>
               </div>
             </div>

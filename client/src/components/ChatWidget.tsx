@@ -245,7 +245,7 @@ export default function ChatWidget() {
                 <EcoAiIcon className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-heading font-bold text-sm">EcoMarket AI Assistant</h3>
+                <h3 className="font-heading font-bold text-base">EcoMarket AI Assistant</h3>
                 <span className="text-[10px] text-white/80 block">Grounded Catalog Advisor</span>
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages Body */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
             {messages.map((msg) => {
               const isAssistant = msg.role === 'assistant';
 
@@ -313,7 +313,7 @@ export default function ChatWidget() {
             )}
 
             {errorMsg && (
-              <div className="bg-error-light border border-error/30 rounded-xl p-3 text-error flex items-center space-x-2 text-xs">
+              <div className="bg-error-light border border-error/30 rounded-xl p-3 text-error flex items-center space-x-2 text-sm">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{errorMsg}</span>
               </div>
@@ -330,7 +330,7 @@ export default function ChatWidget() {
               disabled={!isSignedIn || isLoading}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 px-3.5 py-2.5 bg-background-muted border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-ai/40"
+              className="flex-1 px-3.5 py-2.5 bg-background-muted border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ai/40"
             />
             <button
               type="submit"

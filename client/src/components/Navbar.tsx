@@ -6,6 +6,7 @@ import apiClient from '../api/axios';
 import SideMenu from './SideMenu';
 import AccountListsDropdown from './AccountListsDropdown';
 import { useUserRole } from '../hooks/useUserRole';
+import { useDarkMode } from '../hooks/useDarkMode';
 import logo from '../assets/logo.png';
 import {
   Menu,
@@ -23,6 +24,8 @@ import {
   Store,
   Package,
   Settings,
+  Sun,
+  Moon,
   UserCheck,
   User,
   Sparkles,
@@ -55,6 +58,7 @@ export default function Navbar({
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const { isAdmin } = useUserRole();
+  const { isDark, setIsDark } = useDarkMode();
 
   let currentCategory = '';
   if (location.pathname.startsWith('/shop/category/')) {
@@ -136,7 +140,7 @@ export default function Navbar({
           </Link>
 
           {/* Navigation Items */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 text-xs font-semibold overflow-x-auto no-scrollbar">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-semibold overflow-x-auto no-scrollbar">
             <Link
               to="/admin/dashboard"
               className="px-3 py-2 rounded-xl text-white/90 hover:text-white hover:bg-white/10 transition-colors flex items-center space-x-1.5"
@@ -232,7 +236,7 @@ export default function Navbar({
       <header className="bg-background-card border-b border-text-muted/15 sticky top-0 z-40 shadow-soft">
         {/* Admin Operational Strip (Only for ADMIN role) */}
         {isAdmin && (
-          <div className="bg-[#1B2E1E] text-white px-4 py-2 text-xs border-b border-white/10">
+          <div className="bg-[#1B2E1E] text-white px-4 py-2 text-sm border-b border-white/10">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center space-x-2 font-bold font-heading text-accent">
                 <div className="bg-white rounded-md p-0.5 overflow-hidden">
@@ -281,7 +285,7 @@ export default function Navbar({
               className="p-2 rounded-xl text-text-primary hover:bg-background-muted transition-colors cursor-pointer flex items-center space-x-1"
             >
               <Menu className="w-5 h-5 text-primary" />
-              <span className="hidden sm:inline text-xs font-bold text-text-secondary">Menu</span>
+              <span className="hidden sm:inline text-sm font-bold text-text-secondary">Menu</span>
             </button>
 
             <Link to={isAdmin ? "/admin/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-2.5 group">
@@ -292,7 +296,7 @@ export default function Navbar({
                 EcoMarket
               </span>
               {isAdmin && (
-                <span className="text-xs bg-secondary text-white px-2 py-0.5 rounded-full font-bold font-body leading-normal">
+                <span className="text-sm bg-secondary text-white px-2 py-0.5 rounded-full font-bold font-body leading-normal">
                   Admin
                 </span>
               )}
@@ -309,7 +313,7 @@ export default function Navbar({
               <select
                 value={localCategory}
                 onChange={(e) => setLocalCategory(e.target.value)}
-                className="py-2 pl-3 pr-7 bg-transparent text-xs font-semibold text-text-primary focus:outline-none appearance-none cursor-pointer"
+                className="py-2 pl-3 pr-7 bg-transparent text-sm font-semibold text-text-primary focus:outline-none appearance-none cursor-pointer"
               >
                 {PRODUCT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -327,7 +331,7 @@ export default function Navbar({
               placeholder="Search organic produce, artisan crafts, or masterclasses..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="flex-1 px-3 py-2 text-xs bg-transparent text-text-primary focus:outline-none placeholder:text-text-muted"
+              className="flex-1 px-3 py-2 text-sm bg-transparent text-text-primary focus:outline-none placeholder:text-text-muted"
             />
 
             {/* Search Submit Button */}
@@ -342,6 +346,15 @@ export default function Navbar({
 
           {/* Right Action Icons: Account & Cart */}
           <div className="flex items-center justify-end space-x-1 sm:space-x-4 shrink-0">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="p-1.5 sm:p-2 rounded-full sm:rounded-xl text-text-primary hover:bg-background-muted transition-colors flex items-center justify-center cursor-pointer"
+              aria-label="Toggle Dark Mode"
+            >
+              {isDark ? <Sun className="w-5 h-5 text-secondary" /> : <Moon className="w-5 h-5 text-primary" />}
+            </button>
+
             {/* Desktop Amazon-Style Account Dropdown */}
             <div className="hidden md:block">
               <AccountListsDropdown />
@@ -394,7 +407,7 @@ export default function Navbar({
               placeholder="Search products or courses..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="flex-1 px-3 py-2 text-xs bg-transparent text-text-primary focus:outline-none"
+              className="flex-1 px-3 py-2 text-sm bg-transparent text-text-primary focus:outline-none"
             />
             <button
               type="submit"
@@ -409,7 +422,7 @@ export default function Navbar({
         {/* Secondary Category Shortcuts Tier (Horizontally Scrollable with Scroll Snap & Fade Cue) */}
         <div className="bg-background-muted/50 border-t border-text-muted/10 py-1.5 relative">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative after:pointer-events-none after:absolute after:right-0 after:top-0 after:bottom-0 after:w-10 after:bg-gradient-to-l after:from-background-card/90 after:to-transparent md:after:hidden">
-            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap scroll-smooth text-xs font-medium text-text-secondary pr-8 md:pr-0 w-full">
+            <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap scroll-smooth text-sm font-medium text-text-secondary pr-8 md:pr-0 w-full">
               <button
                 onClick={() => handleQuickCategoryClick('All Categories')}
                 className={`px-3 py-1 rounded-lg shrink-0 snap-start transition-colors cursor-pointer ${

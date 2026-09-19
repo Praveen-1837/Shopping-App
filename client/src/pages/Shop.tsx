@@ -102,7 +102,7 @@ export default function Shop() {
   return (
     <div className="max-w-7xl mx-auto py-6 px-3 sm:px-6 lg:px-8 space-y-6">
       {/* Dedicated Breadcrumb Trail */}
-      <nav className="flex items-center space-x-1.5 text-xs text-text-muted">
+      <nav className="flex items-center space-x-1.5 text-sm text-text-muted">
         <Link to="/" className="hover:text-primary transition-colors">
           Home
         </Link>
@@ -121,14 +121,14 @@ export default function Shop() {
       {/* Clean Dedicated Category Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-text-muted/15 pb-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center space-x-1.5 bg-primary-light text-primary px-2.5 py-0.5 rounded-full text-xs font-bold border border-primary/20">
+          <div className="inline-flex items-center space-x-1.5 bg-primary-light text-primary px-2.5 py-0.5 rounded-full text-sm font-bold border border-primary/20">
             <Tag className="w-3 h-3" />
             <span>{selectedCategory === 'All Categories' ? 'All Products Catalog' : selectedCategory}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-text-primary tracking-tight">
             {selectedCategory === 'All Categories' ? 'Ethical & Eco-Friendly Marketplace' : `${selectedCategory} Collection`}
           </h1>
-          <p className="text-xs sm:text-sm text-text-muted max-w-xl">
+          <p className="text-sm sm:text-base text-text-muted max-w-xl">
             {selectedCategory === 'All Categories'
               ? 'Browse verified sustainable goods direct from local organic farmers and eco-artisans.'
               : `Explore handcrafted, high-quality ${selectedCategory.toLowerCase()} sourced directly with transparent eco-standards.`}
@@ -136,7 +136,7 @@ export default function Shop() {
         </div>
 
         {pagination && (
-          <span className="px-3 py-1.5 bg-background-muted/80 text-text-secondary text-xs font-bold rounded-xl border border-text-muted/15 shrink-0 self-start sm:self-center">
+          <span className="px-3 py-1.5 bg-background-muted/80 text-text-secondary text-sm font-bold rounded-xl border border-text-muted/15 shrink-0 self-start sm:self-center">
             {pagination.total} Products Available
           </span>
         )}
@@ -144,13 +144,13 @@ export default function Shop() {
 
       {/* Mobile Filter Toggle Button */}
       <div className="lg:hidden flex items-center justify-between bg-background-card p-3 rounded-2xl border border-text-muted/15 shadow-soft">
-        <div className="flex items-center space-x-2 text-xs font-semibold text-text-primary">
+        <div className="flex items-center space-x-2 text-sm font-semibold text-text-primary">
           <ShoppingBag className="w-4 h-4 text-primary" />
           <span>Product Catalog ({pagination?.total || 0})</span>
         </div>
         <button
           onClick={() => setIsMobileFilterOpen(true)}
-          className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary-light text-primary text-xs font-bold rounded-xl hover:bg-primary hover:text-white transition-colors cursor-pointer"
+          className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary-light text-primary text-sm font-bold rounded-xl hover:bg-primary hover:text-white transition-colors cursor-pointer"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           <span>Filters</span>
@@ -162,7 +162,7 @@ export default function Shop() {
         {/* Left-Hand Filter Sidebar */}
         <aside className="w-64 shrink-0 hidden lg:block space-y-5 bg-background-card rounded-2xl p-5 border border-text-muted/15 shadow-soft sticky top-24">
           <div className="flex items-center justify-between border-b border-text-muted/15 pb-3">
-            <h3 className="font-heading font-bold text-sm text-text-primary flex items-center space-x-2">
+            <h3 className="font-heading font-bold text-base text-text-primary flex items-center space-x-2">
               <Filter className="w-4 h-4 text-primary" />
               <span>Catalog Filters</span>
             </h3>
@@ -178,7 +178,7 @@ export default function Shop() {
 
           {/* Search Keyword Filter */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider">
+            <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider">
               Search Keywords
             </label>
             <div className="relative">
@@ -191,14 +191,14 @@ export default function Shop() {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
-                className="w-full pl-8 pr-3 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full pl-8 pr-3 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
             </div>
           </div>
 
           {/* Category Selection Filter */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider">
+            <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider">
               Product Categories
             </label>
             <div className="space-y-1">
@@ -206,7 +206,7 @@ export default function Shop() {
                 <button
                   key={cat}
                   onClick={() => handleCategorySelect(cat)}
-                  className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer flex items-center justify-between ${
+                  className={`w-full text-left px-3 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer flex items-center justify-between ${
                     selectedCategory === cat
                       ? 'bg-primary text-white shadow-soft'
                       : 'hover:bg-background-muted text-text-secondary'
@@ -221,7 +221,7 @@ export default function Shop() {
 
           {/* Price Range Filter */}
           <div className="space-y-1.5 pt-2 border-t border-text-muted/15">
-            <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider">
+            <label className="block text-sm font-bold text-text-secondary uppercase tracking-wider">
               Price Range (₹)
             </label>
             <div className="flex items-center space-x-2">
@@ -233,9 +233,9 @@ export default function Shop() {
                   setMinPrice(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-2.5 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full px-2.5 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
-              <span className="text-text-muted text-xs">-</span>
+              <span className="text-text-muted text-sm">-</span>
               <input
                 type="number"
                 placeholder="Max"
@@ -244,7 +244,7 @@ export default function Shop() {
                   setMaxPrice(e.target.value);
                   setPage(1);
                 }}
-                className="w-full px-2.5 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full px-2.5 py-1.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
             </div>
           </div>
@@ -270,13 +270,13 @@ export default function Shop() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-text-secondary mb-1">
+                  <label className="block text-sm font-bold text-text-secondary mb-1">
                     Category
                   </label>
                   <select
                     value={selectedCategory}
                     onChange={(e) => handleCategorySelect(e.target.value)}
-                    className="w-full p-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs"
+                    className="w-full p-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
                   >
                     {CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -288,7 +288,7 @@ export default function Shop() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-bold text-text-secondary mb-1">
+                    <label className="block text-sm font-bold text-text-secondary mb-1">
                       Min Price (₹)
                     </label>
                     <input
@@ -299,11 +299,11 @@ export default function Shop() {
                         setMinPrice(e.target.value);
                         setPage(1);
                       }}
-                      className="w-full p-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs"
+                      className="w-full p-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-text-secondary mb-1">
+                    <label className="block text-sm font-bold text-text-secondary mb-1">
                       Max Price (₹)
                     </label>
                     <input
@@ -314,14 +314,14 @@ export default function Shop() {
                         setMaxPrice(e.target.value);
                         setPage(1);
                       }}
-                      className="w-full p-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs"
+                      className="w-full p-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
                     />
                   </div>
                 </div>
 
                 <button
                   onClick={() => setIsMobileFilterOpen(false)}
-                  className="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl shadow-soft"
+                  className="w-full py-3 bg-primary text-white font-bold text-sm rounded-xl shadow-soft"
                 >
                   Apply Filters
                 </button>
@@ -335,18 +335,18 @@ export default function Shop() {
           {isLoading ? (
             <div className="py-20 text-center text-text-secondary space-y-3">
               <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-              <p className="text-sm font-medium">Loading catalog products...</p>
+              <p className="text-base font-medium">Loading catalog products...</p>
             </div>
           ) : isError ? (
             <div className="bg-error-light border border-error/30 rounded-2xl p-8 text-center space-y-4">
               <AlertCircle className="w-10 h-10 mx-auto text-error" />
               <h3 className="text-lg font-bold text-error font-heading">Failed to Load Products</h3>
-              <p className="text-xs text-error/90 max-w-md mx-auto">
+              <p className="text-sm text-error/90 max-w-md mx-auto">
                 {(error as any)?.response?.data?.error?.message || (error as any)?.message || 'An error occurred'}
               </p>
               <button
                 onClick={() => refetch()}
-                className="px-4 py-2 bg-error text-white text-xs font-semibold rounded-lg hover:bg-error/90 transition-colors"
+                className="px-4 py-2 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors"
               >
                 Try Again
               </button>
@@ -355,12 +355,12 @@ export default function Shop() {
             <div className="bg-background-card rounded-2xl p-12 text-center border border-text-muted/15 space-y-4">
               <ShoppingBag className="w-12 h-12 mx-auto text-text-muted opacity-50" />
               <h3 className="text-xl font-bold font-heading">No Products Found</h3>
-              <p className="text-xs text-text-secondary max-w-md mx-auto">
+              <p className="text-sm text-text-secondary max-w-md mx-auto">
                 We couldn't find any products matching your active filters or search terms in {selectedCategory}. Try clearing your search query or selecting another category.
               </p>
               <button
                 onClick={handleResetFilters}
-                className="px-5 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+                className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
               >
                 Reset All Filters
               </button>
@@ -376,8 +376,8 @@ export default function Shop() {
 
               {/* Pagination Controls */}
               {pagination && pagination.totalPages > 1 && (
-                <div className="flex items-center justify-between border-t border-text-muted/15 pt-6 text-sm">
-                  <span className="text-xs text-text-secondary">
+                <div className="flex items-center justify-between border-t border-text-muted/15 pt-6 text-base">
+                  <span className="text-sm text-text-secondary">
                     Showing page <strong className="text-text-primary">{pagination.page}</strong> of{' '}
                     <strong className="text-text-primary">{pagination.totalPages}</strong> ({pagination.total} total items)
                   </span>
@@ -386,7 +386,7 @@ export default function Shop() {
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-medium transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-medium transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                     >
                       <ChevronLeft className="w-4 h-4" />
                       <span>Previous</span>
@@ -395,7 +395,7 @@ export default function Shop() {
                     <button
                       onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                       disabled={page === pagination.totalPages}
-                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-xs font-medium transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg border border-text-muted/20 hover:bg-background-muted text-sm font-medium transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
                     >
                       <span>Next</span>
                       <ChevronRight className="w-4 h-4" />

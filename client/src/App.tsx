@@ -8,6 +8,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ScrollToTop from './components/ScrollToTop';
 import ChatWidget from './components/ChatWidget';
 import AdminLayout from './components/AdminLayout';
+import NetworkStatus from './components/NetworkStatus';
 const Home = lazy(() => import('./pages/Home'));
 const Shop = lazy(() => import('./pages/Shop'));
 const Login = lazy(() => import('./pages/Login'));
@@ -52,23 +53,25 @@ const Returns = lazy(() => import('./pages/Returns'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
+import { UserRole } from './constants/roles';
 
-const SELLER_ROLES = ['SELLER', 'FARMER', 'ARTISAN', 'ADMIN'];
-const FARMER_ROLES = ['FARMER', 'SELLER', 'ARTISAN', 'ADMIN'];
-const EDUCATOR_ROLES = ['EDUCATOR', 'ADMIN'];
-const ADMIN_ROLES = ['ADMIN'];
-const DELIVERY_ROLES = ['DELIVERY_PARTNER', 'ADMIN'];
+const SELLER_ROLES = [UserRole.SELLER, UserRole.FARMER, UserRole.ARTISAN, UserRole.ADMIN];
+const FARMER_ROLES = [UserRole.FARMER, UserRole.SELLER, UserRole.ARTISAN, UserRole.ADMIN];
+const EDUCATOR_ROLES = [UserRole.EDUCATOR, UserRole.ADMIN];
+const ADMIN_ROLES = [UserRole.ADMIN];
+const DELIVERY_ROLES = [UserRole.DELIVERY_PARTNER, UserRole.ADMIN];
 
 function App() {
   return (
     <BrowserRouter>
+      <NetworkStatus />
       <ScrollToTop />
       <div className="min-h-screen bg-background text-text-primary flex flex-col justify-between font-body relative max-w-full overflow-x-hidden">
         <div>
           <Navbar />
           <main>
             <ErrorBoundary>
-              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><div className="mt-4 text-text-muted font-bold text-sm">Loading...</div></div></div>}>
+              <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><div className="mt-4 text-text-muted font-bold text-base">Loading...</div></div></div>}>
               <PartnerLockGuard>
             <Routes>
               {/* Public Catalog & Information Routes */}
@@ -302,12 +305,12 @@ function App() {
                   <div className="max-w-xl mx-auto py-20 px-4 text-center space-y-4">
                     <div className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-3">
                       <h2 className="text-2xl font-bold font-heading text-primary">Page Not Found</h2>
-                      <p className="text-xs text-text-secondary">
+                      <p className="text-sm text-text-secondary">
                         The requested page path does not exist or has been moved.
                       </p>
                       <a
                         href="/"
-                        className="inline-block px-5 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl shadow-soft"
+                        className="inline-block px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-soft"
                       >
                         Return to Storefront
                       </a>

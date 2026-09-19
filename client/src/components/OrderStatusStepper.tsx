@@ -31,8 +31,8 @@ export default function OrderStatusStepper({ status, hasCourseOnly = false, canc
       <div className="bg-secondary-light/40 border border-secondary/30 rounded-2xl p-5 flex items-center space-x-3 text-secondary">
         <Sparkles className="w-6 h-6 shrink-0 text-secondary animate-pulse" />
         <div>
-          <h4 className="font-heading font-bold text-sm">Instant Digital Access Activated</h4>
-          <p className="text-xs text-text-secondary">
+          <h4 className="font-heading font-bold text-base">Instant Digital Access Activated</h4>
+          <p className="text-sm text-text-secondary">
             No physical shipping required. All course modules are unlocked in your <strong>My Learning</strong> workspace.
           </p>
         </div>
@@ -48,7 +48,7 @@ export default function OrderStatusStepper({ status, hasCourseOnly = false, canc
         </div>
         <div className="space-y-1.5 flex-1">
           <h4 className="font-heading font-bold text-base text-text-primary">Order Cancelled</h4>
-          <p className="text-xs text-text-secondary leading-relaxed">
+          <p className="text-sm text-text-secondary leading-relaxed">
             {cancellationReason ? (
               <span>
                 This order was cancelled by the seller.{' '}
@@ -75,7 +75,7 @@ export default function OrderStatusStepper({ status, hasCourseOnly = false, canc
 
   return (
     <div className="bg-background-card rounded-2xl p-6 border border-text-muted/15 shadow-soft space-y-4">
-      <h4 className="font-heading font-bold text-sm text-text-primary uppercase tracking-wider">
+      <h4 className="font-heading font-bold text-base text-text-primary uppercase tracking-wider">
         Shipment Delivery Progress
       </h4>
 

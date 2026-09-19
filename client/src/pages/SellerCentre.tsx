@@ -169,7 +169,7 @@ export default function SellerCentre() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-text-muted/15 pb-6">
         <div>
           <h1 className="text-3xl font-bold font-heading text-primary">Seller Centre Operations</h1>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Monitor sales trend charts, respond to inventory alerts, manage order dispatches, and brand your store.
           </p>
         </div>
@@ -178,7 +178,7 @@ export default function SellerCentre() {
         <div className="flex flex-wrap items-center gap-1.5 bg-background-muted p-1 rounded-2xl border border-text-muted/10">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
               activeTab === 'overview'
                 ? 'bg-primary text-white shadow-soft'
                 : 'text-text-secondary hover:text-text-primary'
@@ -188,7 +188,7 @@ export default function SellerCentre() {
           </button>
           <button
             onClick={() => setActiveTab('products')}
-            className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
               activeTab === 'products'
                 ? 'bg-primary text-white shadow-soft'
                 : 'text-text-secondary hover:text-text-primary'
@@ -198,7 +198,7 @@ export default function SellerCentre() {
           </button>
           <button
             onClick={() => setActiveTab('fulfillment')}
-            className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer ${
               activeTab === 'fulfillment'
                 ? 'bg-primary text-white shadow-soft'
                 : 'text-text-secondary hover:text-text-primary'
@@ -211,7 +211,7 @@ export default function SellerCentre() {
               setActiveTab('branding');
               syncProfileState();
             }}
-            className={`px-4 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center space-x-1 ${
+            className={`px-4 py-2 text-sm font-bold rounded-xl transition-all cursor-pointer flex items-center space-x-1 ${
               activeTab === 'branding'
                 ? 'bg-primary text-white shadow-soft'
                 : 'text-text-secondary hover:text-text-primary'
@@ -231,7 +231,7 @@ export default function SellerCentre() {
               {/* Low Stock Warning */}
               {alerts.lowStockProducts.length > 0 && (
                 <div className="bg-secondary/15 border border-accent/40 rounded-3xl p-5 shadow-soft space-y-3">
-                  <div className="flex items-center space-x-2 text-text-primary font-bold text-xs uppercase tracking-wider">
+                  <div className="flex items-center space-x-2 text-text-primary font-bold text-sm uppercase tracking-wider">
                     <AlertTriangle className="w-4 h-4 text-secondary shrink-0" />
                     <span>Low Stock Alert ({alerts.lowStockProducts.length} items)</span>
                   </div>
@@ -239,7 +239,7 @@ export default function SellerCentre() {
                     {alerts.lowStockProducts.map((prod) => (
                       <div
                         key={prod.id}
-                        className="bg-background-card p-3 rounded-2xl border border-text-muted/15 flex items-center justify-between text-xs"
+                        className="bg-background-card p-3 rounded-2xl border border-text-muted/15 flex items-center justify-between text-sm"
                       >
                         <div className="flex items-center space-x-2.5">
                           <img
@@ -269,7 +269,7 @@ export default function SellerCentre() {
               {/* SLA Breached Orders Warning */}
               {alerts.slaBreachedOrders.length > 0 && (
                 <div className="bg-error-light/60 border border-error/30 rounded-3xl p-5 shadow-soft space-y-3">
-                  <div className="flex items-center space-x-2 text-error font-bold text-xs uppercase tracking-wider">
+                  <div className="flex items-center space-x-2 text-error font-bold text-sm uppercase tracking-wider">
                     <Clock className="w-4 h-4 shrink-0" />
                     <span>Dispatch SLA Warning (&gt;48h Pending)</span>
                   </div>
@@ -277,7 +277,7 @@ export default function SellerCentre() {
                     {alerts.slaBreachedOrders.map((ord) => (
                       <div
                         key={ord.orderId}
-                        className="bg-background-card p-3 rounded-2xl border border-text-muted/15 flex items-center justify-between text-xs"
+                        className="bg-background-card p-3 rounded-2xl border border-text-muted/15 flex items-center justify-between text-sm"
                       >
                         <div>
                           <p className="font-bold font-mono text-primary">Order #{ord.orderId.slice(0, 8)}</p>
@@ -303,7 +303,7 @@ export default function SellerCentre() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
               <div className="space-y-1">
-                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+                <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
                   Gross Seller Sales
                 </span>
                 <span className="text-3xl font-extrabold font-heading text-primary block">
@@ -321,7 +321,7 @@ export default function SellerCentre() {
 
             <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
               <div className="space-y-1">
-                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+                <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
                   Total Orders Processed
                 </span>
                 <span className="text-3xl font-extrabold font-heading text-secondary block">
@@ -336,7 +336,7 @@ export default function SellerCentre() {
 
             <div className="bg-background-card rounded-3xl p-6 border border-text-muted/15 shadow-soft flex items-center justify-between">
               <div className="space-y-1">
-                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block">
+                <span className="text-sm font-semibold text-text-muted uppercase tracking-wider block">
                   Store Status
                 </span>
                 <span className="text-xl font-extrabold font-heading text-text-primary block flex items-center space-x-1">
@@ -359,7 +359,7 @@ export default function SellerCentre() {
                   <TrendingUp className="w-5 h-5 text-primary" />
                   <span>Sales Trend & Revenue Performance</span>
                 </h3>
-                <p className="text-xs text-text-muted">
+                <p className="text-sm text-text-muted">
                   Aggregated gross sales grouped by {period} period
                 </p>
               </div>
@@ -368,7 +368,7 @@ export default function SellerCentre() {
               <div className="flex items-center space-x-1 bg-background-muted/80 p-1 rounded-xl border border-text-muted/15 shrink-0">
                 <button
                   onClick={() => setPeriod('daily')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                     period === 'daily' ? 'bg-primary text-white shadow-soft' : 'text-text-muted hover:text-text-primary'
                   }`}
                 >
@@ -376,7 +376,7 @@ export default function SellerCentre() {
                 </button>
                 <button
                   onClick={() => setPeriod('weekly')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                     period === 'weekly' ? 'bg-primary text-white shadow-soft' : 'text-text-muted hover:text-text-primary'
                   }`}
                 >
@@ -384,7 +384,7 @@ export default function SellerCentre() {
                 </button>
                 <button
                   onClick={() => setPeriod('monthly')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                     period === 'monthly' ? 'bg-primary text-white shadow-soft' : 'text-text-muted hover:text-text-primary'
                   }`}
                 >
@@ -398,7 +398,7 @@ export default function SellerCentre() {
                 <RefreshCw className="w-6 h-6 animate-spin text-primary" />
               </div>
             ) : analytics.chartData.length === 0 ? (
-              <div className="py-12 text-center text-xs text-text-muted">
+              <div className="py-12 text-center text-sm text-text-muted">
                 No sales recorded for the selected period yet.
               </div>
             ) : (
@@ -447,7 +447,7 @@ export default function SellerCentre() {
                 <Store className="w-6 h-6 text-primary" />
                 <span>Store Branding & Public Info</span>
               </h2>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Configure your public storefront branding banner, bio, contact channels, and self-declared trust badges.
               </p>
             </div>
@@ -455,7 +455,7 @@ export default function SellerCentre() {
             <button
               onClick={() => updateProfileMutation.mutate()}
               disabled={updateProfileMutation.isPending}
-              className="px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
             >
               {updateProfileMutation.isPending ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />
@@ -467,7 +467,7 @@ export default function SellerCentre() {
           </div>
 
           {profileSuccessMsg && (
-            <div className="p-4 bg-success-light border border-success/30 text-success rounded-2xl text-xs font-bold flex items-center space-x-2">
+            <div className="p-4 bg-success-light border border-success/30 text-success rounded-2xl text-sm font-bold flex items-center space-x-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{profileSuccessMsg}</span>
             </div>
@@ -478,7 +478,7 @@ export default function SellerCentre() {
               <RefreshCw className="w-6 h-6 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="space-y-6 text-xs">
+            <div className="space-y-6 text-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1">
                   <label className="block font-bold text-text-primary">Store Logo URL</label>

@@ -36,12 +36,12 @@ export default class ErrorBoundary extends Component<Props, State> {
             <AlertTriangle className="w-10 h-10 mx-auto" />
           </div>
           <h2 className="text-xl font-bold font-heading text-text-primary">Something went wrong</h2>
-          <p className="text-xs text-text-secondary max-w-md mx-auto leading-relaxed">
+          <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
             {this.state.error?.message || 'An unexpected rendering error occurred. Please refresh the page to restore state.'}
           </p>
           <button
             onClick={this.handleReload}
-            className="px-5 py-2.5 bg-primary text-white font-bold text-xs rounded-xl shadow-soft hover:bg-primary-hover transition-colors flex items-center space-x-2 cursor-pointer"
+            className="px-5 py-2.5 bg-primary text-white font-bold text-sm rounded-xl shadow-soft hover:bg-primary-hover transition-colors flex items-center space-x-2 cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Reload Application</span>

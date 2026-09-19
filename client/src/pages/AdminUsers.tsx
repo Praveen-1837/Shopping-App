@@ -79,7 +79,7 @@ export default function AdminUsers() {
           <h1 className="text-3xl font-bold font-heading text-text-primary">
             Customer & User Management
           </h1>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Monitor registered platform users, view order activity, and enforce server-side account suspension.
           </p>
         </div>
@@ -95,12 +95,12 @@ export default function AdminUsers() {
               placeholder="Search user by name or email address..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="w-full pl-10 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             />
           </div>
           <button
             type="submit"
-            className="px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft cursor-pointer"
+            className="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft cursor-pointer"
           >
             Search
           </button>
@@ -113,26 +113,26 @@ export default function AdminUsers() {
           <h2 className="font-heading font-bold text-lg text-text-primary">
             Registered Users ({data?.data?.total || 0})
           </h2>
-          <span className="text-xs text-text-muted">Page {page} of {totalPages}</span>
+          <span className="text-sm text-text-muted">Page {page} of {totalPages}</span>
         </div>
 
         {isLoading ? (
-          <div className="py-12 flex flex-col items-center justify-center space-y-2 text-text-muted text-xs">
+          <div className="py-12 flex flex-col items-center justify-center space-y-2 text-text-muted text-sm">
             <RefreshCw className="w-6 h-6 animate-spin text-primary" />
             <p>Loading users...</p>
           </div>
         ) : isError ? (
-          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-xs font-bold flex items-center space-x-2">
+          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-sm font-bold flex items-center space-x-2">
             <AlertCircle className="w-4 h-4" />
             <span>{(error as any)?.response?.data?.error?.message || 'Failed to load user list'}</span>
           </div>
         ) : users.length === 0 ? (
-          <div className="py-12 text-center text-xs text-text-muted">
+          <div className="py-12 text-center text-sm text-text-muted">
             No registered users found matching query.
           </div>
         ) : (
           <div className="overflow-x-auto no-scrollbar">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-sm">
               <thead className="bg-background-muted/60 text-text-muted uppercase tracking-wider border-b border-text-muted/10 font-bold">
                 <tr>
                   <th className="py-3 px-4">User</th>
@@ -212,7 +212,7 @@ export default function AdminUsers() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-4 border-t border-text-muted/10 text-xs">
+          <div className="flex items-center justify-between pt-4 border-t border-text-muted/10 text-sm">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}

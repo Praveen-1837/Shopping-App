@@ -101,11 +101,11 @@ export default function HeroBannerCarousel() {
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-12 md:bottom-16 px-4 sm:px-10 md:px-16 flex flex-col items-start z-10 pointer-events-auto">
               <div className="max-w-[75%] sm:max-w-full md:max-w-3xl space-y-1 sm:space-y-4">
 
-                <h2 className="text-sm sm:text-3xl md:text-5xl font-black font-heading text-white leading-tight tracking-tight text-balance break-words line-clamp-2">
+                <h2 className="text-base sm:text-3xl md:text-5xl font-black font-heading text-white leading-tight tracking-tight text-balance break-words line-clamp-2">
                   {banner.title}
                 </h2>
                 {banner.subtitle && (
-                  <p className="hidden sm:block text-xs sm:text-base md:text-lg text-gray-200 font-medium text-balance break-words max-w-full">
+                  <p className="hidden sm:block text-sm sm:text-base md:text-lg text-gray-200 font-medium text-balance break-words max-w-full">
                     {banner.subtitle}
                   </p>
                 )}

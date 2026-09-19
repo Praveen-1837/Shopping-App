@@ -81,7 +81,7 @@ export default function AdminOnboarding() {
           <h1 className="text-3xl font-bold font-heading text-text-primary">
             Partner Application Approvals
           </h1>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Review applicant credentials and grant operational access for Sellers, Farmers, and Educators.
           </p>
         </div>
@@ -101,7 +101,7 @@ export default function AdminOnboarding() {
             <button
               key={tab.value}
               onClick={() => setSearchParams({ tab: tab.value })}
-              className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer ${
+              className={`px-5 py-3 rounded-2xl text-sm font-bold transition-all flex items-center space-x-2 cursor-pointer ${
                 isActive
                   ? 'bg-primary text-white shadow-soft'
                   : 'bg-background-card text-text-secondary border border-text-muted/20 hover:border-primary'
@@ -117,17 +117,17 @@ export default function AdminOnboarding() {
       {isLoading ? (
         <div className="py-12 flex flex-col items-center justify-center space-y-3 text-text-muted">
           <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-xs">Loading {activeTab.toLowerCase()} applications...</p>
+          <p className="text-sm">Loading {activeTab.toLowerCase()} applications...</p>
         </div>
       ) : isError ? (
         <div className="p-6 bg-error-light border border-error/30 text-error rounded-2xl flex items-center space-x-3">
           <AlertCircle className="w-6 h-6 shrink-0" />
-          <p className="text-xs font-bold">{(error as any)?.response?.data?.error?.message || 'Access Denied'}</p>
+          <p className="text-sm font-bold">{(error as any)?.response?.data?.error?.message || 'Access Denied'}</p>
         </div>
       ) : applications.length === 0 ? (
-        <div className="bg-background-card rounded-3xl p-12 text-center text-xs text-text-muted border border-text-muted/15 space-y-2">
+        <div className="bg-background-card rounded-3xl p-12 text-center text-sm text-text-muted border border-text-muted/15 space-y-2">
           <Clock className="w-8 h-8 mx-auto text-text-muted opacity-50" />
-          <p className="font-bold text-sm text-text-primary">No Pending {activeTab} Applications</p>
+          <p className="font-bold text-base text-text-primary">No Pending {activeTab} Applications</p>
           <p>Applications requesting {activeTab} role access will appear here for admin review.</p>
         </div>
       ) : (
@@ -142,7 +142,7 @@ export default function AdminOnboarding() {
                   <span className="font-heading font-bold text-base text-text-primary">
                     {app.user?.name}
                   </span>
-                  <span className="text-xs text-text-muted">({app.user?.email})</span>
+                  <span className="text-sm text-text-muted">({app.user?.email})</span>
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                       app.status === 'APPROVED'
@@ -156,7 +156,7 @@ export default function AdminOnboarding() {
                   </span>
                 </div>
 
-                <div className="flex items-center space-x-4 text-xs font-medium text-text-secondary">
+                <div className="flex items-center space-x-4 text-sm font-medium text-text-secondary">
                   <span>
                     Requested Role: <strong className="text-primary font-bold">{formatRoleLabel(app.requestedRole)}</strong>
                   </span>
@@ -168,7 +168,7 @@ export default function AdminOnboarding() {
 
                 {/* Details Breakdown */}
                 {app.details && (
-                  <div className="bg-background-muted/60 rounded-2xl p-4 border border-text-muted/10 space-y-1.5 text-xs text-text-secondary">
+                  <div className="bg-background-muted/60 rounded-2xl p-4 border border-text-muted/10 space-y-1.5 text-sm text-text-secondary">
                     {app.details.businessName && (
                       <p>
                         <strong>Business / Farm / Institute:</strong> {app.details.businessName}
@@ -234,7 +234,7 @@ export default function AdminOnboarding() {
                   <button
                     onClick={() => reviewMutation.mutate({ id: app.id, status: 'APPROVED' })}
                     disabled={reviewMutation.isPending}
-                    className="px-4 py-2.5 bg-success text-white text-xs font-bold rounded-xl hover:bg-success/90 transition-colors shadow-soft flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2.5 bg-success text-white text-sm font-bold rounded-xl hover:bg-success/90 transition-colors shadow-soft flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Approve</span>
@@ -243,14 +243,14 @@ export default function AdminOnboarding() {
                   <button
                     onClick={() => reviewMutation.mutate({ id: app.id, status: 'REJECTED' })}
                     disabled={reviewMutation.isPending}
-                    className="px-4 py-2.5 bg-error-light text-error border border-error/30 hover:bg-error hover:text-white text-xs font-bold rounded-xl transition-colors flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2.5 bg-error-light text-error border border-error/30 hover:bg-error hover:text-white text-sm font-bold rounded-xl transition-colors flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
                   >
                     <XCircle className="w-4 h-4" />
                     <span>Reject</span>
                   </button>
                 </div>
               ) : (
-                <span className="text-xs text-text-muted font-mono italic">Decision Finalized</span>
+                <span className="text-sm text-text-muted font-mono italic">Decision Finalized</span>
               )}
             </div>
           ))}

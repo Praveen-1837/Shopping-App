@@ -5,17 +5,17 @@ export default function Terms() {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-8">
       <div className="space-y-3 border-b border-text-muted/15 pb-6">
-        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-semibold">
+        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-sm font-semibold">
           <FileText className="w-4 h-4" />
           <span>Legal Agreement</span>
         </div>
         <h1 className="text-3xl font-extrabold font-heading text-primary">Terms of Service</h1>
-        <p className="text-sm text-text-secondary">
+        <p className="text-base text-text-secondary">
           Sample Placeholder Agreement • Last updated: {new Date().toLocaleDateString()}
         </p>
       </div>
 
-      <div className="bg-background-card rounded-2xl p-6 md:p-8 border border-text-muted/15 shadow-soft space-y-6 text-xs text-text-secondary leading-relaxed">
+      <div className="bg-background-card rounded-2xl p-6 md:p-8 border border-text-muted/15 shadow-soft space-y-6 text-sm text-text-secondary leading-relaxed">
         <div className="space-y-2">
           <h3 className="font-heading font-bold text-base text-text-primary">1. Marketplace Platform Rules</h3>
           <p>

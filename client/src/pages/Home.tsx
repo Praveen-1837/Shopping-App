@@ -61,14 +61,14 @@ export default function Home() {
     <div className="max-w-[1480px] mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
       {/* Intro Header & Brand Messaging */}
       <div className="space-y-1.5 pt-1">
-        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
+        <div className="inline-flex items-center space-x-2 bg-primary-light text-primary px-3 py-1 rounded-full text-sm font-bold border border-primary/20">
           <Sprout className="w-3.5 h-3.5 text-primary" />
           <span>Verifiable Eco Marketplace</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-text-primary tracking-tight">
           Direct From Local Farmers & Eco-Artisans
         </h1>
-        <p className="text-xs sm:text-sm text-text-muted max-w-2xl font-medium leading-relaxed">
+        <p className="text-sm sm:text-base text-text-muted max-w-2xl font-medium leading-relaxed">
           Ethically harvested organic produce, natural wellness products, and verified sustainability.
         </p>
       </div>
@@ -89,7 +89,7 @@ export default function Home() {
             </h2>
             <button
               onClick={() => navigate('/shop')}
-              className="text-xs font-bold text-primary hover:text-primary-hover flex items-center space-x-1 cursor-pointer bg-[#FAF7F2]/90 backdrop-blur-xs px-3 py-1.5 rounded-xl border border-primary/20 hover:border-primary/40 transition-colors"
+              className="text-sm font-bold text-primary hover:text-primary-hover flex items-center space-x-1 cursor-pointer bg-[#FAF7F2]/90 backdrop-blur-xs px-3 py-1.5 rounded-xl border border-primary/20 hover:border-primary/40 transition-colors"
             >
               <span>View All Products</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -122,11 +122,11 @@ export default function Home() {
             <h2 className="text-lg sm:text-xl font-heading font-extrabold text-text-primary tracking-tight">
               Featured Eco Discoveries
             </h2>
-            <p className="text-xs text-text-muted">Top rated sustainable goods direct from certified producers</p>
+            <p className="text-sm text-text-muted">Top rated sustainable goods direct from certified producers</p>
           </div>
           <button
             onClick={() => navigate('/shop')}
-            className="text-xs font-bold text-primary hover:text-primary-hover flex items-center space-x-1 cursor-pointer"
+            className="text-sm font-bold text-primary hover:text-primary-hover flex items-center space-x-1 cursor-pointer"
           >
             <span>Browse Full Catalog</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -136,15 +136,15 @@ export default function Home() {
         {isLoading ? (
           <div className="py-16 text-center text-text-secondary space-y-3">
             <RefreshCw className="w-8 h-8 animate-spin mx-auto text-primary" />
-            <p className="text-sm font-medium">Loading featured discoveries...</p>
+            <p className="text-base font-medium">Loading featured discoveries...</p>
           </div>
         ) : isError ? (
           <div className="bg-error-light border border-error/30 rounded-2xl p-6 text-center space-y-3">
             <AlertCircle className="w-8 h-8 mx-auto text-error" />
-            <h3 className="text-sm font-bold text-error font-heading">Failed to Load Featured Products</h3>
+            <h3 className="text-base font-bold text-error font-heading">Failed to Load Featured Products</h3>
             <button
               onClick={() => refetch()}
-              className="px-4 py-1.5 bg-error text-white text-xs font-semibold rounded-lg hover:bg-error/90 transition-colors"
+              className="px-4 py-1.5 bg-error text-white text-sm font-semibold rounded-lg hover:bg-error/90 transition-colors"
             >
               Try Again
             </button>

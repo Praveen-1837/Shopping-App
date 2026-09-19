@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Verifying authentication...</p>
+        <p className="text-base font-medium">Verifying authentication...</p>
       </div>
     );
   }

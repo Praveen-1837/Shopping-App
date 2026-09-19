@@ -166,7 +166,7 @@ export default function AdminCategories() {
           <h1 className="text-3xl font-bold font-heading text-text-primary">
             Marketplace Category Management
           </h1>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Manage taxonomy categories and upload curated tile representative images for homepage grid display.
           </p>
         </div>
@@ -174,7 +174,7 @@ export default function AdminCategories() {
 
       {/* Error Alert */}
       {formError && (
-        <div className="p-4 bg-error-light border border-error/30 text-error rounded-2xl flex items-center space-x-3 text-xs">
+        <div className="p-4 bg-error-light border border-error/30 text-error rounded-2xl flex items-center space-x-3 text-sm">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <p className="font-medium">{formError}</p>
         </div>
@@ -185,7 +185,7 @@ export default function AdminCategories() {
         onSubmit={handleCreateSubmit}
         className="bg-background-card p-6 rounded-3xl border border-text-muted/15 shadow-soft space-y-4"
       >
-        <h3 className="text-sm font-bold font-heading text-text-primary flex items-center space-x-2">
+        <h3 className="text-base font-bold font-heading text-text-primary flex items-center space-x-2">
           <Plus className="w-4 h-4 text-primary" />
           <span>Add New Category & Representative Image</span>
         </h3>
@@ -196,7 +196,7 @@ export default function AdminCategories() {
             placeholder="Category name (e.g. Handmade Pottery, Food & Spices)..."
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
-            className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
           />
 
           <div className="flex items-center space-x-2">
@@ -205,7 +205,7 @@ export default function AdminCategories() {
               placeholder="Image URL (https://...)"
               value={newCategoryImageUrl}
               onChange={(e) => setNewCategoryImageUrl(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="flex-1 px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             />
             <label className="p-2.5 bg-background-muted border border-text-muted/20 rounded-xl hover:bg-primary-light transition-colors cursor-pointer text-text-muted hover:text-primary shrink-0" title="Upload Image File">
               {isUploading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
@@ -226,7 +226,7 @@ export default function AdminCategories() {
         <button
           type="submit"
           disabled={createMutation.isPending || !newCategoryName.trim()}
-          className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
+          className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-hover transition-colors shadow-soft flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
         >
           {createMutation.isPending ? (
             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -244,16 +244,16 @@ export default function AdminCategories() {
         </h2>
 
         {isLoading ? (
-          <div className="py-8 flex flex-col items-center justify-center space-y-2 text-text-muted text-xs">
+          <div className="py-8 flex flex-col items-center justify-center space-y-2 text-text-muted text-sm">
             <RefreshCw className="w-6 h-6 animate-spin text-primary" />
             <p>Loading categories...</p>
           </div>
         ) : isError ? (
-          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-xs font-bold">
+          <div className="p-4 bg-error-light border border-error/30 text-error rounded-xl text-sm font-bold">
             {(error as any)?.response?.data?.error?.message || 'Failed to load categories'}
           </div>
         ) : categories.length === 0 ? (
-          <div className="py-8 text-center text-xs text-text-muted">
+          <div className="py-8 text-center text-sm text-text-muted">
             No categories created yet. Add one above!
           </div>
         ) : (
@@ -267,7 +267,7 @@ export default function AdminCategories() {
                         type="text"
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="px-3 py-2 bg-background-muted border border-primary rounded-xl text-xs focus:outline-none"
+                        className="px-3 py-2 bg-background-muted border border-primary rounded-xl text-sm focus:outline-none"
                         placeholder="Category Name"
                       />
                       <div className="flex items-center space-x-2">
@@ -275,7 +275,7 @@ export default function AdminCategories() {
                           type="url"
                           value={editImageUrl}
                           onChange={(e) => setEditImageUrl(e.target.value)}
-                          className="flex-1 px-3 py-2 bg-background-muted border border-primary rounded-xl text-xs focus:outline-none"
+                          className="flex-1 px-3 py-2 bg-background-muted border border-primary rounded-xl text-sm focus:outline-none"
                           placeholder="Image URL"
                         />
                         <label className="p-2 bg-background-muted border border-text-muted/20 rounded-xl hover:bg-primary-light cursor-pointer">
@@ -288,14 +288,14 @@ export default function AdminCategories() {
                       <button
                         onClick={() => handleSaveEdit(cat.id)}
                         disabled={updateMutation.isPending}
-                        className="px-3 py-1.5 bg-success text-white text-xs font-bold rounded-xl hover:bg-success/90 cursor-pointer inline-flex items-center space-x-1"
+                        className="px-3 py-1.5 bg-success text-white text-sm font-bold rounded-xl hover:bg-success/90 cursor-pointer inline-flex items-center space-x-1"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Save</span>
                       </button>
                       <button
                         onClick={() => setEditingId(null)}
-                        className="px-3 py-1.5 bg-background-muted text-text-muted text-xs font-semibold rounded-xl hover:text-text-primary cursor-pointer"
+                        className="px-3 py-1.5 bg-background-muted text-text-muted text-sm font-semibold rounded-xl hover:text-text-primary cursor-pointer"
                       >
                         Cancel
                       </button>
@@ -314,7 +314,7 @@ export default function AdminCategories() {
                       </div>
 
                       <div>
-                        <span className="font-bold text-xs text-text-primary block">{cat.name}</span>
+                        <span className="font-bold text-sm text-text-primary block">{cat.name}</span>
                         <span className="text-[11px] text-text-muted">
                           {cat.imageUrl ? 'Curated image set' : 'Branded fallback active'}
                         </span>

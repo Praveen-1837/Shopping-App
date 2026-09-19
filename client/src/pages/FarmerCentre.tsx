@@ -33,7 +33,7 @@ export default function FarmerCentre() {
       {/* Friendly Farmer Header */}
       <div className="bg-gradient-to-br from-[#1B2E1E] to-primary text-white rounded-3xl p-8 md:p-12 shadow-card space-y-4 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/20">
+          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-sm font-semibold border border-white/20">
             <Sprout className="w-4 h-4 text-secondary" />
             <span>Organic Farmer Portal</span>
           </div>
@@ -42,7 +42,7 @@ export default function FarmerCentre() {
             Kisan & Farmer Centre
           </h1>
 
-          <p className="text-sm md:text-base text-white/90 leading-relaxed">
+          <p className="text-base md:text-base text-white/90 leading-relaxed">
             Simplified tool for local farmers to list fresh harvests, track customer orders, and receive fair market payments directly!
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function FarmerCentre() {
             <IndianRupee className="w-8 h-8" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
               Total Farm Revenue
             </span>
             <span className="text-3xl font-black font-heading text-secondary">
@@ -79,7 +79,7 @@ export default function FarmerCentre() {
             <Package className="w-8 h-8" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
               Harvest Produce Listed
             </span>
             <span className="text-3xl font-black font-heading text-primary">
@@ -94,7 +94,7 @@ export default function FarmerCentre() {
             <Truck className="w-8 h-8 text-secondary" />
           </div>
           <div>
-            <span className="text-xs font-bold text-text-muted uppercase tracking-wider block">
+            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
               Orders Received
             </span>
             <span className="text-3xl font-black font-heading text-text-primary">
@@ -114,7 +114,7 @@ export default function FarmerCentre() {
             <h3 className="font-heading font-bold text-base text-text-primary group-hover:text-secondary">
               Manage My Products
             </h3>
-            <p className="text-xs text-text-muted">Edit prices, quantities, and sustainability tags</p>
+            <p className="text-sm text-text-muted">Edit prices, quantities, and sustainability tags</p>
           </div>
           <Package className="w-6 h-6 text-secondary" />
         </Link>
@@ -127,7 +127,7 @@ export default function FarmerCentre() {
             <h3 className="font-heading font-bold text-base text-text-primary group-hover:text-secondary">
               Fulfillment Queue
             </h3>
-            <p className="text-xs text-text-muted">Pack and mark items as shipped to customers</p>
+            <p className="text-sm text-text-muted">Pack and mark items as shipped to customers</p>
           </div>
           <Truck className="w-6 h-6 text-secondary" />
         </Link>

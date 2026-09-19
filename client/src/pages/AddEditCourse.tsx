@@ -242,6 +242,11 @@ export default function AddEditCourse() {
       setErrorMsg('Course must contain at least one section and lesson.');
       return;
     }
+    const priceNum = parseFloat(price);
+    if (priceNum < 0 || !Number.isFinite(priceNum)) {
+      setErrorMsg('Price must be a valid non-negative number');
+      return;
+    }
     saveMutation.mutate();
   };
 
@@ -249,7 +254,7 @@ export default function AddEditCourse() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-3 text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-secondary" />
-        <p className="text-sm font-medium">Loading course data for edit...</p>
+        <p className="text-base font-medium">Loading course data for edit...</p>
       </div>
     );
   }
@@ -259,7 +264,7 @@ export default function AddEditCourse() {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-text-muted/15 pb-6">
         <div>
-          <div className="flex items-center space-x-2 text-secondary font-semibold text-xs uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-secondary font-semibold text-sm uppercase tracking-wider mb-1">
             <BookOpen className="w-4 h-4 text-secondary" />
             <span>Educator Curriculum Builder</span>
           </div>
@@ -270,7 +275,7 @@ export default function AddEditCourse() {
 
         <Link
           to="/educator/centre"
-          className="flex items-center space-x-1 text-xs text-text-secondary hover:text-secondary transition-colors"
+          className="flex items-center space-x-1 text-sm text-text-secondary hover:text-secondary transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Educator Centre</span>
@@ -280,7 +285,7 @@ export default function AddEditCourse() {
       {errorMsg && (
         <div className="bg-error-light border border-error/30 rounded-2xl p-4 text-error flex items-center space-x-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-xs font-semibold">{errorMsg}</p>
+          <p className="text-sm font-semibold">{errorMsg}</p>
         </div>
       )}
 
@@ -295,7 +300,7 @@ export default function AddEditCourse() {
 
             {/* Published Toggle */}
             <div className="flex items-center space-x-3 bg-background-muted p-2 rounded-xl border border-text-muted/15">
-              <span className="text-xs font-bold text-text-primary">
+              <span className="text-sm font-bold text-text-primary">
                 Status: {published ? <span className="text-success">Published</span> : <span className="text-text-muted">Draft</span>}
               </span>
               <button
@@ -315,7 +320,7 @@ export default function AddEditCourse() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold text-text-primary">
+            <label className="block text-sm font-semibold text-text-primary">
               Course Title <span className="text-error">*</span>
             </label>
             <input
@@ -324,13 +329,13 @@ export default function AddEditCourse() {
               placeholder="e.g. Masterclass: Regenerative Organic Farming"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Regular Price (₹) <span className="text-error">*</span>
               </label>
               <input
@@ -340,12 +345,12 @@ export default function AddEditCourse() {
                 min="0"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Discount Price (₹)
               </label>
               <input
@@ -355,12 +360,12 @@ export default function AddEditCourse() {
                 placeholder="Optional discount"
                 value={discountPrice}
                 onChange={(e) => setDiscountPrice(e.target.value)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Duration (Mins) <span className="text-error">*</span>
               </label>
               <input
@@ -369,18 +374,18 @@ export default function AddEditCourse() {
                 min="10"
                 value={durationMins}
                 onChange={(e) => setDurationMins(e.target.value)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Catalog Visibility
               </label>
               <select
                 value={visibility}
                 onChange={(e) => setVisibility(e.target.value as any)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
               >
                 <option value="PUBLIC">Public (In Catalog)</option>
                 <option value="INVITE_ONLY">Invite Only (Hidden)</option>
@@ -389,13 +394,13 @@ export default function AddEditCourse() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold text-text-primary">
+            <label className="block text-sm font-semibold text-text-primary">
               Category <span className="text-error">*</span>
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
             >
               <option value="Sustainable Agriculture">Sustainable Agriculture</option>
               <option value="Eco Living">Eco Living</option>
@@ -405,7 +410,7 @@ export default function AddEditCourse() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-semibold text-text-primary">
+            <label className="block text-sm font-semibold text-text-primary">
               Course Summary Description <span className="text-error">*</span>
             </label>
             <textarea
@@ -413,20 +418,20 @@ export default function AddEditCourse() {
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40"
+              className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
             <div className="space-y-1">
-              <label className="block text-xs font-semibold text-text-primary">
+              <label className="block text-sm font-semibold text-text-primary">
                 Preview Video URL (YouTube / Embed)
               </label>
               <input
                 type="text"
                 value={previewVideo}
                 onChange={(e) => setPreviewVideo(e.target.value)}
-                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/40 font-mono text-xs"
+                className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-secondary/40 font-mono text-sm"
               />
             </div>
 
@@ -438,7 +443,7 @@ export default function AddEditCourse() {
                   onChange={(e) => setCertificate(e.target.checked)}
                   className="w-4 h-4 accent-secondary"
                 />
-                <span className="text-xs font-semibold text-text-primary">
+                <span className="text-sm font-semibold text-text-primary">
                   Issue Digital Certificate on 100% Completion
                 </span>
               </label>
@@ -453,14 +458,14 @@ export default function AddEditCourse() {
               <h2 className="text-lg font-bold font-heading text-primary">
                 2. Curriculum Builder (Sections & Lessons)
               </h2>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Organize your curriculum into ordered sections and multi-format lessons (video, article, resource).
               </p>
             </div>
             <button
               type="button"
               onClick={addSection}
-              className="flex items-center space-x-1 px-3 py-2 bg-secondary text-white text-xs font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft cursor-pointer"
+              className="flex items-center space-x-1 px-3 py-2 bg-secondary text-white text-sm font-bold rounded-xl hover:bg-secondary-hover transition-colors shadow-soft cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Section</span>
@@ -476,7 +481,7 @@ export default function AddEditCourse() {
                 {/* Section Header */}
                 <div className="flex items-center justify-between gap-3 border-b border-text-muted/15 pb-3">
                   <div className="flex items-center space-x-2 flex-1">
-                    <span className="text-xs font-bold text-secondary uppercase tracking-wider">
+                    <span className="text-sm font-bold text-secondary uppercase tracking-wider">
                       Section {secIdx + 1}:
                     </span>
                     <input
@@ -484,7 +489,7 @@ export default function AddEditCourse() {
                       required
                       value={sec.title}
                       onChange={(e) => updateSectionTitle(secIdx, e.target.value)}
-                      className="flex-1 px-3 py-1.5 bg-background-card border border-text-muted/20 rounded-xl text-xs font-bold text-text-primary"
+                      className="flex-1 px-3 py-1.5 bg-background-card border border-text-muted/20 rounded-xl text-sm font-bold text-text-primary"
                     />
                   </div>
 
@@ -492,7 +497,7 @@ export default function AddEditCourse() {
                     <button
                       type="button"
                       onClick={() => addLesson(secIdx)}
-                      className="px-2.5 py-1 bg-secondary-light text-secondary hover:bg-secondary hover:text-white text-xs font-bold rounded-lg transition-colors flex items-center space-x-1 cursor-pointer"
+                      className="px-2.5 py-1 bg-secondary-light text-secondary hover:bg-secondary hover:text-white text-sm font-bold rounded-lg transition-colors flex items-center space-x-1 cursor-pointer"
                     >
                       <Plus className="w-3 h-3" />
                       <span>Add Lesson</span>
@@ -527,7 +532,7 @@ export default function AddEditCourse() {
                             placeholder="Lesson Title"
                             value={les.title}
                             onChange={(e) => updateLesson(secIdx, lesIdx, 'title', e.target.value)}
-                            className="flex-1 px-3 py-1 bg-background-muted/60 border border-text-muted/20 rounded-lg text-xs font-semibold"
+                            className="flex-1 px-3 py-1 bg-background-muted/60 border border-text-muted/20 rounded-lg text-sm font-semibold"
                           />
                         </div>
 
@@ -536,7 +541,7 @@ export default function AddEditCourse() {
                           <select
                             value={les.type}
                             onChange={(e) => updateLesson(secIdx, lesIdx, 'type', e.target.value as any)}
-                            className="px-2.5 py-1 bg-background-muted border border-text-muted/20 rounded-lg text-xs font-bold text-secondary cursor-pointer"
+                            className="px-2.5 py-1 bg-background-muted border border-text-muted/20 rounded-lg text-sm font-bold text-secondary cursor-pointer"
                           >
                             <option value="video">🎥 Video Lesson</option>
                             <option value="article">📄 Article / Text</option>
@@ -576,7 +581,7 @@ export default function AddEditCourse() {
                             placeholder="https://www.youtube.com/embed/... or direct mp4 URL"
                             value={les.videoUrl || ''}
                             onChange={(e) => updateLesson(secIdx, lesIdx, 'videoUrl', e.target.value)}
-                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-xs font-mono"
+                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-sm font-mono"
                           />
                         </div>
                       )}
@@ -592,7 +597,7 @@ export default function AddEditCourse() {
                             placeholder="Enter lesson text, instructions, and reading materials..."
                             value={les.content || ''}
                             onChange={(e) => updateLesson(secIdx, lesIdx, 'content', e.target.value)}
-                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-xs"
+                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-sm"
                           ></textarea>
                         </div>
                       )}
@@ -608,7 +613,7 @@ export default function AddEditCourse() {
                             placeholder="https://res.cloudinary.com/.../resource.pdf"
                             value={les.resourceUrl || ''}
                             onChange={(e) => updateLesson(secIdx, lesIdx, 'resourceUrl', e.target.value)}
-                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-xs font-mono"
+                            className="w-full px-3 py-1.5 bg-background-muted/40 border border-text-muted/20 rounded-lg text-sm font-mono"
                           />
                         </div>
                       )}
@@ -624,7 +629,7 @@ export default function AddEditCourse() {
         <button
           type="submit"
           disabled={saveMutation.isPending}
-          className="w-full py-4 bg-secondary text-white hover:bg-secondary-hover font-semibold text-sm rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
+          className="w-full py-4 bg-secondary text-white hover:bg-secondary-hover font-semibold text-base rounded-xl transition-all shadow-soft flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
         >
           {saveMutation.isPending ? (
             <>

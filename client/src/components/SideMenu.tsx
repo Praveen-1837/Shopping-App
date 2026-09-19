@@ -85,15 +85,15 @@ export default function SideMenu({
             </div>
             <div>
               <SignedIn>
-                <span className="text-xs font-medium text-white/80 block">Hello,</span>
-                <span className="text-sm font-bold font-heading">{user?.firstName || 'Customer'}</span>
+                <span className="text-sm font-medium text-white/80 block">Hello,</span>
+                <span className="text-base font-bold font-heading">{user?.firstName || 'Customer'}</span>
               </SignedIn>
               <SignedOut>
-                <span className="text-xs font-medium text-white/80 block">Hello,</span>
+                <span className="text-sm font-medium text-white/80 block">Hello,</span>
                 <Link
                   to="/login"
                   onClick={onClose}
-                  className="text-sm font-bold font-heading hover:underline text-secondary"
+                  className="text-base font-bold font-heading hover:underline text-secondary"
                 >
                   Sign In
                 </Link>
@@ -114,7 +114,7 @@ export default function SideMenu({
         <div className="p-4 space-y-6">
           {/* Section 1: Shop Categories */}
           <div className="space-y-2">
-            <h3 className="text-xs font-bold font-heading uppercase text-text-muted tracking-wider px-2">
+            <h3 className="text-sm font-bold font-heading uppercase text-text-muted tracking-wider px-2">
               Shop by Category
             </h3>
             <div className="space-y-1">
@@ -125,7 +125,7 @@ export default function SideMenu({
                     onSelectCategory(cat);
                     onClose();
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors cursor-pointer ${
+                  className={`w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium transition-colors cursor-pointer ${
                     selectedCategory === cat
                       ? 'bg-primary text-white font-bold'
                       : 'hover:bg-background-muted text-text-primary'
@@ -144,14 +144,14 @@ export default function SideMenu({
 
           {/* Section 2: Learning & Masterclasses */}
           <div className="space-y-2 pt-3 border-t border-text-muted/15">
-            <h3 className="text-xs font-bold font-heading uppercase text-text-muted tracking-wider px-2">
+            <h3 className="text-sm font-bold font-heading uppercase text-text-muted tracking-wider px-2">
               Eco-Learning
             </h3>
             <div className="space-y-1">
               <Link
                 to="/courses"
                 onClick={onClose}
-                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
               >
                 <span className="flex items-center space-x-2">
                   <BookOpen className="w-3.5 h-3.5 text-primary" />
@@ -164,7 +164,7 @@ export default function SideMenu({
                 <Link
                   to="/my-world/courses"
                   onClick={onClose}
-                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <GraduationCap className="w-3.5 h-3.5 text-secondary" />
@@ -179,7 +179,7 @@ export default function SideMenu({
           {/* Section 3: Partner & Management Dashboards (Strictly Role Gated) */}
           <SignedIn>
             <div className="space-y-2 pt-3 border-t border-text-muted/15">
-              <h3 className="text-xs font-bold font-heading uppercase text-text-muted tracking-wider px-2">
+              <h3 className="text-sm font-bold font-heading uppercase text-text-muted tracking-wider px-2">
                 Partner Centres
               </h3>
               <div className="space-y-1">
@@ -187,7 +187,7 @@ export default function SideMenu({
                   <Link
                     to="/seller-centre"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-primary-light text-primary transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-bold bg-primary-light text-primary transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <Briefcase className="w-3.5 h-3.5 text-primary" />
@@ -201,7 +201,7 @@ export default function SideMenu({
                   <Link
                     to="/farmer-centre"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-secondary-light text-secondary transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-bold bg-secondary-light text-secondary transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <Sprout className="w-3.5 h-3.5 text-secondary" />
@@ -215,7 +215,7 @@ export default function SideMenu({
                   <Link
                     to="/educator-centre"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-accent/20 text-text-primary transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-bold bg-accent/20 text-text-primary transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <Award className="w-3.5 h-3.5 text-primary" />
@@ -229,7 +229,7 @@ export default function SideMenu({
                   <Link
                     to="/delivery-centre"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-[#1B2E1E]/10 text-[#1B2E1E] transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-bold bg-[#1B2E1E]/10 text-[#1B2E1E] transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <Truck className="w-3.5 h-3.5 text-[#1B2E1E]" />
@@ -243,7 +243,7 @@ export default function SideMenu({
                   <Link
                     to="/admin/onboarding"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-bold bg-ai-light text-ai transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-bold bg-ai-light text-ai transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <ShieldCheck className="w-3.5 h-3.5 text-ai" />
@@ -257,7 +257,7 @@ export default function SideMenu({
                   <Link
                     to="/apply"
                     onClick={onClose}
-                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
                   >
                     <span className="flex items-center space-x-2">
                       <Sprout className="w-3.5 h-3.5 text-primary" />
@@ -273,14 +273,14 @@ export default function SideMenu({
           {/* Section 4: Customer Orders & Account */}
           <SignedIn>
             <div className="space-y-2 pt-3 border-t border-text-muted/15">
-              <h3 className="text-xs font-bold font-heading uppercase text-text-muted tracking-wider px-2">
+              <h3 className="text-sm font-bold font-heading uppercase text-text-muted tracking-wider px-2">
                 Account & Orders
               </h3>
               <div className="space-y-1">
                 <Link
                   to="/my-world/wishlist"
                   onClick={onClose}
-                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <Heart className="w-3.5 h-3.5 text-secondary" />
@@ -292,7 +292,7 @@ export default function SideMenu({
                 <Link
                   to="/my-world/orders"
                   onClick={onClose}
-                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <Package className="w-3.5 h-3.5 text-primary" />
@@ -304,7 +304,7 @@ export default function SideMenu({
                 <Link
                   to="/my-account"
                   onClick={onClose}
-                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
                 >
                   <span className="flex items-center space-x-2">
                     <User className="w-3.5 h-3.5 text-primary" />
@@ -318,14 +318,14 @@ export default function SideMenu({
 
           {/* Section 5: Help & Legal Information */}
           <div className="space-y-2 pt-3 border-t border-text-muted/15">
-            <h3 className="text-xs font-bold font-heading uppercase text-text-muted tracking-wider px-2">
+            <h3 className="text-sm font-bold font-heading uppercase text-text-muted tracking-wider px-2">
               Help & Policy
             </h3>
             <div className="space-y-1">
               <Link
                 to="/help"
                 onClick={onClose}
-                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
               >
                 <span className="flex items-center space-x-2">
                   <HelpCircle className="w-3.5 h-3.5 text-secondary" />
@@ -337,7 +337,7 @@ export default function SideMenu({
               <Link
                 to="/contact"
                 onClick={onClose}
-                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
               >
                 <span className="flex items-center space-x-2">
                   <Mail className="w-3.5 h-3.5 text-primary" />
@@ -349,7 +349,7 @@ export default function SideMenu({
               <Link
                 to="/privacy"
                 onClick={onClose}
-                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
               >
                 <span className="flex items-center space-x-2">
                   <Shield className="w-3.5 h-3.5 text-text-muted" />
@@ -361,7 +361,7 @@ export default function SideMenu({
               <Link
                 to="/terms"
                 onClick={onClose}
-                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium hover:bg-background-muted text-text-primary transition-colors"
+                className="w-full text-left px-3 py-2 rounded-xl flex items-center justify-between text-sm font-medium hover:bg-background-muted text-text-primary transition-colors"
               >
                 <span className="flex items-center space-x-2">
                   <FileText className="w-3.5 h-3.5 text-text-muted" />

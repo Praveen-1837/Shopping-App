@@ -179,7 +179,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
 
           {/* Title */}
-          <h3 className="font-heading font-bold text-[11px] sm:text-sm text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-heading font-bold text-[11px] sm:text-base text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
             <Link to={`/product/${product.id}`}>{product.title}</Link>
           </h3>
 
@@ -231,7 +231,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <button
           onClick={() => addToCartMutation.mutate()}
           disabled={addToCartMutation.isPending || product.stock === 0}
-          className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-full sm:rounded-xl font-bold text-[9px] sm:text-xs transition-all shadow-soft cursor-pointer flex items-center space-x-0.5 sm:space-x-1.5 ${
+          className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-full sm:rounded-xl font-bold text-[9px] sm:text-sm transition-all shadow-soft cursor-pointer flex items-center space-x-0.5 sm:space-x-1.5 ${
             added
               ? 'bg-success text-white'
               : 'bg-primary text-white hover:bg-primary-hover'
@@ -246,7 +246,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           ) : (
             <>
               <ShoppingCart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              <span className="text-[9px] sm:text-xs">+ Cart</span>
+              <span className="text-[9px] sm:text-sm">+ Cart</span>
             </>
           )}
         </button>

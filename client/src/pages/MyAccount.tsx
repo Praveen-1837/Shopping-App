@@ -524,11 +524,11 @@ export default function MyAccount() {
           <div className="space-y-1">
             <div className="flex items-center space-x-3">
               <h1 className="text-2xl sm:text-3xl font-bold font-heading text-primary">{dbUser?.name || 'My Account'}</h1>
-              <span className={`px-3 py-1 rounded-full text-xs font-bold font-mono border tracking-wider ${roleBadgeStyle(dbUser?.role)}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-bold font-mono border tracking-wider ${roleBadgeStyle(dbUser?.role)}`}>
                 {formatRoleLabel(dbUser?.role || 'CUSTOMER')}
               </span>
             </div>
-            <p className="text-sm text-text-secondary flex items-center space-x-2">
+            <p className="text-base text-text-secondary flex items-center space-x-2">
               <Mail className="w-4 h-4 text-text-muted" />
               <span>{clerkUser?.primaryEmailAddress?.emailAddress || dbUser?.email}</span>
               {dbUser?.username && <span className="text-primary font-medium">(@{dbUser.username})</span>}
@@ -541,14 +541,14 @@ export default function MyAccount() {
           <button
             onClick={fetchProfile}
             disabled={loadingUser}
-            className="flex items-center space-x-2 px-4 py-2 bg-background-muted hover:bg-text-muted/10 text-text-primary text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+            className="flex items-center space-x-2 px-4 py-2 bg-background-muted hover:bg-text-muted/10 text-text-primary text-sm font-semibold rounded-xl transition-colors cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loadingUser ? 'animate-spin' : ''}`} />
             <span>Sync Profile</span>
           </button>
           <Link
             to="/cart"
-            className="flex items-center space-x-2 px-4 py-2 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl transition-colors shadow-soft"
+            className="flex items-center space-x-2 px-4 py-2 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl transition-colors shadow-soft"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Go to Cart</span>
@@ -576,7 +576,7 @@ export default function MyAccount() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-base font-medium transition-all cursor-pointer ${
                     isActive
                       ? 'bg-primary text-white font-semibold shadow-soft'
                       : 'text-text-secondary hover:bg-background-muted hover:text-text-primary'
@@ -591,14 +591,14 @@ export default function MyAccount() {
 
           {/* Quick Access Card for Role Dashboards */}
           <div className="bg-background-card rounded-2xl p-4 border border-text-muted/15 shadow-soft space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted flex items-center space-x-1.5">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-text-muted flex items-center space-x-1.5">
               <Sparkles className="w-3.5 h-3.5 text-primary" />
               <span>Quick Portals</span>
             </h3>
             <div className="space-y-2">
               <Link
                 to="/my-learning"
-                className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-primary-light/50 rounded-xl text-xs font-semibold text-text-primary hover:text-primary transition-colors"
+                className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-primary-light/50 rounded-xl text-sm font-semibold text-text-primary hover:text-primary transition-colors"
               >
                 <div className="flex items-center space-x-2">
                   <BookOpen className="w-4 h-4 text-accent" />
@@ -610,7 +610,7 @@ export default function MyAccount() {
               {(dbUser?.role === 'SELLER' || dbUser?.role === 'FARMER' || dbUser?.role === 'ARTISAN') && (
                 <Link
                   to="/seller-centre"
-                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-secondary-light/50 rounded-xl text-xs font-semibold text-text-primary hover:text-secondary transition-colors"
+                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-secondary-light/50 rounded-xl text-sm font-semibold text-text-primary hover:text-secondary transition-colors"
                 >
                   <div className="flex items-center space-x-2">
                     <Store className="w-4 h-4 text-secondary" />
@@ -623,7 +623,7 @@ export default function MyAccount() {
               {dbUser?.role === 'EDUCATOR' && (
                 <Link
                   to="/educator-centre"
-                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-accent-light/50 rounded-xl text-xs font-semibold text-text-primary hover:text-accent transition-colors"
+                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-accent-light/50 rounded-xl text-sm font-semibold text-text-primary hover:text-accent transition-colors"
                 >
                   <div className="flex items-center space-x-2">
                     <Sparkles className="w-4 h-4 text-accent" />
@@ -636,7 +636,7 @@ export default function MyAccount() {
               {dbUser?.role === 'ADMIN' && (
                 <Link
                   to="/admin/dashboard"
-                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-error-light/50 rounded-xl text-xs font-semibold text-text-primary hover:text-error transition-colors"
+                  className="flex items-center justify-between p-2.5 bg-background-muted/60 hover:bg-error-light/50 rounded-xl text-sm font-semibold text-text-primary hover:text-error transition-colors"
                 >
                   <div className="flex items-center space-x-2">
                     <Shield className="w-4 h-4 text-error" />
@@ -656,12 +656,12 @@ export default function MyAccount() {
             <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft space-y-6">
               <div className="border-b border-text-muted/10 pb-4">
                 <h2 className="text-xl font-bold font-heading text-primary">Identity & Personal Details</h2>
-                <p className="text-xs text-text-secondary">Update your profile information and public details</p>
+                <p className="text-sm text-text-secondary">Update your profile information and public details</p>
               </div>
 
               {profileMsg && (
                 <div
-                  className={`p-4 rounded-xl text-xs font-medium flex items-center space-x-2 border ${
+                  className={`p-4 rounded-xl text-sm font-medium flex items-center space-x-2 border ${
                     profileMsg.type === 'success'
                       ? 'bg-success-light text-success border-success/30'
                       : 'bg-error-light text-error border-error/30'
@@ -675,19 +675,19 @@ export default function MyAccount() {
               <form onSubmit={handleSaveProfile} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="block text-xs font-semibold text-text-primary">Full Name</label>
+                    <label className="block text-sm font-semibold text-text-primary">Full Name</label>
                     <input
                       type="text"
                       required
                       value={name}
                       onChange={(e) => handleNameChange(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <label className="block text-xs font-semibold text-text-primary">Username (Unique, optional)</label>
+                      <label className="block text-sm font-semibold text-text-primary">Username (Unique, optional)</label>
                       {availStatus && (
                         <div className="text-[11px] font-medium flex items-center space-x-1">
                           {availStatus.loading ? (
@@ -722,13 +722,13 @@ export default function MyAccount() {
                       )}
                     </div>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-xs font-mono text-text-muted">@</span>
+                      <span className="absolute left-3 top-2.5 text-sm font-mono text-text-muted">@</span>
                       <input
                         type="text"
                         placeholder={name ? slugifyName(name) : 'john_doe'}
                         value={username}
                         onChange={(e) => handleUsernameInputChange(e.target.value)}
-                        className="w-full pl-8 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
+                        className="w-full pl-8 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
                       />
                     </div>
                   </div>
@@ -737,7 +737,7 @@ export default function MyAccount() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between min-h-[20px]">
-                      <label className="text-xs font-semibold text-text-primary flex items-center space-x-1.5">
+                      <label className="text-sm font-semibold text-text-primary flex items-center space-x-1.5">
                         <span>Your Email</span>
                         <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-success-light text-success text-[10px] font-bold rounded-full border border-success/30">
                           <CheckCircle2 className="w-3 h-3" />
@@ -750,7 +750,7 @@ export default function MyAccount() {
                         type="email"
                         disabled
                         value={clerkUser?.primaryEmailAddress?.emailAddress || dbUser?.email || ''}
-                        className="w-full pl-4 pr-10 py-2.5 bg-background-muted/40 border border-text-muted/15 rounded-xl text-sm text-text-secondary cursor-not-allowed font-mono truncate"
+                        className="w-full pl-4 pr-10 py-2.5 bg-background-muted/40 border border-text-muted/15 rounded-xl text-base text-text-secondary cursor-not-allowed font-mono truncate"
                       />
                       <button
                         type="button"
@@ -765,27 +765,27 @@ export default function MyAccount() {
 
                   <div className="space-y-1">
                     <div className="flex items-center min-h-[20px]">
-                      <label className="text-xs font-semibold text-text-primary">Phone Number</label>
+                      <label className="text-sm font-semibold text-text-primary">Phone Number</label>
                     </div>
                     <input
                       type="text"
                       placeholder="+91 9876543210"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                   </div>
 
                   <div className="space-y-1">
                     <div className="flex items-center min-h-[20px]">
-                      <label className="text-xs font-semibold text-text-primary">Alternate Phone</label>
+                      <label className="text-sm font-semibold text-text-primary">Alternate Phone</label>
                     </div>
                     <input
                       type="text"
                       placeholder="+91 9123456789"
                       value={alternatePhone}
                       onChange={(e) => setAlternatePhone(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                   </div>
                 </div>
@@ -794,7 +794,7 @@ export default function MyAccount() {
                   <button
                     type="submit"
                     disabled={savingProfile}
-                    className="px-6 py-2.5 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
+                    className="px-6 py-2.5 bg-primary text-white hover:bg-primary-hover text-base font-semibold rounded-xl transition-all shadow-soft flex items-center space-x-2 cursor-pointer disabled:opacity-50"
                   >
                     {savingProfile && <RefreshCw className="w-4 h-4 animate-spin" />}
                     <span>Save Profile Changes</span>
@@ -810,7 +810,7 @@ export default function MyAccount() {
               <div className="flex items-center justify-between border-b border-text-muted/10 pb-4">
                 <div>
                   <h2 className="text-xl font-bold font-heading text-primary">Orders & Tax Invoices</h2>
-                  <p className="text-xs text-text-secondary">View order history and download official PDF tax invoices</p>
+                  <p className="text-sm text-text-secondary">View order history and download official PDF tax invoices</p>
                 </div>
                 <button
                   onClick={fetchOrders}
@@ -823,15 +823,15 @@ export default function MyAccount() {
               {loadingOrders ? (
                 <div className="py-12 text-center text-text-secondary space-y-2">
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-primary" />
-                  <p className="text-xs">Loading order history...</p>
+                  <p className="text-sm">Loading order history...</p>
                 </div>
               ) : orders.length === 0 ? (
                 <div className="py-12 text-center space-y-4">
                   <ShoppingBag className="w-12 h-12 mx-auto text-text-muted/40" />
-                  <p className="text-sm font-semibold text-text-secondary">No orders placed yet</p>
+                  <p className="text-base font-semibold text-text-secondary">No orders placed yet</p>
                   <Link
                     to="/marketplace"
-                    className="inline-block px-5 py-2.5 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl transition-all shadow-soft"
+                    className="inline-block px-5 py-2.5 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl transition-all shadow-soft"
                   >
                     Explore Marketplace Products
                   </Link>
@@ -846,10 +846,10 @@ export default function MyAccount() {
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-text-muted/10 pb-3">
                         <div>
                           <div className="flex items-center space-x-2">
-                            <span className="font-mono text-sm font-bold text-primary">#{order.id.slice(0, 8)}</span>
-                            <span className="text-xs text-text-muted">• {new Date(order.createdAt).toLocaleDateString()}</span>
+                            <span className="font-mono text-base font-bold text-primary">#{order.id.slice(0, 8)}</span>
+                            <span className="text-sm text-text-muted">• {new Date(order.createdAt).toLocaleDateString()}</span>
                           </div>
-                          <p className="text-xs text-text-secondary mt-0.5">
+                          <p className="text-sm text-text-secondary mt-0.5">
                             Status: <span className="font-semibold text-text-primary uppercase">{order.status}</span>
                           </p>
                         </div>
@@ -861,7 +861,7 @@ export default function MyAccount() {
                           <button
                             onClick={() => handleDownloadInvoice(order.id)}
                             disabled={downloadingInvId === order.id}
-                            className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary-light hover:bg-primary/20 text-primary text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                            className="flex items-center space-x-1.5 px-3 py-1.5 bg-primary-light hover:bg-primary/20 text-primary text-sm font-semibold rounded-lg transition-colors cursor-pointer"
                           >
                             {downloadingInvId === order.id ? (
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -876,7 +876,7 @@ export default function MyAccount() {
                       {/* Items Preview */}
                       <div className="space-y-2">
                         {order.items.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between text-xs">
+                          <div key={item.id} className="flex items-center justify-between text-sm">
                             <span className="font-medium text-text-primary">
                               {item.product?.title || item.course?.title || 'Item'} (x{item.quantity})
                             </span>
@@ -897,7 +897,7 @@ export default function MyAccount() {
               <div className="flex items-center justify-between border-b border-text-muted/10 pb-4">
                 <div>
                   <h2 className="text-xl font-bold font-heading text-primary">Address Book & Logistics</h2>
-                  <p className="text-xs text-text-secondary">Manage saved delivery addresses with Indian pincode auto-lookup</p>
+                  <p className="text-sm text-text-secondary">Manage saved delivery addresses with Indian pincode auto-lookup</p>
                 </div>
                 <button
                   onClick={() => {
@@ -905,7 +905,7 @@ export default function MyAccount() {
                     setAddrForm({ label: 'Home', line1: '', line2: '', city: '', state: '', pincode: '', isDefault: false });
                     setShowAddrModal(true);
                   }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl transition-all shadow-soft cursor-pointer"
+                  className="flex items-center space-x-2 px-4 py-2 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl transition-all shadow-soft cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add New Address</span>
@@ -915,12 +915,12 @@ export default function MyAccount() {
               {loadingAddresses ? (
                 <div className="py-12 text-center text-text-secondary space-y-2">
                   <RefreshCw className="w-6 h-6 animate-spin mx-auto text-primary" />
-                  <p className="text-xs">Loading addresses...</p>
+                  <p className="text-sm">Loading addresses...</p>
                 </div>
               ) : addresses.length === 0 ? (
                 <div className="py-12 text-center space-y-3">
                   <MapPin className="w-12 h-12 mx-auto text-text-muted/40" />
-                  <p className="text-sm font-semibold text-text-secondary">No addresses saved yet</p>
+                  <p className="text-base font-semibold text-text-secondary">No addresses saved yet</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -934,7 +934,7 @@ export default function MyAccount() {
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-sm font-heading text-primary flex items-center space-x-2">
+                        <span className="font-bold text-base font-heading text-primary flex items-center space-x-2">
                           <MapPin className="w-4 h-4" />
                           <span>{addr.label}</span>
                         </span>
@@ -952,7 +952,7 @@ export default function MyAccount() {
                         )}
                       </div>
 
-                      <div className="text-xs text-text-secondary space-y-0.5">
+                      <div className="text-sm text-text-secondary space-y-0.5">
                         <p className="font-medium text-text-primary">{addr.line1}</p>
                         {addr.line2 && <p>{addr.line2}</p>}
                         <p>
@@ -1009,15 +1009,15 @@ export default function MyAccount() {
                       </button>
                     </div>
 
-                    {addrError && <p className="text-xs text-error font-medium">{addrError}</p>}
+                    {addrError && <p className="text-sm text-error font-medium">{addrError}</p>}
 
                     <form onSubmit={handleSaveAddress} className="space-y-3">
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-1">Address Label</label>
+                        <label className="block text-sm font-semibold text-text-primary mb-1">Address Label</label>
                         <select
                           value={addrForm.label}
                           onChange={(e) => setAddrForm((prev) => ({ ...prev, label: e.target.value }))}
-                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
+                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base"
                         >
                           <option value="Home">Home</option>
                           <option value="Office">Office</option>
@@ -1027,29 +1027,29 @@ export default function MyAccount() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-1">Street Address Line 1</label>
+                        <label className="block text-sm font-semibold text-text-primary mb-1">Street Address Line 1</label>
                         <input
                           type="text"
                           required
                           value={addrForm.line1}
                           onChange={(e) => setAddrForm((prev) => ({ ...prev, line1: e.target.value }))}
-                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
+                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-1">Line 2 (Optional)</label>
+                        <label className="block text-sm font-semibold text-text-primary mb-1">Line 2 (Optional)</label>
                         <input
                           type="text"
                           value={addrForm.line2}
                           onChange={(e) => setAddrForm((prev) => ({ ...prev, line2: e.target.value }))}
-                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
+                          className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base"
                         />
                       </div>
 
                       <div className="grid grid-cols-3 gap-2">
                         <div>
-                          <label className="block text-xs font-semibold text-text-primary mb-1">
+                          <label className="block text-sm font-semibold text-text-primary mb-1">
                             Pincode {pincodeLoading && <RefreshCw className="inline w-3 h-3 animate-spin text-primary" />}
                           </label>
                           <input
@@ -1059,27 +1059,27 @@ export default function MyAccount() {
                             placeholder="400001"
                             value={addrForm.pincode}
                             onChange={(e) => handlePincodeChange(e.target.value)}
-                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm font-mono"
+                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base font-mono"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-text-primary mb-1">City</label>
+                          <label className="block text-sm font-semibold text-text-primary mb-1">City</label>
                           <input
                             type="text"
                             required
                             value={addrForm.city}
                             onChange={(e) => setAddrForm((prev) => ({ ...prev, city: e.target.value }))}
-                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
+                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-text-primary mb-1">State</label>
+                          <label className="block text-sm font-semibold text-text-primary mb-1">State</label>
                           <input
                             type="text"
                             required
                             value={addrForm.state}
                             onChange={(e) => setAddrForm((prev) => ({ ...prev, state: e.target.value }))}
-                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-sm"
+                            className="w-full px-3 py-2 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base"
                           />
                         </div>
                       </div>
@@ -1092,21 +1092,21 @@ export default function MyAccount() {
                           onChange={(e) => setAddrForm((prev) => ({ ...prev, isDefault: e.target.checked }))}
                           className="rounded border-text-muted text-primary focus:ring-primary"
                         />
-                        <label htmlFor="isDefault" className="text-xs text-text-primary">Set as default delivery address</label>
+                        <label htmlFor="isDefault" className="text-sm text-text-primary">Set as default delivery address</label>
                       </div>
 
                       <div className="pt-3 flex justify-end space-x-2">
                         <button
                           type="button"
                           onClick={() => setShowAddrModal(false)}
-                          className="px-4 py-2 bg-background-muted text-text-secondary hover:text-text-primary text-xs font-semibold rounded-xl"
+                          className="px-4 py-2 bg-background-muted text-text-secondary hover:text-text-primary text-sm font-semibold rounded-xl"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={savingAddr}
-                          className="px-5 py-2 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl shadow-soft"
+                          className="px-5 py-2 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl shadow-soft"
                         >
                           {savingAddr ? 'Saving...' : 'Save Address'}
                         </button>
@@ -1123,7 +1123,7 @@ export default function MyAccount() {
             <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft space-y-6">
               <div className="border-b border-text-muted/10 pb-4">
                 <h2 className="text-xl font-bold font-heading text-primary">Payments & Billing</h2>
-                <p className="text-xs text-text-secondary">Security and checkout transaction parameters</p>
+                <p className="text-sm text-text-secondary">Security and checkout transaction parameters</p>
               </div>
 
               <div className="bg-primary-light/40 border border-primary/30 rounded-2xl p-6 space-y-3">
@@ -1131,7 +1131,7 @@ export default function MyAccount() {
                   <CreditCard className="w-6 h-6 text-primary" />
                   <h3 className="text-base">Secure Gateway Processing</h3>
                 </div>
-                <p className="text-xs text-text-secondary leading-relaxed">
+                <p className="text-sm text-text-secondary leading-relaxed">
                   Payment methods are processed securely at checkout via our mock pass-through gateway. In accordance with zero-trust security architecture, credit cards, bank accounts, and wallet tokens are never saved or persisted on your account profile.
                 </p>
               </div>
@@ -1143,7 +1143,7 @@ export default function MyAccount() {
             <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft space-y-6">
               <div className="border-b border-text-muted/10 pb-4">
                 <h2 className="text-xl font-bold font-heading text-primary">Account Security & Credentials</h2>
-                <p className="text-xs text-text-secondary">Password updates, 2FA, and active session controls managed by Clerk Auth</p>
+                <p className="text-sm text-text-secondary">Password updates, 2FA, and active session controls managed by Clerk Auth</p>
               </div>
 
               <div className="p-6 bg-background-muted/40 border border-text-muted/15 rounded-2xl space-y-4">
@@ -1151,12 +1151,12 @@ export default function MyAccount() {
                   <Lock className="w-5 h-5 text-primary" />
                   <h3>Authentication & Access Controls</h3>
                 </div>
-                <p className="text-xs text-text-secondary">
+                <p className="text-sm text-text-secondary">
                   Your password, two-factor authentication, and connected devices are secured via Clerk's encrypted identity provider.
                 </p>
                 <button
                   onClick={() => openUserProfile && openUserProfile()}
-                  className="flex items-center space-x-2 px-5 py-2.5 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl shadow-soft cursor-pointer"
+                  className="flex items-center space-x-2 px-5 py-2.5 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl shadow-soft cursor-pointer"
                 >
                   <ExternalLink className="w-4 h-4" />
                   <span>Open Account Security Panel</span>
@@ -1177,12 +1177,12 @@ export default function MyAccount() {
             <div className="bg-background-card rounded-2xl p-6 sm:p-8 border border-text-muted/15 shadow-soft space-y-6">
               <div className="border-b border-text-muted/10 pb-4">
                 <h2 className="text-xl font-bold font-heading text-primary">Support & Customer Help</h2>
-                <p className="text-xs text-text-secondary">File a ticket with support or access help documentation</p>
+                <p className="text-sm text-text-secondary">File a ticket with support or access help documentation</p>
               </div>
 
               {ticketMsg && (
                 <div
-                  className={`p-4 rounded-xl text-xs font-medium flex items-center space-x-2 border ${
+                  className={`p-4 rounded-xl text-sm font-medium flex items-center space-x-2 border ${
                     ticketMsg.type === 'success'
                       ? 'bg-success-light text-success border-success/30'
                       : 'bg-error-light text-error border-error/30'
@@ -1195,32 +1195,32 @@ export default function MyAccount() {
 
               {/* Submit Ticket Form */}
               <form onSubmit={handleCreateTicket} className="p-5 bg-background-muted/40 border border-text-muted/15 rounded-2xl space-y-3">
-                <h3 className="font-bold text-sm font-heading text-primary flex items-center space-x-2">
+                <h3 className="font-bold text-base font-heading text-primary flex items-center space-x-2">
                   <Send className="w-4 h-4 text-primary" />
                   <span>Submit a New Support Ticket</span>
                 </h3>
 
                 <div>
-                  <label className="block text-xs font-semibold text-text-primary mb-1">Subject</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-1">Subject</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Question about order shipment"
                     value={ticketSubject}
                     onChange={(e) => setTicketSubject(e.target.value)}
-                    className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-sm"
+                    className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-base"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-text-primary mb-1">Message</label>
+                  <label className="block text-sm font-semibold text-text-primary mb-1">Message</label>
                   <textarea
                     rows={3}
                     required
                     placeholder="Describe your issue or question in detail..."
                     value={ticketMessage}
                     onChange={(e) => setTicketMessage(e.target.value)}
-                    className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-sm"
+                    className="w-full px-4 py-2 bg-background-card border border-text-muted/20 rounded-xl text-base"
                   />
                 </div>
 
@@ -1228,7 +1228,7 @@ export default function MyAccount() {
                   <button
                     type="submit"
                     disabled={submittingTicket}
-                    className="px-5 py-2 bg-primary text-white hover:bg-primary-hover text-xs font-semibold rounded-xl shadow-soft cursor-pointer flex items-center space-x-2"
+                    className="px-5 py-2 bg-primary text-white hover:bg-primary-hover text-sm font-semibold rounded-xl shadow-soft cursor-pointer flex items-center space-x-2"
                   >
                     {submittingTicket && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                     <span>Submit Ticket</span>
@@ -1238,24 +1238,24 @@ export default function MyAccount() {
 
               {/* User's Submitted Tickets */}
               <div className="space-y-3">
-                <h3 className="text-sm font-bold font-heading text-text-primary">Your Support Tickets</h3>
+                <h3 className="text-base font-bold font-heading text-text-primary">Your Support Tickets</h3>
                 {loadingTickets ? (
-                  <div className="py-6 text-center text-text-secondary text-xs">
+                  <div className="py-6 text-center text-text-secondary text-sm">
                     <RefreshCw className="w-5 h-5 animate-spin mx-auto text-primary" />
                   </div>
                 ) : tickets.length === 0 ? (
-                  <p className="text-xs text-text-secondary italic">No support tickets submitted yet.</p>
+                  <p className="text-sm text-text-secondary italic">No support tickets submitted yet.</p>
                 ) : (
                   <div className="space-y-2">
                     {tickets.map((t) => (
                       <div key={t.id} className="p-4 bg-background-muted/30 border border-text-muted/15 rounded-xl space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-xs text-text-primary">{t.subject}</span>
+                          <span className="font-semibold text-sm text-text-primary">{t.subject}</span>
                           <span className="px-2 py-0.5 bg-primary-light text-primary text-[10px] font-bold rounded-full uppercase">
                             {t.status}
                           </span>
                         </div>
-                        <p className="text-xs text-text-secondary line-clamp-2">{t.message}</p>
+                        <p className="text-sm text-text-secondary line-clamp-2">{t.message}</p>
                         <span className="text-[10px] text-text-muted">{new Date(t.createdAt).toLocaleString()}</span>
                       </div>
                     ))}
@@ -1264,7 +1264,7 @@ export default function MyAccount() {
               </div>
 
               {/* Policy Quick Links */}
-              <div className="border-t border-text-muted/10 pt-4 flex flex-wrap gap-4 text-xs font-semibold text-primary">
+              <div className="border-t border-text-muted/10 pt-4 flex flex-wrap gap-4 text-sm font-semibold text-primary">
                 <Link to="/help" className="hover:underline flex items-center space-x-1">
                   <FileText className="w-3.5 h-3.5" />
                   <span>Help & FAQ</span>
@@ -1285,7 +1285,7 @@ export default function MyAccount() {
 
       {/* DEV-ONLY Role Switcher Drawer (Strictly gated to DEV environment AND ADMIN role) */}
       {import.meta.env.DEV && dbUser?.role === 'ADMIN' && (
-        <div className="mt-8 p-4 bg-background-card border border-text-muted/15 rounded-2xl text-xs space-y-2">
+        <div className="mt-8 p-4 bg-background-card border border-text-muted/15 rounded-2xl text-sm space-y-2">
           <div className="flex items-center justify-between text-text-muted">
             <span className="font-bold flex items-center space-x-1">
               <UserCheck className="w-3.5 h-3.5 text-primary" />

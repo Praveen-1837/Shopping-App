@@ -92,7 +92,7 @@ export default function DeliveryCentre() {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-heading text-text-primary">Delivery Centre</h1>
-            <p className="text-xs text-text-secondary">
+            <p className="text-sm text-text-secondary">
               Manage your active deliveries and view your history.
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function DeliveryCentre() {
         <div className="flex items-center space-x-2 bg-background-muted p-1 rounded-xl shrink-0 self-start sm:self-auto">
           <button
             onClick={() => setActiveTab('ACTIVE')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center space-x-2 ${
+            className={`px-4 py-2 rounded-lg text-base font-bold transition-all flex items-center space-x-2 ${
               activeTab === 'ACTIVE'
                 ? 'bg-white shadow-soft text-primary'
                 : 'text-text-secondary hover:text-text-primary'
@@ -113,7 +113,7 @@ export default function DeliveryCentre() {
           </button>
           <button
             onClick={() => setActiveTab('HISTORY')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center space-x-2 ${
+            className={`px-4 py-2 rounded-lg text-base font-bold transition-all flex items-center space-x-2 ${
               activeTab === 'HISTORY'
                 ? 'bg-white shadow-soft text-primary'
                 : 'text-text-secondary hover:text-text-primary'
@@ -126,7 +126,7 @@ export default function DeliveryCentre() {
       </div>
 
       {transitionError && (
-        <div className="p-4 bg-error-light border border-error/30 text-error text-xs font-bold rounded-xl flex items-center space-x-2">
+        <div className="p-4 bg-error-light border border-error/30 text-error text-sm font-bold rounded-xl flex items-center space-x-2">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{transitionError}</span>
         </div>
@@ -137,17 +137,17 @@ export default function DeliveryCentre() {
           {activeLoading ? (
             <div className="py-12 flex flex-col items-center justify-center space-y-3 text-text-muted">
               <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-              <p className="text-xs">Loading delivery assignments...</p>
+              <p className="text-sm">Loading delivery assignments...</p>
             </div>
           ) : activeIsError ? (
             <div className="p-6 bg-error-light border border-error/30 text-error rounded-2xl flex items-center space-x-3">
               <AlertCircle className="w-6 h-6 shrink-0" />
-              <p className="text-xs font-bold">{(activeError as any)?.response?.data?.error?.message || 'Access Denied'}</p>
+              <p className="text-sm font-bold">{(activeError as any)?.response?.data?.error?.message || 'Access Denied'}</p>
             </div>
           ) : activeOrders.length === 0 ? (
-            <div className="bg-background-card rounded-3xl p-12 text-center text-xs text-text-muted border border-text-muted/15 space-y-2">
+            <div className="bg-background-card rounded-3xl p-12 text-center text-sm text-text-muted border border-text-muted/15 space-y-2">
               <CheckCircle2 className="w-8 h-8 mx-auto text-success" />
-              <p className="font-bold text-sm text-text-primary">No Active Deliveries</p>
+              <p className="font-bold text-base text-text-primary">No Active Deliveries</p>
               <p>You have no pending deliveries assigned at this time.</p>
             </div>
           ) : (
@@ -164,14 +164,14 @@ export default function DeliveryCentre() {
                       <div className="flex items-start justify-between">
                         <div>
                           <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Order ID</span>
-                          <span className="block font-mono font-bold text-text-primary text-sm">#{order.id.slice(0, 8)}</span>
+                          <span className="block font-mono font-bold text-text-primary text-base">#{order.id.slice(0, 8)}</span>
                         </div>
                         <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded-lg">
                           {order.status.replace(/_/g, ' ')}
                         </span>
                       </div>
 
-                      <div className="space-y-2 text-xs">
+                      <div className="space-y-2 text-sm">
                         <div className="flex items-start space-x-2">
                           <MapPin className="w-4 h-4 text-text-muted mt-0.5 shrink-0" />
                           <div>
@@ -190,7 +190,7 @@ export default function DeliveryCentre() {
                         )}
                       </div>
                       
-                      <div className="pt-4 border-t border-text-muted/10 flex items-center justify-between text-xs">
+                      <div className="pt-4 border-t border-text-muted/10 flex items-center justify-between text-sm">
                         <span className="text-text-secondary">{itemCount} items</span>
                         <span className="font-bold text-text-primary">Mock Payment</span>
                       </div>
@@ -201,7 +201,7 @@ export default function DeliveryCentre() {
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-background-muted text-text-primary hover:bg-background-muted/80 text-xs font-bold rounded-xl transition-colors border border-text-muted/10"
+                        className="w-full flex items-center justify-center space-x-2 px-4 py-2.5 bg-background-muted text-text-primary hover:bg-background-muted/80 text-sm font-bold rounded-xl transition-colors border border-text-muted/10"
                       >
                         <MapPin className="w-4 h-4" />
                         <span>Navigate</span>
@@ -211,7 +211,7 @@ export default function DeliveryCentre() {
                         <button
                           onClick={() => handleAction(order)}
                           disabled={updateStatusMutation.isPending}
-                          className="w-full px-4 py-2.5 bg-primary text-white hover:bg-primary-hover text-xs font-bold rounded-xl shadow-soft transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full px-4 py-2.5 bg-primary text-white hover:bg-primary-hover text-sm font-bold rounded-xl shadow-soft transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {updateStatusMutation.isPending ? 'Updating...' : actionLabel}
                         </button>
@@ -235,26 +235,26 @@ export default function DeliveryCentre() {
               <h2 className="text-xl sm:text-3xl font-extrabold font-heading text-success">
                 {totalHistory} <span className="text-lg sm:text-xl font-bold">Orders Delivered</span>
               </h2>
-              <p className="text-success/80 text-sm font-medium">Thank you for your hard work and dedication!</p>
+              <p className="text-success/80 text-base font-medium">Thank you for your hard work and dedication!</p>
             </div>
           </div>
 
           {historyLoading ? (
             <div className="py-12 flex flex-col items-center justify-center space-y-3 text-text-muted">
               <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-              <p className="text-xs">Loading delivery history...</p>
+              <p className="text-sm">Loading delivery history...</p>
             </div>
           ) : historyOrders.length === 0 ? (
-            <div className="bg-background-card rounded-3xl p-12 text-center text-xs text-text-muted border border-text-muted/15 space-y-2">
+            <div className="bg-background-card rounded-3xl p-12 text-center text-sm text-text-muted border border-text-muted/15 space-y-2">
               <History className="w-8 h-8 mx-auto text-text-muted/50" />
-              <p className="font-bold text-sm text-text-primary">No Delivery History</p>
+              <p className="font-bold text-base text-text-primary">No Delivery History</p>
               <p>You haven't completed any deliveries yet. Your delivered orders will appear here.</p>
             </div>
           ) : (
             <div className="bg-background-card border border-text-muted/15 rounded-2xl overflow-hidden shadow-soft">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                  <thead className="bg-background-muted/50 text-text-secondary text-xs uppercase font-bold tracking-wider">
+                <table className="w-full text-left text-base whitespace-nowrap">
+                  <thead className="bg-background-muted/50 text-text-secondary text-sm uppercase font-bold tracking-wider">
                     <tr>
                       <th className="px-6 py-4">Order ID</th>
                       <th className="px-6 py-4">Delivered On</th>
@@ -290,7 +290,7 @@ export default function DeliveryCentre() {
               {/* Pagination Controls */}
               {totalPages > 1 && (
                 <div className="px-6 py-4 border-t border-text-muted/10 flex items-center justify-between bg-background-muted/30">
-                  <span className="text-xs text-text-secondary font-medium">
+                  <span className="text-sm text-text-secondary font-medium">
                     Showing page {page} of {totalPages}
                   </span>
                   <div className="flex items-center space-x-2">

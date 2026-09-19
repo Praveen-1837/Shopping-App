@@ -53,7 +53,7 @@ export default function PartnerLockGuard({ children }: { children: React.ReactNo
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-3 bg-background-main text-text-secondary">
         <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm font-medium">Loading EcoMarket...</p>
+        <p className="text-base font-medium">Loading EcoMarket...</p>
       </div>
     );
   }
