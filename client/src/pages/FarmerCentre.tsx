@@ -1,8 +1,19 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
-import { Sprout, PlusCircle, Package, IndianRupee, Truck } from 'lucide-react';
+import { AxiosError } from 'axios';
+import { 
+  Plus, 
+  AlertCircle, 
+  CheckCircle2, 
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Sprout, PlusCircle, Package, IndianRupee, Truck
+} from 'lucide-react';
 
 interface AnalyticsData {
   totalProducts: number;
@@ -11,25 +22,139 @@ interface AnalyticsData {
 }
 
 export default function FarmerCentre() {
-  const navigate = useNavigate();
   const { getToken, isSignedIn } = useAuth();
-
-  const { data, isLoading } = useQuery<{ success: boolean; data: AnalyticsData }>({
-    queryKey: ['seller-analytics'],
-    queryFn: async () => {
-      const token = await getToken();
-      const res = await apiClient.get<{ success: boolean; data: AnalyticsData }>('/seller/analytics', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return res.data;
-    },
-    enabled: !!isSignedIn,
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [orderPage, setOrderPage] = useState(1);
+  const [orderLimit, setOrderLimit] = useState(10);
+  const [orderStatus, setOrderStatus] = useState<string>(''); // Filter by status
+  const queryClient = useQueryClient();
+  
+  // Form for adding product
+  const {
+    register: registerProduct,
+    handleSubmit: handleSubmitProduct,
+    reset: resetProductForm,
+    formState: { errors: productErrors, isSubmitting: isSubmittingProduct }
+  } = useForm({
+    mode: 'onBlur',
+    defaultValues: {
+      name: '',
+      description: '',
+      price: '',
+      category: 'ORGANIC_PRODUCE',
+      quantity: '',
+      unit: 'kg',
+      sku: ''
+    }
   });
 
-  const analytics = data?.data || { totalProducts: 0, totalOrders: 0, totalRevenue: 0 };
+  // Existing analytics query
+  const {
+    data: analyticsResponse,
+    isLoading: analyticsLoading,
+    error: analyticsError
+  } = useQuery({
+    queryKey: ['farmerAnalytics'],
+    queryFn: async () => {
+      const token = await getToken();
+      const { data } = await apiClient.get('/seller/analytics', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return data;
+    },
+    enabled: !!isSignedIn,
+    staleTime: 5 * 60 * 1000 // 5 minutes
+  });
+
+  const analyticsData = analyticsResponse?.data || { totalProducts: 0, totalOrders: 0, totalRevenue: 0 };
+
+  // NEW: Query for seller orders/fulfillment list
+  const {
+    data: ordersResponse,
+    isLoading: ordersLoading,
+    error: ordersError,
+    refetch: refetchOrders
+  } = useQuery({
+    queryKey: ['sellerOrders', orderPage, orderLimit, orderStatus],
+    queryFn: async () => {
+      const token = await getToken();
+      const params = new URLSearchParams({
+        page: String(orderPage),
+        limit: String(orderLimit),
+        ...(orderStatus && { status: orderStatus })
+      });
+      const { data } = await apiClient.get(
+        `/seller/orders?${params.toString()}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      return data;
+    },
+    enabled: !!isSignedIn && activeTab === 'fulfillment',
+    staleTime: 1 * 60 * 1000 // 1 minute
+  });
+
+  const ordersData = ordersResponse;
+
+  // NEW: Mutation for creating product
+  const createProductMutation = useMutation({
+    mutationFn: async (productData: any) => {
+      const token = await getToken();
+      const { data } = await apiClient.post(
+        '/seller/product',
+        productData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log('✅ Product created:', data.name);
+      resetProductForm();
+      setShowAddProductModal(false);
+      queryClient.invalidateQueries({ queryKey: ['farmerAnalytics'] });
+      alert(`${data.name} added successfully!`); // simple fallback for toast
+    },
+    onError: (error: AxiosError<any>) => {
+      const message = error.response?.data?.message || 'Failed to create product';
+      console.error('❌ Product creation failed:', message);
+      alert(message); // simple fallback for toast
+    }
+  });
+
+  // Handler: Create product
+  const onSubmitProduct = async (formData: any) => {
+    const price = Number(formData.price);
+    if (isNaN(price) || price <= 0) {
+      alert('Price must be a positive number');
+      return;
+    }
+
+    createProductMutation.mutate({
+      ...formData,
+      price: price,
+      quantity: formData.quantity ? Number(formData.quantity) : 0
+    });
+  };
+
+  // Handler: Pagination
+  const handlePreviousPage = () => {
+    if (orderPage > 1) setOrderPage(orderPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (ordersData?.pagination?.hasMore) setOrderPage(orderPage + 1);
+  };
+
+  // Handler: Filter by status
+  const handleStatusFilter = (status: string) => {
+    setOrderStatus(status === orderStatus ? '' : status);
+    setOrderPage(1);
+  };
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-10">
+    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 space-y-6">
+      
       {/* Friendly Farmer Header */}
       <div className="bg-gradient-to-br from-[#1B2E1E] to-primary text-white rounded-3xl p-8 md:p-12 shadow-card space-y-4 text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2 max-w-2xl">
@@ -46,92 +171,488 @@ export default function FarmerCentre() {
             Simplified tool for local farmers to list fresh harvests, track customer orders, and receive fair market payments directly!
           </p>
         </div>
-
-        <Link
-          to="/seller/products/new"
-          className="px-6 py-4 bg-secondary text-text-primary text-base font-bold rounded-2xl hover:bg-secondary-hover transition-colors shadow-soft flex items-center justify-center space-x-2 shrink-0"
-        >
-          <PlusCircle className="w-6 h-6" />
-          <span>Add New Harvest</span>
-        </Link>
       </div>
 
-      {/* Large Touch Target Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Card 1: Total Revenue */}
-        <div className="bg-background-card border-2 border-secondary/20 rounded-3xl p-8 shadow-soft space-y-3">
-          <div className="p-4 bg-secondary-light text-secondary rounded-2xl w-fit">
-            <IndianRupee className="w-8 h-8" />
-          </div>
-          <div>
-            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
-              Total Farm Revenue
-            </span>
-            <span className="text-3xl font-black font-heading text-secondary">
-              ₹{analytics.totalRevenue.toLocaleString('en-IN')}
-            </span>
-          </div>
-        </div>
+      {/* ADD PRODUCT MODAL */}
+      {showAddProductModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 md:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-text-primary">Add New Product</h2>
+              <button
+                onClick={() => setShowAddProductModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-3xl font-light leading-none"
+              >
+                &times;
+              </button>
+            </div>
 
-        {/* Card 2: Active Products */}
-        <div className="bg-background-card border-2 border-primary/20 rounded-3xl p-8 shadow-soft space-y-3">
-          <div className="p-4 bg-primary-light text-primary rounded-2xl w-fit">
-            <Package className="w-8 h-8" />
-          </div>
-          <div>
-            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
-              Harvest Produce Listed
-            </span>
-            <span className="text-3xl font-black font-heading text-primary">
-              {analytics.totalProducts} Items
-            </span>
-          </div>
-        </div>
+            <form onSubmit={handleSubmitProduct(onSubmitProduct)} className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-1">
+                  Product Name *
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Organic Tomatoes"
+                  {...registerProduct('name', {
+                    required: 'Product name is required',
+                    minLength: { value: 3, message: 'Name must be at least 3 characters' }
+                  })}
+                  className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+                {productErrors.name && (
+                  <p className="text-red-500 text-sm mt-1">{productErrors.name.message as string}</p>
+                )}
+              </div>
 
-        {/* Card 3: Total Orders */}
-        <div className="bg-background-card border-2 border-text-muted/20 rounded-3xl p-8 shadow-soft space-y-3">
-          <div className="p-4 bg-background-muted text-text-primary rounded-2xl w-fit border">
-            <Truck className="w-8 h-8 text-secondary" />
-          </div>
-          <div>
-            <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
-              Orders Received
-            </span>
-            <span className="text-3xl font-black font-heading text-text-primary">
-              {analytics.totalOrders} Orders
-            </span>
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-1">
+                  Description
+                </label>
+                <textarea
+                  placeholder="Describe your product (optional)"
+                  {...registerProduct('description')}
+                  rows={3}
+                  className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-text-primary mb-1">
+                    Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="45.00"
+                    {...registerProduct('price', {
+                      required: 'Price is required'
+                    })}
+                    className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                  {productErrors.price && (
+                    <p className="text-red-500 text-sm mt-1">{productErrors.price.message as string}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-text-primary mb-1">
+                    Category *
+                  </label>
+                  <select
+                    {...registerProduct('category', { required: 'Category is required' })}
+                    className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 bg-white"
+                  >
+                    <option value="">Select Category</option>
+                    <option value="ORGANIC_PRODUCE">Organic Produce</option>
+                    <option value="ARTISAN_CRAFTS">Artisan Crafts</option>
+                    <option value="ECO_LIVING">Eco Living</option>
+                    <option value="FOOD_SPICES">Food & Spices</option>
+                  </select>
+                  {productErrors.category && (
+                    <p className="text-red-500 text-sm mt-1">{productErrors.category.message as string}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-text-primary mb-1">
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="100"
+                    {...registerProduct('quantity')}
+                    className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-text-primary mb-1">
+                    Unit
+                  </label>
+                  <select
+                    {...registerProduct('unit')}
+                    className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 bg-white"
+                  >
+                    <option value="kg">kg</option>
+                    <option value="g">g</option>
+                    <option value="l">l</option>
+                    <option value="ml">ml</option>
+                    <option value="piece">piece</option>
+                    <option value="box">box</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-1">
+                  SKU (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="ORG-TOM-001"
+                  {...registerProduct('sku')}
+                  className="w-full px-4 py-3 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+
+              {createProductMutation.isError && (
+                <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-red-900">
+                      {(createProductMutation.error as AxiosError<any>)?.response?.data?.message ||
+                        'Failed to create product'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-3 justify-end pt-6 border-t border-border-muted mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowAddProductModal(false)}
+                  className="px-6 py-3 font-bold text-text-primary bg-background-muted hover:bg-gray-200 rounded-xl transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingProduct || createProductMutation.isPending}
+                  className="px-6 py-3 font-bold text-white bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition flex items-center gap-2"
+                >
+                  {createProductMutation.isPending && (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  )}
+                  Add Product
+                </button>
+              </div>
+            </form>
           </div>
         </div>
+      )}
+
+      {/* TAB NAVIGATION */}
+      <div className="flex gap-2 border-b border-border-muted overflow-x-auto pb-px scrollbar-hide">
+        <button
+          onClick={() => setActiveTab('dashboard')}
+          className={`px-6 py-4 font-bold whitespace-nowrap border-b-2 transition ${
+            activeTab === 'dashboard'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-muted hover:text-text-primary'
+          }`}
+        >
+          Dashboard
+        </button>
+        <button
+          onClick={() => setActiveTab('add-products')}
+          className={`px-6 py-4 font-bold whitespace-nowrap border-b-2 transition ${
+            activeTab === 'add-products'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-muted hover:text-text-primary'
+          }`}
+        >
+          Products
+        </button>
+        <button
+          onClick={() => setActiveTab('fulfillment')}
+          className={`px-6 py-4 font-bold whitespace-nowrap border-b-2 transition ${
+            activeTab === 'fulfillment'
+              ? 'border-primary text-primary'
+              : 'border-transparent text-text-muted hover:text-text-primary'
+          }`}
+        >
+          Fulfillment Orders
+        </button>
       </div>
 
-      {/* Quick Action Navigation */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Link
-          to="/seller/products"
-          className="p-6 bg-background-card rounded-2xl border border-text-muted/15 hover:border-secondary transition-all shadow-soft flex items-center justify-between group"
-        >
-          <div>
-            <h3 className="font-heading font-bold text-base text-text-primary group-hover:text-secondary">
-              Manage My Products
-            </h3>
-            <p className="text-sm text-text-muted">Edit prices, quantities, and sustainability tags</p>
-          </div>
-          <Package className="w-6 h-6 text-secondary" />
-        </Link>
+      {/* TAB CONTENT: DASHBOARD */}
+      {activeTab === 'dashboard' && (
+        <div className="space-y-6 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-background-card border-2 border-secondary/20 rounded-3xl p-8 shadow-soft space-y-3">
+              <div className="p-4 bg-secondary-light text-secondary rounded-2xl w-fit">
+                <IndianRupee className="w-8 h-8" />
+              </div>
+              <div>
+                <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
+                  Total Farm Revenue
+                </span>
+                <span className="text-3xl font-black font-heading text-secondary">
+                  ₹{analyticsData.totalRevenue.toLocaleString('en-IN')}
+                </span>
+              </div>
+            </div>
 
-        <Link
-          to="/seller-centre/orders"
-          className="p-6 bg-background-card rounded-2xl border border-text-muted/15 hover:border-secondary transition-all shadow-soft flex items-center justify-between group"
-        >
-          <div>
-            <h3 className="font-heading font-bold text-base text-text-primary group-hover:text-secondary">
-              Fulfillment Queue
-            </h3>
-            <p className="text-sm text-text-muted">Pack and mark items as shipped to customers</p>
+            <div className="bg-background-card border-2 border-primary/20 rounded-3xl p-8 shadow-soft space-y-3">
+              <div className="p-4 bg-primary-light text-primary rounded-2xl w-fit">
+                <Package className="w-8 h-8" />
+              </div>
+              <div>
+                <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
+                  Harvest Produce Listed
+                </span>
+                <span className="text-3xl font-black font-heading text-primary">
+                  {analyticsData.totalProducts} Items
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-background-card border-2 border-text-muted/20 rounded-3xl p-8 shadow-soft space-y-3">
+              <div className="p-4 bg-background-muted text-text-primary rounded-2xl w-fit border">
+                <Truck className="w-8 h-8 text-secondary" />
+              </div>
+              <div>
+                <span className="text-sm font-bold text-text-muted uppercase tracking-wider block">
+                  Orders Received
+                </span>
+                <span className="text-3xl font-black font-heading text-text-primary">
+                  {analyticsData.totalOrders} Orders
+                </span>
+              </div>
+            </div>
           </div>
-          <Truck className="w-6 h-6 text-secondary" />
-        </Link>
-      </div>
+        </div>
+      )}
+
+      {/* TAB CONTENT: ADD PRODUCTS */}
+      {activeTab === 'add-products' && (
+        <div className="space-y-6 pt-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black font-heading text-text-primary">Your Products</h2>
+              <p className="text-text-muted mt-1 font-medium">
+                Expand your catalog by adding new products to sell
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAddProductModal(true)}
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold transition shadow-soft"
+            >
+              <Plus className="w-5 h-5" />
+              Add Product
+            </button>
+          </div>
+
+          {analyticsLoading ? (
+            <div className="text-center py-16">
+              <Loader2 className="w-10 h-10 animate-spin mx-auto text-primary" />
+              <p className="text-text-muted mt-4 font-medium">Loading products...</p>
+            </div>
+          ) : (
+            <div className="bg-background-card border border-border-muted rounded-2xl p-8 text-center md:text-left shadow-sm">
+              <h3 className="font-bold text-xl text-text-primary mb-2">
+                Total Products: {analyticsData.totalProducts}
+              </h3>
+              <p className="text-text-muted">
+                Click the "Add Product" button above to list a new item on the EcoMarket.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB CONTENT: FULFILLMENT ORDERS */}
+      {activeTab === 'fulfillment' && (
+        <div className="space-y-6 pt-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <h2 className="text-2xl font-black font-heading text-text-primary">Fulfillment Queue</h2>
+              <p className="text-text-muted mt-1 font-medium">
+                Manage and fulfill customer orders
+              </p>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {['', 'PENDING', 'CONFIRMED', 'PACKED', 'SHIPPED', 'DELIVERED'].map(status => (
+                <button
+                  key={status || 'all'}
+                  onClick={() => handleStatusFilter(status)}
+                  className={`px-4 py-2 text-sm rounded-xl font-bold transition ${
+                    orderStatus === status
+                      ? 'bg-primary text-white shadow-soft'
+                      : 'bg-background-muted text-text-primary hover:bg-gray-200'
+                  }`}
+                >
+                  {status || 'All'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {ordersLoading && (
+            <div className="text-center py-16">
+              <Loader2 className="w-10 h-10 animate-spin mx-auto text-primary" />
+              <p className="text-text-muted mt-4 font-medium">Loading orders...</p>
+            </div>
+          )}
+
+          {ordersError && (
+            <div className="flex items-start gap-4 p-5 bg-red-50 border border-red-200 rounded-2xl">
+              <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-lg text-red-900">Failed to load orders</p>
+                <p className="text-base text-red-700 mt-1">
+                  {(ordersError as AxiosError<any>)?.response?.data?.message || 'Please try again later'}
+                </p>
+                <button
+                  onClick={() => refetchOrders()}
+                  className="text-sm font-bold text-red-600 hover:text-red-800 mt-3 underline underline-offset-2"
+                >
+                  Retry Now
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!ordersLoading && !ordersError && (!ordersData?.orders || ordersData.orders.length === 0) && (
+            <div className="text-center py-16 bg-background-card rounded-3xl border border-border-muted shadow-sm">
+              <div className="text-5xl mb-4">📦</div>
+              <p className="text-xl text-text-primary font-black font-heading">No orders yet</p>
+              <p className="text-text-muted font-medium mt-2">
+                Orders will appear here once customers purchase your products
+              </p>
+            </div>
+          )}
+
+          {!ordersLoading && ordersData?.orders && ordersData.orders.length > 0 && (
+            <div className="space-y-6">
+              {ordersData.orders.map((order: any) => (
+                <div
+                  key={order.id}
+                  className="bg-background-card border border-border-muted rounded-3xl p-6 md:p-8 hover:shadow-card transition-shadow"
+                >
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                    <div>
+                      <h3 className="text-lg font-black font-heading text-text-primary">{order.orderNumber}</h3>
+                      <p className="font-medium text-text-muted mt-1">
+                        {order.customerName} • {order.customerEmail}
+                      </p>
+                    </div>
+                    <div className="md:text-right flex flex-row md:flex-col items-center md:items-end justify-between gap-2">
+                      <div className="text-xl font-black font-heading text-secondary">
+                        ₹{order.totalAmount.toFixed(2)}
+                      </div>
+                      <span className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full ${
+                        order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                        order.status === 'CONFIRMED' ? 'bg-blue-100 text-blue-800' :
+                        order.status === 'PACKED' ? 'bg-indigo-100 text-indigo-800' :
+                        order.status === 'SHIPPED' ? 'bg-purple-100 text-purple-800' :
+                        order.status === 'DELIVERED' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="bg-background-muted rounded-2xl p-5 mb-6">
+                    <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-4">
+                      Items Ordered
+                    </p>
+                    <div className="space-y-4">
+                      {order.items.map((item: any) => (
+                        <div key={item.id} className="flex items-center justify-between">
+                          <div className="flex items-center gap-4 flex-1">
+                            {item.productImage ? (
+                              <img
+                                src={item.productImage}
+                                alt={item.productName}
+                                className="w-12 h-12 object-cover rounded-xl border border-border-muted"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center">
+                                <Package className="w-6 h-6 text-gray-400" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <p className="font-bold text-text-primary">{item.productName}</p>
+                              <p className="text-text-muted font-medium text-sm mt-0.5">
+                                {item.quantity} × ₹{item.price.toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="font-bold text-text-primary text-base">
+                            ₹{item.subtotal.toFixed(2)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-6">
+                    <div className="bg-white p-5 rounded-2xl border border-border-muted/50">
+                      <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
+                        Delivery Address
+                      </p>
+                      <p className="text-text-primary font-medium">{order.shippingAddress || 'No address provided'}</p>
+                      {order.shippingCity && (
+                        <p className="text-text-muted font-medium mt-1">
+                          {order.shippingCity}, {order.shippingState} {order.shippingZip}
+                        </p>
+                      )}
+                    </div>
+                    <div className="bg-white p-5 rounded-2xl border border-border-muted/50">
+                      <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-2">
+                        Timeline
+                      </p>
+                      <p className="text-text-primary font-medium">
+                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        }) : 'N/A'}
+                      </p>
+                      <p className="text-text-muted font-medium mt-1">Order Placed</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button className="flex-1 px-4 py-3 text-sm font-bold text-white bg-primary hover:bg-primary-hover rounded-xl transition shadow-soft">
+                      Update Status
+                    </button>
+                    <button className="flex-1 px-4 py-3 text-sm font-bold text-text-primary bg-background-muted hover:bg-gray-200 border border-border-muted rounded-xl transition">
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {ordersData?.pagination && ordersData.pagination.pages > 1 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between pt-8 gap-4">
+              <p className="text-sm font-medium text-text-muted">
+                Page {ordersData.pagination.page} of {ordersData.pagination.pages} •{' '}
+                {ordersData.pagination.total} total orders
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={orderPage === 1}
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-bold text-text-primary bg-white border border-border-muted hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition shadow-sm"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Prev
+                </button>
+                <button
+                  onClick={handleNextPage}
+                  disabled={!ordersData.pagination.hasMore}
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-bold text-text-primary bg-white border border-border-muted hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition shadow-sm"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
