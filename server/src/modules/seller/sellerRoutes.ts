@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { roleGuard } from '../../middleware/roleGuard';
 import {
   getSellerSalesAnalytics,
+  getAnalytics,
   getSellerAlerts,
   getSellerProfile,
   updateSellerProfile,
@@ -14,6 +15,7 @@ const router = Router();
 const SELLER_ROLES = ['SELLER', 'FARMER', 'ARTISAN', 'ADMIN'] as const;
 
 // Seller analytics & alerts
+router.get('/seller/analytics', roleGuard([...SELLER_ROLES]), getAnalytics);
 router.get('/seller/analytics/sales', roleGuard([...SELLER_ROLES]), getSellerSalesAnalytics);
 router.get('/seller/alerts', roleGuard([...SELLER_ROLES]), getSellerAlerts);
 

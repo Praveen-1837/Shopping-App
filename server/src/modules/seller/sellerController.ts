@@ -537,3 +537,100 @@ export const generateInvoice = async (req: Request, res: Response, next: NextFun
     next(error);
   }
 };
+
+export const getAnalytics = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const auth = getAuth(req);
+    if (!auth || !auth.userId) {
+      res.status(401).json({ 
+        success: false,
+        error: 'Unauthorized',
+        message: 'User authentication required to access analytics'
+      });
+      return;
+    }
+
+    const sellerUser = await getDbUser(auth.userId);
+    const sellerId = sellerUser.id;
+
+    // Step 3: Count total active products for this seller
+    const totalProducts = await prisma.product.count({
+      where: { 
+        sellerId,
+        status: 'ACTIVE'
+      }
+    });
+
+    // Step 4: Count total orders containing this seller's products
+    const totalOrders = await prisma.order.count({
+      where: {
+        items: {
+          some: {
+            product: { 
+              sellerId
+            }
+          }
+        },
+        status: {
+          in: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'COMPLETED']
+        }
+      }
+    });
+
+    // Step 5: Calculate total revenue from completed/delivered orders
+    const orderItems = await prisma.orderItem.findMany({
+      where: {
+        product: {
+          sellerId
+        },
+        order: {
+          status: {
+            in: ['SHIPPED', 'DELIVERED', 'COMPLETED']
+          }
+        }
+      },
+      select: {
+        price: true,
+        quantity: true
+      }
+    });
+
+    const totalRevenue = orderItems.reduce((sum, item) => {
+      const itemPrice = Number(item.price) || 0;
+      const itemQty = item.quantity || 0;
+      return sum + (itemPrice * itemQty);
+    }, 0);
+
+    const lastOrder = await prisma.order.findFirst({
+      where: {
+        items: {
+          some: {
+            product: { sellerId }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true }
+    });
+
+    const lastOrderDate = lastOrder?.createdAt || null;
+
+    const analyticsData = {
+      totalProducts: totalProducts || 0,
+      totalOrders: totalOrders || 0,
+      totalRevenue: Math.round(totalRevenue * 100) / 100,
+      lastOrderDate,
+      lastUpdated: new Date(),
+      currency: 'INR',
+      period: 'all-time'
+    };
+
+    res.status(200).json({ success: true, data: analyticsData });
+  } catch (error: any) {
+    console.error('[getAnalytics Error]', {
+      error: error.message,
+      stack: error.stack
+    });
+    next(error);
+  }
+};
