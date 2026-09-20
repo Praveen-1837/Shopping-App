@@ -8,6 +8,8 @@ import {
   updateSellerProfile,
   generatePackingSlip,
   generateInvoice,
+  createProduct,
+  getSellerOrders,
 } from './sellerController';
 
 const router = Router();
@@ -28,5 +30,9 @@ import { requireAuth } from '@clerk/express';
 // Order Packing Slip & Invoice PDF Downloads
 router.get('/orders/:id/packing-slip', roleGuard([...SELLER_ROLES]), generatePackingSlip);
 router.get('/orders/:id/invoice', requireAuth(), generateInvoice);
+
+// NEW ROUTES
+router.post('/seller/product', roleGuard([...SELLER_ROLES]), createProduct);
+router.get('/seller/orders', roleGuard([...SELLER_ROLES]), getSellerOrders);
 
 export default router;
