@@ -40,6 +40,8 @@ interface SyncedUser {
   id: string;
   clerkId: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   role: string;
   phone?: string;
@@ -100,6 +102,8 @@ export default function MyAccount() {
 
   // Identity Form State
   const [name, setName] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [usernameEdited, setUsernameEdited] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>('');
@@ -227,7 +231,14 @@ export default function MyAccount() {
       });
       const userData = res.data.data;
       setDbUser(userData);
-      setName(userData.name || '');
+      
+      const dbFirstName = userData.firstName || clerkUser?.firstName || '';
+      const dbLastName = userData.lastName || clerkUser?.lastName || '';
+      
+      setFirstName(dbFirstName);
+      setLastName(dbLastName);
+      setName(userData.name || `${dbFirstName} ${dbLastName}`.trim());
+
       const fetchedUsername = userData.username || '';
       setUsername(fetchedUsername);
       if (fetchedUsername) {
@@ -309,7 +320,7 @@ export default function MyAccount() {
       const token = await getToken();
       const res = await apiClient.patch(
         '/users/profile',
-        { name, username, phone, alternatePhone },
+        { name, firstName, lastName, username, phone, alternatePhone },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setDbUser(res.data.data);
@@ -673,120 +684,145 @@ export default function MyAccount() {
               )}
 
               <form onSubmit={handleSaveProfile} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="block text-sm font-semibold text-text-primary">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => handleNameChange(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <label className="block text-sm font-semibold text-text-primary">Username (Unique, optional)</label>
-                      {availStatus && (
-                        <div className="text-[11px] font-medium flex items-center space-x-1">
-                          {availStatus.loading ? (
-                            <span className="text-text-muted flex items-center space-x-1">
-                              <RefreshCw className="w-3 h-3 animate-spin text-primary" />
-                              <span>Checking...</span>
-                            </span>
-                          ) : availStatus.available ? (
-                            <span className="text-success flex items-center space-x-1 font-semibold">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Available</span>
-                            </span>
-                          ) : (
-                            <span className="text-error flex items-center space-x-1">
-                              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                              <span>Taken — try </span>
-                              {availStatus.suggestion && (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setUsername(availStatus.suggestion!);
-                                    setUsernameEdited(true);
-                                  }}
-                                  className="underline font-bold text-primary hover:text-primary-hover font-mono cursor-pointer"
-                                >
-                                  @{availStatus.suggestion}
-                                </button>
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-sm font-mono text-text-muted">@</span>
+                {/* SECTION 1: Basic Info */}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-bold text-text-primary border-b border-text-muted/10 pb-2 uppercase tracking-wide">Basic Info</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="space-y-1">
+                      <label className="block text-sm font-semibold text-text-primary">First Name</label>
                       <input
                         type="text"
-                        placeholder={name ? slugifyName(name) : 'john_doe'}
-                        value={username}
-                        onChange={(e) => handleUsernameInputChange(e.target.value)}
-                        className="w-full pl-8 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
+                        required
+                        value={firstName}
+                        onChange={(e) => {
+                          setFirstName(e.target.value);
+                          handleNameChange(`${e.target.value} ${lastName}`);
+                        }}
+                        className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                       />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-sm font-semibold text-text-primary">Last Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => {
+                          setLastName(e.target.value);
+                          handleNameChange(`${firstName} ${e.target.value}`);
+                        }}
+                        className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between min-h-[20px]">
+                        <label className="text-sm font-semibold text-text-primary flex items-center space-x-1.5">
+                          <span>Your Email</span>
+                          <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-success-light text-success text-[10px] font-bold rounded-full border border-success/30">
+                            <CheckCircle2 className="w-3 h-3" />
+                            <span>Verified</span>
+                          </span>
+                        </label>
+                      </div>
+                      <div className="relative flex items-center">
+                        <input
+                          type="email"
+                          disabled
+                          value={clerkUser?.primaryEmailAddress?.emailAddress || dbUser?.email || ''}
+                          className="w-full pl-4 pr-10 py-2.5 bg-background-muted/40 border border-text-muted/15 rounded-xl text-base text-text-secondary cursor-not-allowed font-mono truncate"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => openUserProfile && openUserProfile()}
+                          className="absolute right-2.5 p-1.5 text-text-muted hover:text-primary hover:bg-background-card border border-transparent hover:border-text-muted/20 rounded-lg transition-all cursor-pointer"
+                          title="Change Email via Clerk"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between min-h-[20px]">
-                      <label className="text-sm font-semibold text-text-primary flex items-center space-x-1.5">
-                        <span>Your Email</span>
-                        <span className="inline-flex items-center space-x-1 px-1.5 py-0.5 bg-success-light text-success text-[10px] font-bold rounded-full border border-success/30">
-                          <CheckCircle2 className="w-3 h-3" />
-                          <span>Verified</span>
-                        </span>
-                      </label>
+                {/* SECTION 2: Additional Info */}
+                <div className="space-y-4 pt-4 mt-2">
+                  <h3 className="text-sm font-bold text-text-primary border-b border-text-muted/10 pb-2 uppercase tracking-wide">Additional Info</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-sm font-semibold text-text-primary">Username (Unique, optional)</label>
+                        {availStatus && (
+                          <div className="text-[11px] font-medium flex items-center space-x-1">
+                            {availStatus.loading ? (
+                              <span className="text-text-muted flex items-center space-x-1">
+                                <RefreshCw className="w-3 h-3 animate-spin text-primary" />
+                                <span>Checking...</span>
+                              </span>
+                            ) : availStatus.available ? (
+                              <span className="text-success flex items-center space-x-1 font-semibold">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>Available</span>
+                              </span>
+                            ) : (
+                              <span className="text-error flex items-center space-x-1">
+                                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                                <span>Taken — try </span>
+                                {availStatus.suggestion && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setUsername(availStatus.suggestion!);
+                                      setUsernameEdited(true);
+                                    }}
+                                    className="underline font-bold text-primary hover:text-primary-hover font-mono cursor-pointer"
+                                  >
+                                    @{availStatus.suggestion}
+                                  </button>
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className="relative">
+                        <span className="absolute left-3 top-2.5 text-sm font-mono text-text-muted">@</span>
+                        <input
+                          type="text"
+                          placeholder={firstName ? slugifyName(firstName) : 'john_doe'}
+                          value={username}
+                          onChange={(e) => handleUsernameInputChange(e.target.value)}
+                          className="w-full pl-8 pr-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
+                        />
+                      </div>
                     </div>
-                    <div className="relative flex items-center">
+
+                    <div className="space-y-1">
+                      <div className="flex items-center min-h-[20px]">
+                        <label className="text-sm font-semibold text-text-primary">Phone Number</label>
+                      </div>
                       <input
-                        type="email"
-                        disabled
-                        value={clerkUser?.primaryEmailAddress?.emailAddress || dbUser?.email || ''}
-                        className="w-full pl-4 pr-10 py-2.5 bg-background-muted/40 border border-text-muted/15 rounded-xl text-base text-text-secondary cursor-not-allowed font-mono truncate"
+                        type="text"
+                        placeholder="+91 9876543210"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
                       />
-                      <button
-                        type="button"
-                        onClick={() => openUserProfile && openUserProfile()}
-                        className="absolute right-2.5 p-1.5 text-text-muted hover:text-primary hover:bg-background-card border border-transparent hover:border-text-muted/20 rounded-lg transition-all cursor-pointer"
-                        title="Change Email via Clerk"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
                     </div>
-                  </div>
 
-                  <div className="space-y-1">
-                    <div className="flex items-center min-h-[20px]">
-                      <label className="text-sm font-semibold text-text-primary">Phone Number</label>
+                    <div className="space-y-1">
+                      <div className="flex items-center min-h-[20px]">
+                        <label className="text-sm font-semibold text-text-primary">Alternate Phone</label>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="+91 9123456789"
+                        value={alternatePhone}
+                        onChange={(e) => setAlternatePhone(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      />
                     </div>
-                    <input
-                      type="text"
-                      placeholder="+91 9876543210"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center min-h-[20px]">
-                      <label className="text-sm font-semibold text-text-primary">Alternate Phone</label>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="+91 9123456789"
-                      value={alternatePhone}
-                      onChange={(e) => setAlternatePhone(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-background-muted/60 border border-text-muted/20 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    />
                   </div>
                 </div>
 

@@ -306,14 +306,14 @@ export default function Navbar({
           {/* Center: Integrated Amazon-Style Search Bar */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex-1 max-w-2xl hidden md:flex items-center bg-background-muted/80 border border-text-muted/20 rounded-xl overflow-hidden shadow-xs focus-within:ring-2 focus-within:ring-primary/40 transition-all"
+            className="flex-1 max-w-2xl hidden md:flex items-stretch bg-background-muted/80 border border-text-muted/20 rounded-xl overflow-hidden shadow-xs focus-within:ring-2 focus-within:ring-primary/40 transition-all"
           >
             {/* Category Select Dropdown */}
-            <div className="relative border-r border-text-muted/20 bg-background-card shrink-0">
+            <div className="relative border-r border-text-muted/20 bg-background-card shrink-0 flex items-center">
               <select
                 value={localCategory}
                 onChange={(e) => setLocalCategory(e.target.value)}
-                className="py-2 pl-3 pr-7 bg-transparent text-sm font-semibold text-text-primary focus:outline-none appearance-none cursor-pointer"
+                className="py-2.5 pl-3 pr-7 bg-transparent text-sm font-semibold text-text-primary focus:outline-none appearance-none cursor-pointer h-full"
               >
                 {PRODUCT_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -322,7 +322,7 @@ export default function Navbar({
                 ))}
                 <option value="Courses">Courses</option>
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-text-muted absolute right-2 top-2.5 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-text-muted absolute right-2 pointer-events-none" />
             </div>
 
             {/* Search Input Box */}
@@ -331,16 +331,16 @@ export default function Navbar({
               placeholder="Search organic produce, artisan crafts, or masterclasses..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="flex-1 px-3 py-2 text-sm bg-transparent text-text-primary focus:outline-none placeholder:text-text-muted"
+              className="flex-1 px-3 py-2.5 text-sm bg-transparent text-text-primary focus:outline-none placeholder:text-text-muted"
             />
 
             {/* Search Submit Button */}
             <button
               type="submit"
               aria-label="Submit search"
-              className="px-4 py-2 bg-primary text-white hover:bg-primary-hover transition-colors flex items-center justify-center cursor-pointer shrink-0"
+              className="px-4 bg-[#52b788] hover:bg-[#40916c] text-white transition-colors flex items-center justify-center cursor-pointer shrink-0"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 text-white" />
             </button>
           </form>
 
@@ -400,21 +400,21 @@ export default function Navbar({
         <div className="px-3 pb-2.5 md:hidden">
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center bg-background-muted/80 border border-text-muted/20 rounded-xl overflow-hidden shadow-xs"
+            className="flex items-stretch bg-background-muted/80 border border-text-muted/20 rounded-xl overflow-hidden shadow-xs focus-within:ring-2 focus-within:ring-primary/40 transition-all"
           >
             <input
               type="text"
               placeholder="Search products or courses..."
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
-              className="flex-1 px-3 py-2 text-sm bg-transparent text-text-primary focus:outline-none"
+              className="flex-1 px-3 py-2.5 text-sm bg-transparent text-text-primary focus:outline-none placeholder:text-text-muted"
             />
             <button
               type="submit"
               aria-label="Submit search"
-              className="px-3.5 py-2 bg-primary text-white hover:bg-primary-hover transition-colors"
+              className="px-4 bg-[#52b788] hover:bg-[#40916c] text-white transition-colors flex items-center justify-center cursor-pointer shrink-0"
             >
-              <Search className="w-3.5 h-3.5" />
+              <Search className="w-4 h-4 text-white" />
             </button>
           </form>
         </div>

@@ -68,12 +68,16 @@ export const handleClerkWebhook = async (req: Request, res: Response, next: Next
         where: { clerkId },
         update: {
           name,
+          firstName,
+          lastName,
           email,
           role: roleFromMetadata,
         },
         create: {
           clerkId,
           name,
+          firstName,
+          lastName,
           email,
           role: roleFromMetadata,
         },
@@ -91,6 +95,8 @@ export const handleClerkWebhook = async (req: Request, res: Response, next: Next
 
       const updateData: any = {};
       if (name) updateData.name = name;
+      updateData.firstName = firstName;
+      updateData.lastName = lastName;
       if (email) updateData.email = email;
       if (roleFromMetadata) updateData.role = roleFromMetadata;
 

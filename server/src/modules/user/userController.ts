@@ -77,7 +77,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
       return;
     }
 
-    const { name, username, phone, alternatePhone } = req.body;
+    const { name, firstName, lastName, username, phone, alternatePhone } = req.body;
 
     if (username && typeof username === 'string' && username.trim().length > 0) {
       const existing = await prisma.user.findFirst({
@@ -92,10 +92,15 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
       }
     }
 
+    const finalName = (name !== undefined) ? String(name).trim() : 
+                      ((firstName || '') + ' ' + (lastName || '')).trim();
+
     const updatedUser = await prisma.user.update({
       where: { clerkId: auth.userId },
       data: {
-        ...(name !== undefined && { name: String(name).trim() }),
+        ...(finalName && { name: finalName }),
+        ...(firstName !== undefined && { firstName: firstName ? String(firstName).trim() : null }),
+        ...(lastName !== undefined && { lastName: lastName ? String(lastName).trim() : null }),
         ...(username !== undefined && { username: username ? String(username).trim() : null }),
         ...(phone !== undefined && { phone: phone ? String(phone).trim() : null }),
         ...(alternatePhone !== undefined && { alternatePhone: alternatePhone ? String(alternatePhone).trim() : null }),
