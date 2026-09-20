@@ -50,22 +50,22 @@ export default function Home() {
   const categories = [
     { 
       name: 'Artisan Crafts', 
-      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_3xzl6o3xzl6o3xzl',
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-art',
       count: 24 
     },
     { 
       name: 'Eco Living', 
-      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-',
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-eco',
       count: 38 
     },
     { 
       name: 'Food & Spices', 
-      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_rl6gywrl6gywrl6g',
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-food',
       count: 52 
     },
     { 
       name: 'Organic Produce', 
-      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_snk6alsnk6alsnk6',
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-Organic',
       count: 47 
     },
   ];
@@ -116,15 +116,15 @@ export default function Home() {
                 <button
                   key={cat.name}
                   onClick={() => handleSelectCategory(cat.name)}
-                  className="flex flex-col items-center bg-white rounded-xl py-3 px-1 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors cursor-pointer"
+                  className="flex flex-col items-center bg-white rounded-xl py-3 px-1 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors gap-1.5 cursor-pointer"
                 >
                   <img 
                     src={cat.image} 
                     alt={cat.name}
                     loading="lazy"
-                    className="w-12 h-12 object-cover rounded-lg mb-2"
+                    className="w-12 h-12 object-cover rounded-lg"
                   />
-                  <span className="text-[10px] font-semibold text-gray-700 text-center">{cat.name}</span>
+                  <span className="text-[10px] font-semibold text-gray-700 text-center leading-tight">{cat.name}</span>
                   <span className="text-[9px] text-gray-400">{cat.count} items</span>
                 </button>
               ))}
