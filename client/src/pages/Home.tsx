@@ -9,8 +9,6 @@ import {
   Sprout,
   ArrowRight,
 } from 'lucide-react';
-
-import CategoryPreviewCard from '../components/CategoryPreviewCard';
 import { useUserRole } from '../hooks/useUserRole';
 import { Navigate, useNavigate } from 'react-router-dom';
 import HeroBannerCarousel from '../components/HeroBannerCarousel';
@@ -31,15 +29,7 @@ export default function Home() {
     enabled: !isAdmin,
   });
 
-  // Fetch 4 quadrant category previews
-  const { data: previewData } = useQuery<{ success: boolean; data: any[] }>({
-    queryKey: ['category-previews'],
-    queryFn: async () => {
-      const res = await apiClient.get<{ success: boolean; data: any[] }>('/products/category-previews');
-      return res.data;
-    },
-    enabled: !isAdmin,
-  });
+  // Fetch 4 quadrant category previews replaced by static categories
 
   if (isAdmin) {
     return <Navigate to="/admin/dashboard" replace />;
@@ -56,6 +46,29 @@ export default function Home() {
       navigate('/shop');
     }
   };
+
+  const categories = [
+    { 
+      name: 'Artisan Crafts', 
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_3xzl6o3xzl6o3xzl',
+      count: 24 
+    },
+    { 
+      name: 'Eco Living', 
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_removebg-',
+      count: 38 
+    },
+    { 
+      name: 'Food & Spices', 
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_rl6gywrl6gywrl6g',
+      count: 52 
+    },
+    { 
+      name: 'Organic Produce', 
+      image: 'https://res.cloudinary.com/hzjhhalf/image/upload/f_auto,q_auto/Gemini_Generated_Image_snk6alsnk6alsnk6',
+      count: 47 
+    },
+  ];
 
   return (
     <div className="max-w-[1480px] mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
@@ -99,16 +112,21 @@ export default function Home() {
           {/* Responsive Grid Layout */}
           <div className="relative">
             <div className="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 items-stretch">
-              {(previewData?.data || []).map((prev: any) => (
-                <CategoryPreviewCard
-                  key={prev.category}
-                  category={prev.category}
-                  imageUrl={prev.imageUrl}
-                  items={prev.items}
-                  linkType={prev.linkType}
-                  linkValue={prev.linkValue}
-                  onSelectCategory={handleSelectCategory}
-                />
+              {categories.map((cat) => (
+                <button
+                  key={cat.name}
+                  onClick={() => handleSelectCategory(cat.name)}
+                  className="flex flex-col items-center bg-white rounded-xl py-3 px-1 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors cursor-pointer"
+                >
+                  <img 
+                    src={cat.image} 
+                    alt={cat.name}
+                    loading="lazy"
+                    className="w-12 h-12 object-cover rounded-lg mb-2"
+                  />
+                  <span className="text-[10px] font-semibold text-gray-700 text-center">{cat.name}</span>
+                  <span className="text-[9px] text-gray-400">{cat.count} items</span>
+                </button>
               ))}
             </div>
           </div>
