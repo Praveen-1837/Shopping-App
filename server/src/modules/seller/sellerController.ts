@@ -572,7 +572,7 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
           }
         },
         status: {
-          in: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'COMPLETED']
+          in: ['PENDING', 'CONFIRMED', 'PACKED', 'SHIPPED', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED']
         }
       }
     });
@@ -585,7 +585,7 @@ export const getAnalytics = async (req: Request, res: Response, next: NextFuncti
         },
         order: {
           status: {
-            in: ['SHIPPED', 'DELIVERED', 'COMPLETED']
+            in: ['SHIPPED', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED']
           }
         }
       },
