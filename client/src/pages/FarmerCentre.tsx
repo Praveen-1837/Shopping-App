@@ -30,6 +30,11 @@ export default function FarmerCentre() {
   const [orderStatus, setOrderStatus] = useState<string>(''); // Filter by status
   const queryClient = useQueryClient();
   
+  // Image Upload State
+  const [productImage, setProductImage] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+  
   // Form for adding product
   const {
     register: registerProduct,
@@ -111,6 +116,9 @@ export default function FarmerCentre() {
     onSuccess: (data) => {
       console.log('✅ Product created:', data.name);
       resetProductForm();
+      setProductImage(null);
+      setImageUploadError(null);
+      (window as any).selectedImageFile = null;
       setShowAddProductModal(false);
       queryClient.invalidateQueries({ queryKey: ['farmerAnalytics'] });
       alert(`${data.name} added successfully!`); // simple fallback for toast
@@ -122,19 +130,101 @@ export default function FarmerCentre() {
     }
   });
 
-  // Handler: Create product
-  const onSubmitProduct = async (formData: any) => {
-    const price = Number(formData.price);
-    if (isNaN(price) || price <= 0) {
-      alert('Price must be a positive number');
+  /**
+   * Upload image file to Cloudinary and return secure URL
+   */
+  const uploadImageToCloudinary = async (file: File): Promise<string> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'ecomarket_products');
+      formData.append('cloud_name', 'hzjhhalf');
+      formData.append('folder', 'ecomarket/products');
+      formData.append('quality', 'auto:good');
+      formData.append('fetch_format', 'auto');
+
+      const response = await fetch(
+        'https://api.cloudinary.com/v1_1/hzjhhalf/image/upload',
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Cloudinary upload failed');
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error('Image upload error:', error);
+      throw new Error('Failed to upload image. Please try again.');
+    }
+  };
+
+  /**
+   * Handle image file selection and preview
+   */
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setImageUploadError('Please select an image file (JPG, PNG, etc.)');
       return;
     }
 
-    createProductMutation.mutate({
-      ...formData,
-      price: price,
-      quantity: formData.quantity ? Number(formData.quantity) : 0
-    });
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      setImageUploadError('Image size must be less than 5MB');
+      return;
+    }
+
+    setImageUploadError(null);
+    const previewUrl = URL.createObjectURL(file);
+    setProductImage(previewUrl);
+    (window as any).selectedImageFile = file;
+  };
+
+  // Handler: Create product
+  const onSubmitProduct = async (formData: any) => {
+    try {
+      const price = Number(formData.price);
+      if (isNaN(price) || price <= 0) {
+        alert('Price must be a positive number');
+        return;
+      }
+
+      if (!formData.name?.trim()) {
+        alert('Product name is required');
+        return;
+      }
+
+      let imageUrl: string | null = null;
+      if ((window as any).selectedImageFile) {
+        setIsUploadingImage(true);
+        try {
+          imageUrl = await uploadImageToCloudinary((window as any).selectedImageFile);
+          console.log('✅ Image uploaded:', imageUrl);
+        } catch (error: any) {
+          setImageUploadError(error.message || 'Failed to upload image');
+          setIsUploadingImage(false);
+          return;
+        }
+        setIsUploadingImage(false);
+      }
+
+      createProductMutation.mutate({
+        ...formData,
+        price: price,
+        quantity: formData.quantity ? Number(formData.quantity) : 0,
+        image: imageUrl
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
   };
 
   // Handler: Pagination
@@ -188,6 +278,59 @@ export default function FarmerCentre() {
             </div>
 
             <form onSubmit={handleSubmitProduct(onSubmitProduct)} className="space-y-5">
+              {/* Product Image Upload */}
+              <div>
+                <label className="block text-sm font-bold text-text-primary mb-2">
+                  Product Image
+                </label>
+                
+                {/* Image Preview */}
+                {productImage && (
+                  <div className="mb-3 relative">
+                    <img
+                      src={productImage}
+                      alt="Product preview"
+                      className="w-full h-40 object-cover rounded-lg border border-border-muted"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProductImage(null);
+                        (window as any).selectedImageFile = null;
+                        setImageUploadError(null);
+                      }}
+                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 w-8 h-8 flex items-center justify-center text-lg"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+
+                {/* File Input */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  disabled={isUploadingImage || createProductMutation.isPending}
+                  className="w-full px-3 py-2 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50 disabled:cursor-not-allowed bg-white"
+                />
+                
+                <p className="text-xs text-text-muted mt-1">
+                  JPG, PNG or WebP. Max 5MB.
+                </p>
+
+                {imageUploadError && (
+                  <p className="text-red-500 text-sm mt-2">{imageUploadError}</p>
+                )}
+
+                {isUploadingImage && (
+                  <div className="flex items-center gap-2 text-primary text-sm mt-2 font-medium">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Uploading image...
+                  </div>
+                )}
+              </div>
+
               <div>
                 <label className="block text-sm font-bold text-text-primary mb-1">
                   Product Name *
@@ -324,13 +467,25 @@ export default function FarmerCentre() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmittingProduct || createProductMutation.isPending}
+                  disabled={isUploadingImage || isSubmittingProduct || createProductMutation.isPending}
                   className="px-6 py-3 font-bold text-white bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition flex items-center gap-2"
                 >
-                  {createProductMutation.isPending && (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                  {isUploadingImage ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Uploading Image...
+                    </>
+                  ) : createProductMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Creating Product...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-5 h-5" />
+                      Add Product
+                    </>
                   )}
-                  Add Product
                 </button>
               </div>
             </form>
