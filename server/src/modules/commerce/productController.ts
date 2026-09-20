@@ -102,34 +102,51 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
   try {
     const query = productQuerySchema.parse(req.query);
 
-    const where: any = {};
+    const AND: any[] = [];
 
     if (query.category) {
-      where.category = { equals: query.category, mode: 'insensitive' };
+      let normalizedCategory = query.category;
+      const lower = query.category.toLowerCase();
+      if (lower === 'organic produce') normalizedCategory = 'ORGANIC_PRODUCE';
+      else if (lower === 'artisan crafts') normalizedCategory = 'ARTISAN_CRAFTS';
+      else if (lower === 'eco living') normalizedCategory = 'ECO_LIVING';
+      else if (lower === 'food & spices' || lower === 'food_spices') normalizedCategory = 'FOOD_SPICES';
+
+      AND.push({
+        OR: [
+          { category: { equals: query.category, mode: 'insensitive' } },
+          { category: { equals: normalizedCategory, mode: 'insensitive' } }
+        ]
+      });
     }
 
     if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      where.price = {};
-      if (query.minPrice !== undefined) where.price.gte = query.minPrice;
-      if (query.maxPrice !== undefined) where.price.lte = query.maxPrice;
+      const priceFilter: any = {};
+      if (query.minPrice !== undefined) priceFilter.gte = query.minPrice;
+      if (query.maxPrice !== undefined) priceFilter.lte = query.maxPrice;
+      AND.push({ price: priceFilter });
     }
 
     if (query.search) {
-      where.OR = [
-        { title: { contains: query.search, mode: 'insensitive' } },
-        { description: { contains: query.search, mode: 'insensitive' } },
-      ];
+      AND.push({
+        OR: [
+          { title: { contains: query.search, mode: 'insensitive' } },
+          { description: { contains: query.search, mode: 'insensitive' } },
+        ]
+      });
     }
 
     if (query.sellerId) {
-      where.sellerId = query.sellerId;
+      AND.push({ sellerId: query.sellerId });
     } else {
-      where.status = 'ACTIVE';
+      AND.push({ status: 'ACTIVE' });
     }
 
     if (query.producerRole) {
-      where.seller = { role: query.producerRole as Role };
+      AND.push({ seller: { role: query.producerRole as Role } });
     }
+
+    const where = AND.length > 0 ? { AND } : {};
 
     const page = query.page;
     const limit = query.limit;
