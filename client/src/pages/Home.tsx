@@ -111,22 +111,27 @@ export default function Home() {
 
           {/* Responsive Grid Layout */}
           <div className="relative">
-            {/* CATEGORY GRID - 2x2 on all screen sizes */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* CATEGORY GRID - 2x2 on Mobile/Tablet, 4x1 on Desktop */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {categories.map((cat) => (
                 <button
                   key={cat.name}
                   onClick={() => handleSelectCategory(cat.name)}
-                  className="flex flex-col items-center bg-white rounded-xl py-3 px-1 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors cursor-pointer"
+                  className="flex items-center bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-[#52b788] hover:shadow-md transition-all text-left cursor-pointer"
                 >
+                  {/* IMAGE ON LEFT */}
                   <img 
                     src={cat.image} 
                     alt={cat.name}
                     loading="lazy"
-                    className="w-12 h-12 object-cover rounded-lg mb-2"
+                    className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
                   />
-                  <span className="text-[10px] font-semibold text-gray-700 text-center leading-tight">{cat.name}</span>
-                  <span className="text-[9px] text-gray-400">{cat.count} items</span>
+                  
+                  {/* NAME & COUNT ON RIGHT */}
+                  <div className="ml-4 flex flex-col justify-center">
+                    <span className="text-sm font-bold text-gray-800">{cat.name}</span>
+                    <span className="text-xs text-gray-500 mt-1">{cat.count} items</span>
+                  </div>
                 </button>
               ))}
             </div>
