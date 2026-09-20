@@ -111,21 +111,41 @@ export default function Home() {
 
           {/* Responsive Grid Layout */}
           <div className="relative">
-            <div className="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6 items-stretch">
+            {/* MOBILE VIEW: Just image + name */}
+            <div className="md:hidden flex flex-col gap-4">
               {categories.map((cat) => (
                 <button
                   key={cat.name}
                   onClick={() => handleSelectCategory(cat.name)}
-                  className="flex flex-col items-center bg-white rounded-xl py-3 px-1 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors gap-1.5 cursor-pointer"
+                  className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer text-left"
                 >
                   <img 
                     src={cat.image} 
                     alt={cat.name}
                     loading="lazy"
-                    className="w-12 h-12 object-cover rounded-lg"
+                    className="w-10 h-10 object-cover rounded-lg shrink-0"
                   />
-                  <span className="text-[10px] font-semibold text-gray-700 text-center leading-tight">{cat.name}</span>
-                  <span className="text-[9px] text-gray-400">{cat.count} items</span>
+                  <span className="text-sm font-semibold text-gray-800">{cat.name}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* DESKTOP VIEW: 2x2 Grid with full card */}
+            <div className="hidden md:grid grid-cols-2 gap-4">
+              {categories.map((cat) => (
+                <button
+                  key={cat.name}
+                  onClick={() => handleSelectCategory(cat.name)}
+                  className="flex flex-col items-center bg-white rounded-xl py-4 px-2 shadow-sm border border-gray-100 hover:border-[#52b788] transition-colors cursor-pointer"
+                >
+                  <img 
+                    src={cat.image} 
+                    alt={cat.name}
+                    loading="lazy"
+                    className="w-14 h-14 object-cover rounded-lg mb-2"
+                  />
+                  <span className="text-[11px] font-semibold text-gray-700 text-center leading-tight">{cat.name}</span>
+                  <span className="text-[9px] text-gray-400 mt-1">{cat.count} items</span>
                 </button>
               ))}
             </div>
