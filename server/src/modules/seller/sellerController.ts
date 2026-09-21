@@ -650,7 +650,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
     const seller = await getDbUser(auth.userId);
     const sellerId = seller.id;
 
-    const { name, description, price, category, image, videoUrl, quantity, isActive } = req.body;
+    const { name, description, price, category, image, images, videoUrl, quantity, isActive } = req.body;
 
     if (!name || !price || !category) {
       res.status(400).json({
@@ -680,7 +680,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
         description: description?.trim() || '',
         price: priceNum,
         category,
-        images: image ? [image] : [],
+        images: Array.isArray(images) && images.length > 0 ? images : (image ? [image] : []),
         videoUrl: videoUrl || null,
         stock: quantity ? Number(quantity) : 0,
         status: isActive !== false ? 'ACTIVE' : 'INACTIVE',
@@ -699,6 +699,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       description: newProduct.description,
       price: Number(newProduct.price),
       category: newProduct.category,
+      images: newProduct.images,
       image: newProduct.images[0] || null,
       videoUrl: newProduct.videoUrl,
       quantity: newProduct.stock,
