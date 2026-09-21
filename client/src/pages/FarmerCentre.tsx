@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
-  Sprout, PlusCircle, Package, IndianRupee, Truck
+  Sprout, PlusCircle, Package, IndianRupee, Truck, Trash2, Edit, Video
 } from 'lucide-react';
 
 interface AnalyticsData {
@@ -29,6 +29,17 @@ export default function FarmerCentre() {
   const [orderLimit, setOrderLimit] = useState(10);
   const [orderStatus, setOrderStatus] = useState<string>(''); // Filter by status
   const queryClient = useQueryClient();
+
+  // Products list states
+  const [productsPage, setProductsPage] = useState(1);
+  const [productsLimit, setProductsLimit] = useState(12);
+
+  // Media Input Method States
+  const [mediaInputMethod, setMediaInputMethod] = useState<'upload' | 'imageUrl' | 'videoUrl'>('upload');
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [videoUrl, setVideoUrl] = useState<string>('');
+  const [imageUrlError, setImageUrlError] = useState<string | null>(null);
+  const [videoUrlError, setVideoUrlError] = useState<string | null>(null);
   
   // Image Upload State
   const [productImage, setProductImage] = useState<string | null>(null);
@@ -102,6 +113,23 @@ export default function FarmerCentre() {
 
   const ordersData = ordersResponse;
 
+  const { data: productsData, isLoading: productsLoading, error: productsError, refetch: refetchProducts } = useQuery({
+    queryKey: ['sellerProducts', productsPage, productsLimit],
+    queryFn: async () => {
+      const token = await getToken();
+      const params = new URLSearchParams({
+        page: String(productsPage),
+        limit: String(productsLimit)
+      });
+      const { data } = await apiClient.get(`/seller/products?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return data;
+    },
+    enabled: !!isSignedIn && activeTab === 'dashboard',
+    staleTime: 2 * 60 * 1000
+  });
+
   // NEW: Mutation for creating product
   const createProductMutation = useMutation({
     mutationFn: async (productData: any) => {
@@ -117,10 +145,16 @@ export default function FarmerCentre() {
       console.log('✅ Product created:', data.name);
       resetProductForm();
       setProductImage(null);
+      setImageUrl('');
+      setVideoUrl('');
       setImageUploadError(null);
+      setImageUrlError(null);
+      setVideoUrlError(null);
+      setMediaInputMethod('upload');
       (window as any).selectedImageFile = null;
       setShowAddProductModal(false);
       queryClient.invalidateQueries({ queryKey: ['farmerAnalytics'] });
+      queryClient.invalidateQueries({ queryKey: ['sellerProducts'] });
       alert(`${data.name} added successfully!`); // simple fallback for toast
     },
     onError: (error: AxiosError<any>) => {
@@ -145,15 +179,10 @@ export default function FarmerCentre() {
 
       const response = await fetch(
         'https://api.cloudinary.com/v1_1/hzjhhalf/image/upload',
-        {
-          method: 'POST',
-          body: formData
-        }
+        { method: 'POST', body: formData }
       );
 
-      if (!response.ok) {
-        throw new Error('Cloudinary upload failed');
-      }
+      if (!response.ok) throw new Error('Cloudinary upload failed');
 
       const data = await response.json();
       return data.secure_url;
@@ -163,12 +192,8 @@ export default function FarmerCentre() {
     }
   };
 
-  /**
-   * Handle image file selection and preview
-   */
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -188,7 +213,61 @@ export default function FarmerCentre() {
     (window as any).selectedImageFile = file;
   };
 
-  // Handler: Create product
+  const handleImageUrlChange = (url: string) => {
+    const trimmed = url.trim();
+    setImageUrl(trimmed);
+    if (!trimmed) {
+      setImageUrlError(null);
+      setProductImage(null);
+      return;
+    }
+    
+    try {
+      new URL(trimmed); // Validate URL format
+      setImageUrlError(null);
+      setProductImage(trimmed);
+    } catch {
+      setImageUrlError('Please enter a valid URL');
+      setProductImage(null);
+    }
+  };
+
+  const getVideoEmbedUrl = (url: string): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    
+    // YouTube
+    const ytMatch = trimmed.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+    if (ytMatch && ytMatch[1]) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+    
+    // Vimeo
+    const vimeoMatch = trimmed.match(/vimeo\.com\/(?:.*#|.*\/videos\/)?([0-9]+)/i);
+    if (vimeoMatch && vimeoMatch[1]) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+    
+    // Dailymotion
+    const dmMatch = trimmed.match(/dailymotion\.com\/(?:video|embed\/video)\/(.*)/i);
+    if (dmMatch && dmMatch[1]) return `https://www.dailymotion.com/embed/video/${dmMatch[1].split('?')[0]}`;
+    
+    return null;
+  };
+
+  const handleVideoUrlChange = (url: string) => {
+    const trimmed = url.trim();
+    setVideoUrl(trimmed);
+    
+    if (!trimmed) {
+      setVideoUrlError(null);
+      return;
+    }
+    
+    const embedUrl = getVideoEmbedUrl(trimmed);
+    if (embedUrl) {
+      setVideoUrlError(null);
+    } else {
+      setVideoUrlError('Unsupported video URL. Please use YouTube, Vimeo, or Dailymotion.');
+    }
+  };
+
   const onSubmitProduct = async (formData: any) => {
     try {
       const price = Number(formData.price);
@@ -202,28 +281,53 @@ export default function FarmerCentre() {
         return;
       }
 
-      let imageUrl: string | null = null;
-      if ((window as any).selectedImageFile) {
+      let finalImageUrl: string | null = null;
+      let finalVideoUrl: string | null = null;
+
+      if (mediaInputMethod === 'upload' && (window as any).selectedImageFile) {
         setIsUploadingImage(true);
         try {
-          imageUrl = await uploadImageToCloudinary((window as any).selectedImageFile);
-          console.log('✅ Image uploaded:', imageUrl);
+          finalImageUrl = await uploadImageToCloudinary((window as any).selectedImageFile);
+          console.log('✅ Image uploaded:', finalImageUrl);
         } catch (error: any) {
           setImageUploadError(error.message || 'Failed to upload image');
           setIsUploadingImage(false);
           return;
         }
         setIsUploadingImage(false);
+      } else if (mediaInputMethod === 'imageUrl' && imageUrl && !imageUrlError) {
+        finalImageUrl = imageUrl;
+      } else if (mediaInputMethod === 'videoUrl' && videoUrl && !videoUrlError) {
+        finalVideoUrl = videoUrl;
       }
 
       createProductMutation.mutate({
         ...formData,
         price: price,
         quantity: formData.quantity ? Number(formData.quantity) : 0,
-        image: imageUrl
+        image: finalImageUrl,
+        videoUrl: finalVideoUrl
       });
     } catch (error) {
       console.error('Form submission error:', error);
+    }
+  };
+
+  const handleProductsPreviousPage = () => { if (productsPage > 1) setProductsPage(productsPage - 1); };
+  const handleProductsNextPage = () => { if (productsData?.pagination?.hasMore) setProductsPage(productsPage + 1); };
+
+  const handleDeleteProduct = async (productId: string, productName: string) => {
+    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+      try {
+        const token = await getToken();
+        await apiClient.delete(`/seller/product/${productId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        queryClient.invalidateQueries({ queryKey: ['sellerProducts'] });
+        queryClient.invalidateQueries({ queryKey: ['farmerAnalytics'] });
+      } catch (err) {
+        alert('Failed to delete product. Please try again.');
+      }
     }
   };
 
@@ -278,57 +382,90 @@ export default function FarmerCentre() {
             </div>
 
             <form onSubmit={handleSubmitProduct(onSubmitProduct)} className="space-y-5">
-              {/* Product Image Upload */}
-              <div>
-                <label className="block text-sm font-bold text-text-primary mb-2">
-                  Product Image
+              {/* Tabbed Media Input Section */}
+              <div className="border border-border-muted rounded-xl p-5 space-y-4 bg-background-muted/30">
+                <label className="block text-sm font-bold text-text-primary">
+                  Product Media
                 </label>
                 
-                {/* Image Preview */}
-                {productImage && (
-                  <div className="mb-3 relative">
-                    <img
-                      src={productImage}
-                      alt="Product preview"
-                      className="w-full h-40 object-cover rounded-lg border border-border-muted"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setProductImage(null);
-                        (window as any).selectedImageFile = null;
-                        setImageUploadError(null);
-                      }}
-                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 w-8 h-8 flex items-center justify-center text-lg"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
+                {/* Tabs */}
+                <div className="flex flex-wrap gap-2 border-b border-border-muted">
+                  <button
+                    type="button"
+                    onClick={() => setMediaInputMethod('upload')}
+                    className={`pb-2 px-3 text-sm font-semibold flex items-center gap-1.5 border-b-2 transition-colors ${
+                      mediaInputMethod === 'upload' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-text-primary'
+                    }`}
+                  >
+                    📁 Upload Image
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMediaInputMethod('imageUrl')}
+                    className={`pb-2 px-3 text-sm font-semibold flex items-center gap-1.5 border-b-2 transition-colors ${
+                      mediaInputMethod === 'imageUrl' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-text-primary'
+                    }`}
+                  >
+                    🔗 Image URL
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMediaInputMethod('videoUrl')}
+                    className={`pb-2 px-3 text-sm font-semibold flex items-center gap-1.5 border-b-2 transition-colors ${
+                      mediaInputMethod === 'videoUrl' ? 'border-primary text-primary' : 'border-transparent text-text-muted hover:text-text-primary'
+                    }`}
+                  >
+                    🎥 Video URL
+                  </button>
+                </div>
 
-                {/* File Input */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  disabled={isUploadingImage || createProductMutation.isPending}
-                  className="w-full px-3 py-2 border border-border-muted rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50 disabled:cursor-not-allowed bg-white"
-                />
-                
-                <p className="text-xs text-text-muted mt-1">
-                  JPG, PNG or WebP. Max 5MB.
-                </p>
+                {/* Content */}
+                <div className="pt-3">
+                  {mediaInputMethod === 'upload' && (
+                    <div className="space-y-3">
+                      {productImage && !productImage.startsWith('http') && (
+                        <div className="relative">
+                          <img src={productImage} alt="Preview" className="w-full h-48 object-cover rounded-xl border border-border-muted" />
+                          <button type="button" onClick={() => { setProductImage(null); (window as any).selectedImageFile = null; setImageUploadError(null); }} className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg shadow-sm">×</button>
+                        </div>
+                      )}
+                      <input type="file" accept="image/*" onChange={handleImageSelect} disabled={isUploadingImage || createProductMutation.isPending} className="w-full px-3 py-2.5 border border-border-muted rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                      <p className="text-xs text-text-muted font-medium">JPG, PNG or WebP. Max 5MB. Will be uploaded to Cloudinary.</p>
+                      {imageUploadError && <p className="text-red-500 text-sm">{imageUploadError}</p>}
+                      {isUploadingImage && <div className="flex items-center gap-2 text-primary text-sm font-bold"><Loader2 className="w-4 h-4 animate-spin" /> Uploading image...</div>}
+                    </div>
+                  )}
 
-                {imageUploadError && (
-                  <p className="text-red-500 text-sm mt-2">{imageUploadError}</p>
-                )}
+                  {mediaInputMethod === 'imageUrl' && (
+                    <div className="space-y-3">
+                      {productImage && productImage.startsWith('http') && (
+                        <div className="relative">
+                          <img src={productImage} alt="Preview" className="w-full h-48 object-cover rounded-xl border border-border-muted" />
+                          <button type="button" onClick={() => { setImageUrl(''); setProductImage(null); setImageUrlError(null); }} className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg shadow-sm">×</button>
+                        </div>
+                      )}
+                      <input type="url" value={imageUrl} onChange={(e) => handleImageUrlChange(e.target.value)} placeholder="https://example.com/product-image.jpg" className="w-full px-4 py-3 border border-border-muted rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                      <p className="text-xs text-text-muted font-medium">Paste URL from Cloudinary, Imgur, Unsplash, or other image hosting service</p>
+                      {imageUrlError && <p className="text-red-500 text-sm">{imageUrlError}</p>}
+                      {imageUrl && !imageUrlError && productImage && <p className="text-green-600 text-sm font-bold flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> ✅ Image URL loaded successfully</p>}
+                    </div>
+                  )}
 
-                {isUploadingImage && (
-                  <div className="flex items-center gap-2 text-primary text-sm mt-2 font-medium">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Uploading image...
-                  </div>
-                )}
+                  {mediaInputMethod === 'videoUrl' && (
+                    <div className="space-y-3">
+                      {videoUrl && !videoUrlError && getVideoEmbedUrl(videoUrl) && (
+                        <div className="relative aspect-video rounded-xl overflow-hidden border border-border-muted shadow-sm bg-black">
+                          <iframe src={getVideoEmbedUrl(videoUrl)!} width="100%" height="100%" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                          <button type="button" onClick={() => { setVideoUrl(''); setVideoUrlError(null); }} className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg z-10 shadow-sm">×</button>
+                        </div>
+                      )}
+                      <input type="url" value={videoUrl} onChange={(e) => handleVideoUrlChange(e.target.value)} placeholder="https://www.youtube.com/watch?v=..." className="w-full px-4 py-3 border border-border-muted rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                      <p className="text-xs text-text-muted font-medium">Supported: YouTube, Vimeo, Dailymotion. Paste the full video URL.</p>
+                      {videoUrlError && <p className="text-red-500 text-sm">{videoUrlError}</p>}
+                      {videoUrl && !videoUrlError && <p className="text-green-600 text-sm font-bold flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4" /> ✅ Video loaded successfully</p>}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>

@@ -10,6 +10,8 @@ import {
   generateInvoice,
   createProduct,
   getSellerOrders,
+  getSellerProducts,
+  deleteSellerProduct,
 } from './sellerController';
 
 const router = Router();
@@ -34,5 +36,8 @@ router.get('/orders/:id/invoice', requireAuth(), generateInvoice);
 // NEW ROUTES
 router.post('/seller/product', roleGuard([...SELLER_ROLES]), createProduct);
 router.get('/seller/orders', roleGuard([...SELLER_ROLES]), getSellerOrders);
+
+router.get('/seller/products', roleGuard([...SELLER_ROLES]), getSellerProducts);
+router.delete('/seller/product/:id', roleGuard([...SELLER_ROLES]), deleteSellerProduct);
 
 export default router;
