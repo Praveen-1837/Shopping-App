@@ -217,8 +217,10 @@ export const getMyOrders = async (req: Request, res: Response, next: NextFunctio
 
     const dbUser = await getDbUser(auth.userId);
 
-    const page = Math.max(1, parseInt((req.query.page as string) || '1', 10));
-    const limit = Math.max(1, Math.min(50, parseInt((req.query.limit as string) || '10', 10)));
+    const parsedPage = parseInt((req.query.page as string) || '1', 10);
+    const parsedLimit = parseInt((req.query.limit as string) || '10', 10);
+    const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+    const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(50, parsedLimit) : 10;
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({

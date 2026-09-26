@@ -2,7 +2,22 @@ import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
 import { prisma } from '../../config/db';
 import { processPayment } from './payment.service';
-import { OrderStatus, PaymentStatus } from '@prisma/client';
+import { Role, OrderStatus, PaymentStatus } from '@prisma/client';
+
+async function getDbUser(clerkId: string) {
+  let user = await prisma.user.findUnique({ where: { clerkId } });
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        clerkId,
+        name: 'Customer User',
+        email: `${clerkId}@example.com`,
+        role: Role.CUSTOMER,
+      },
+    });
+  }
+  return user;
+}
 
 export const processOrderPayment = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,6 +37,8 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
       });
     }
 
+    const dbUser = (req as any).dbUser || (await getDbUser(auth.userId));
+
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
@@ -38,6 +55,31 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
       return res.status(404).json({
         success: false,
         error: { code: 'NOT_FOUND', message: `Order '${orderId}' not found` },
+      });
+    }
+
+    // Ownership check: Caller must be the buyer who created the order or an ADMIN
+    if (order.userId !== dbUser.id && dbUser.role !== Role.ADMIN) {
+      return res.status(403).json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'You are not authorized to pay for this order' },
+      });
+    }
+
+    // Idempotency check: If order has already been paid and confirmed, return existing order (prevent double charge and double stock decrement)
+    if (order.paymentStatus === PaymentStatus.SUCCESS || order.status === OrderStatus.CONFIRMED) {
+      return res.status(200).json({
+        success: true,
+        message: 'Order has already been paid and confirmed (duplicate prevented)',
+        data: order,
+      });
+    }
+
+    // Cancelled check: Do not allow payment for cancelled orders
+    if (order.status === OrderStatus.CANCELLED) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'ORDER_CANCELLED', message: 'Cannot process payment for a cancelled order.' },
       });
     }
 
@@ -71,26 +113,22 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
     // Payment Succeeded — Execute Order Updates + Stock Decrements in a Transaction
     try {
       const updatedOrder = await prisma.$transaction(async (tx) => {
-        // 1. Batch fetch products for stock bounds checking
+        // 1. Atomic stock bounds check and decrement
         const physicalItems = order.items.filter(item => item.productId && item.itemType !== 'COURSE');
-        const products = await Promise.all(
-          physicalItems.map(item => tx.product.findUnique({ where: { id: item.productId! } }))
-        );
-        
-        physicalItems.forEach((item, index) => {
-          const product = products[index];
-          if (!product || product.stock < item.quantity) {
+        for (const item of physicalItems) {
+          const updateRes = await tx.product.updateMany({
+            where: {
+              id: item.productId!,
+              stock: { gte: item.quantity },
+            },
+            data: {
+              stock: { decrement: item.quantity },
+            },
+          });
+          if (updateRes.count === 0) {
             throw new Error(`Insufficient stock for product ${item.productId}`);
           }
-        });
-
-        // 1.5 Batch update stock
-        await Promise.all(
-          physicalItems.map(item => tx.product.update({
-            where: { id: item.productId! },
-            data: { stock: { decrement: item.quantity } }
-          }))
-        );
+        }
 
         // 2. Update Order Status
         const orderUpdated = await tx.order.update({
@@ -152,23 +190,34 @@ export const processOrderPayment = async (req: Request, res: Response, next: Nex
       console.error("[processOrderPayment] Transaction failed:", e.message);
 
       // Handle race condition where stock is unavailable gracefully by failing the order
-      const failedOrder = await prisma.order.update({
-        where: { id: order.id },
-        data: {
-          paymentStatus: PaymentStatus.FAILED,
-          status: OrderStatus.CANCELLED,
-          cancellationReason: e.message,
-        },
-      });
+      try {
+        const failedOrder = await prisma.order.update({
+          where: { id: order.id },
+          data: {
+            paymentStatus: PaymentStatus.FAILED,
+            status: OrderStatus.CANCELLED,
+            cancellationReason: e.message,
+          },
+        });
 
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'STOCK_UNAVAILABLE',
-          message: e.message,
-        },
-        data: failedOrder,
-      });
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'STOCK_UNAVAILABLE',
+            message: e.message,
+          },
+          data: failedOrder,
+        });
+      } catch (dbErr: any) {
+        console.error("[processOrderPayment] Secondary update failed:", dbErr.message);
+        return res.status(500).json({
+          success: false,
+          error: {
+            code: 'INTERNAL_SERVER_ERROR',
+            message: e.message || 'Payment transaction failed',
+          },
+        });
+      }
     }
   } catch (error) {
     next(error);

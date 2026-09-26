@@ -26,3 +26,12 @@ const gracefulShutdown = async (signal: string) => {
 
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+
+// Prevent abrupt unhandled crashes and ensure diagnostic observability
+process.on('unhandledRejection', (reason: any) => {
+  console.error('💥 [Server Process] Unhandled Promise Rejection:', reason);
+});
+
+process.on('uncaughtException', (error: Error) => {
+  console.error('💥 [Server Process] Uncaught Exception:', error);
+});

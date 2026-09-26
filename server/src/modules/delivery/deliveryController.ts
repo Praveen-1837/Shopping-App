@@ -25,8 +25,10 @@ export const getDeliveryOrders = async (req: Request, res: Response, next: NextF
     // For this demo, we use a shared pool of orders. Realistically, these would be assigned to specific riders.
     
     // Pagination parameters
-    const page = parseInt((req.query.page as string) || '1');
-    const limit = parseInt((req.query.limit as string) || '20');
+    const parsedPage = parseInt((req.query.page as string) || '1', 10);
+    const parsedLimit = parseInt((req.query.limit as string) || '20', 10);
+    const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+    const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(50, parsedLimit) : 20;
     const skip = (page - 1) * limit;
     const historyMode = req.query.history === 'true';
 
