@@ -72,257 +72,257 @@ function App() {
           <main>
             <ErrorBoundary>
               <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse flex flex-col items-center"><div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><div className="mt-4 text-text-muted font-bold text-base">Loading...</div></div></div>}>
-              <PartnerLockGuard>
-            <Routes>
-              {/* Public Catalog & Information Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/shop/category/:categoryName" element={<Shop />} />
-              <Route path="/category/:categoryName" element={<Shop />} />
-              <Route path="/product/:id" element={<ProductDetail />} />
-              <Route path="/producer/:id" element={<ProducerDetail />} />
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/course/:id" element={<CourseDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/login/*" element={<Login />} />
-              <Route path="/signup/*" element={<SignUpPage />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/returns" element={<Returns />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
+                <PartnerLockGuard>
+                  <Routes>
+                    {/* Public Catalog & Information Routes */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop" element={<Shop />} />
+                    <Route path="/shop/category/:categoryName" element={<Shop />} />
+                    <Route path="/category/:categoryName" element={<Shop />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/producer/:id" element={<ProducerDetail />} />
+                    <Route path="/courses" element={<Courses />} />
+                    <Route path="/course/:id" element={<CourseDetail />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/login/*" element={<Login />} />
+                    <Route path="/signup/*" element={<SignUpPage />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/careers" element={<Careers />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/returns" element={<Returns />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/terms" element={<Terms />} />
 
-              {/* Protected Customer Routes */}
-              <Route
-                path="/my-account"
-                element={
-                  <ProtectedRoute>
-                    <MyAccount />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/apply"
-                element={
-                  <ProtectedRoute>
-                    <ApplyRole />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/checkout"
-                element={
-                  <ProtectedRoute>
-                    <Checkout />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/checkout/payment"
-                element={
-                  <ProtectedRoute>
-                    <Payment />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/order/:id/confirmation"
-                element={
-                  <ProtectedRoute>
-                    <OrderConfirmation />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/order-confirmation/:id"
-                element={
-                  <ProtectedRoute>
-                    <OrderConfirmation />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-world/orders"
-                element={
-                  <ProtectedRoute>
-                    <MyOrders />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-world/orders/:id"
-                element={
-                  <ProtectedRoute>
-                    <OrderDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/order/:id"
-                element={
-                  <ProtectedRoute>
-                    <OrderDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-world/wishlist"
-                element={
-                  <ProtectedRoute>
-                    <Wishlist />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-world/courses"
-                element={
-                  <ProtectedRoute>
-                    <MyLearning />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-world/courses/:id/learn"
-                element={
-                  <ProtectedRoute>
-                    <CoursePlayer />
-                  </ProtectedRoute>
-                }
-              />
+                    {/* Protected Customer Routes */}
+                    <Route
+                      path="/my-account"
+                      element={
+                        <ProtectedRoute>
+                          <MyAccount />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/apply"
+                      element={
+                        <ProtectedRoute>
+                          <ApplyRole />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/checkout"
+                      element={
+                        <ProtectedRoute>
+                          <Checkout />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/checkout/payment"
+                      element={
+                        <ProtectedRoute>
+                          <Payment />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/order/:id/confirmation"
+                      element={
+                        <ProtectedRoute>
+                          <OrderConfirmation />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/order-confirmation/:id"
+                      element={
+                        <ProtectedRoute>
+                          <OrderConfirmation />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/my-world/orders"
+                      element={
+                        <ProtectedRoute>
+                          <MyOrders />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/my-world/orders/:id"
+                      element={
+                        <ProtectedRoute>
+                          <OrderDetail />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/order/:id"
+                      element={
+                        <ProtectedRoute>
+                          <OrderDetail />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/my-world/wishlist"
+                      element={
+                        <ProtectedRoute>
+                          <Wishlist />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/my-world/courses"
+                      element={
+                        <ProtectedRoute>
+                          <MyLearning />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/my-world/courses/:id/learn"
+                      element={
+                        <ProtectedRoute>
+                          <CoursePlayer />
+                        </ProtectedRoute>
+                      }
+                    />
 
-              {/* Educator Centre & Management Routes */}
-              <Route
-                path="/educator-centre"
-                element={
-                  <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
-                    <EducatorCentre />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/educator/centre"
-                element={
-                  <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
-                    <EducatorCentre />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/educator/courses/new"
-                element={
-                  <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
-                    <AddEditCourse />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/educator/courses/edit/:id"
-                element={
-                  <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
-                    <AddEditCourse />
-                  </ProtectedRoute>
-                }
-              />
+                    {/* Educator Centre & Management Routes */}
+                    <Route
+                      path="/educator-centre"
+                      element={
+                        <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
+                          <EducatorCentre />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/educator/centre"
+                      element={
+                        <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
+                          <EducatorCentre />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/educator/courses/new"
+                      element={
+                        <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
+                          <AddEditCourse />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/educator/courses/edit/:id"
+                      element={
+                        <ProtectedRoute allowedRoles={EDUCATOR_ROLES}>
+                          <AddEditCourse />
+                        </ProtectedRoute>
+                      }
+                    />
 
-              {/* Protected Seller / Farmer / Artisan Dashboards & Product Management Routes */}
-              <Route
-                path="/seller-centre"
-                element={
-                  <ProtectedRoute allowedRoles={SELLER_ROLES}>
-                    <SellerCentre />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/farmer-centre"
-                element={
-                  <ProtectedRoute allowedRoles={FARMER_ROLES}>
-                    <FarmerCentre />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/seller/products"
-                element={
-                  <ProtectedRoute allowedRoles={SELLER_ROLES}>
-                    <MyProducts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/seller/products/new"
-                element={
-                  <ProtectedRoute allowedRoles={SELLER_ROLES}>
-                    <AddEditProduct />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/seller/products/edit/:id"
-                element={
-                  <ProtectedRoute allowedRoles={SELLER_ROLES}>
-                    <AddEditProduct />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/seller-centre/orders"
-                element={
-                  <ProtectedRoute allowedRoles={SELLER_ROLES}>
-                    <SellerFulfillmentQueue />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Delivery Partner Routes */}
-              <Route
-                path="/delivery-centre"
-                element={
-                  <ProtectedRoute allowedRoles={DELIVERY_ROLES}>
-                    <DeliveryCentre />
-                  </ProtectedRoute>
-                }
-              />
+                    {/* Protected Seller / Farmer / Artisan Dashboards & Product Management Routes */}
+                    <Route
+                      path="/seller-centre"
+                      element={
+                        <ProtectedRoute allowedRoles={SELLER_ROLES}>
+                          <SellerCentre />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/farmer-centre"
+                      element={
+                        <ProtectedRoute allowedRoles={FARMER_ROLES}>
+                          <FarmerCentre />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/seller/products"
+                      element={
+                        <ProtectedRoute allowedRoles={SELLER_ROLES}>
+                          <MyProducts />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/seller/products/new"
+                      element={
+                        <ProtectedRoute allowedRoles={SELLER_ROLES}>
+                          <AddEditProduct />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/seller/products/edit/:id"
+                      element={
+                        <ProtectedRoute allowedRoles={SELLER_ROLES}>
+                          <AddEditProduct />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/seller-centre/orders"
+                      element={
+                        <ProtectedRoute allowedRoles={SELLER_ROLES}>
+                          <SellerFulfillmentQueue />
+                        </ProtectedRoute>
+                      }
+                    />
 
-              {/* Admin Dashboard & Management Routes */}
-              <Route path="/admin" element={<ProtectedRoute allowedRoles={ADMIN_ROLES}><AdminLayout /></ProtectedRoute>}>
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="onboarding" element={<AdminOnboarding />} />
-                <Route path="categories" element={<AdminCategories />} />
-                <Route path="banners" element={<AdminBanners />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="stores" element={<AdminStores />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="orders" element={<AdminOrders />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="cancellation-requests" element={<AdminCancellationRequests />} />
-              </Route>
-              <Route
-                path="*"
-                element={
-                  <div className="max-w-xl mx-auto py-20 px-4 text-center space-y-4">
-                    <div className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-3">
-                      <h2 className="text-2xl font-bold font-heading text-primary">Page Not Found</h2>
-                      <p className="text-sm text-text-secondary">
-                        The requested page path does not exist or has been moved.
-                      </p>
-                      <a
-                        href="/"
-                        className="inline-block px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-soft"
-                      >
-                        Return to Storefront
-                      </a>
-                    </div>
-                  </div>
-                }
-              />
-            </Routes>
-            </PartnerLockGuard>
-            </Suspense>
-          </ErrorBoundary>
-        </main>
+                    {/* Delivery Partner Routes */}
+                    <Route
+                      path="/delivery-centre"
+                      element={
+                        <ProtectedRoute allowedRoles={DELIVERY_ROLES}>
+                          <DeliveryCentre />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    {/* Admin Dashboard & Management Routes */}
+                    <Route path="/admin" element={<ProtectedRoute allowedRoles={ADMIN_ROLES}><AdminLayout /></ProtectedRoute>}>
+                      <Route path="dashboard" element={<AdminDashboard />} />
+                      <Route path="onboarding" element={<AdminOnboarding />} />
+                      <Route path="categories" element={<AdminCategories />} />
+                      <Route path="banners" element={<AdminBanners />} />
+                      <Route path="users" element={<AdminUsers />} />
+                      <Route path="stores" element={<AdminStores />} />
+                      <Route path="products" element={<AdminProducts />} />
+                      <Route path="orders" element={<AdminOrders />} />
+                      <Route path="settings" element={<AdminSettings />} />
+                      <Route path="cancellation-requests" element={<AdminCancellationRequests />} />
+                    </Route>
+                    <Route
+                      path="*"
+                      element={
+                        <div className="max-w-xl mx-auto py-20 px-4 text-center space-y-4">
+                          <div className="bg-background-card rounded-2xl p-8 border border-text-muted/15 shadow-soft space-y-3">
+                            <h2 className="text-2xl font-bold font-heading text-primary">Page Not Found</h2>
+                            <p className="text-sm text-text-secondary">
+                              The requested page path does not exist or has been moved.
+                            </p>
+                            <a
+                              href="/"
+                              className="inline-block px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl shadow-soft"
+                            >
+                              Return to Storefront
+                            </a>
+                          </div>
+                        </div>
+                      }
+                    />
+                  </Routes>
+                </PartnerLockGuard>
+              </Suspense>
+            </ErrorBoundary>
+          </main>
         </div>
 
         {/* Global Footer */}

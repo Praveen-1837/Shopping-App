@@ -24,6 +24,7 @@
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^6.19.3",
     "@types/multer": "^2.2.0",
+    "@vercel/nft": "^1.11.0",
     "cloudinary": "^2.10.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

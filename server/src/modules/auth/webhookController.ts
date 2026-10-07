@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import type { Webhook } from 'svix';
 
-// Workaround for importing ESM modules in CommonJS environment
-const dynamicImport = new Function('specifier', 'return import(specifier)');
 import { prisma } from '../../config/db';
 import { Role } from '@prisma/client';
+
+// Trick @vercel/nft into bundling the svix package
+if (false) { require.resolve('svix'); }
+
+// Workaround for importing ESM modules in CommonJS environment
+const dynamicImport = new Function('specifier', 'return import(specifier)');
 
 export const handleClerkWebhook = async (req: Request, res: Response, next: NextFunction) => {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;

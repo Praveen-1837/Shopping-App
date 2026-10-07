@@ -99,7 +99,7 @@ export default function ChatWidget() {
         return;
       }
 
-      const rawApiEnv = import.meta.env.VITE_API_URL || '/api/v1';
+      const rawApiEnv = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
       const cleanBaseUrl = rawApiEnv.endsWith('/api/v1')
         ? rawApiEnv
         : `${rawApiEnv.replace(/\/$/, '')}/api/v1`;

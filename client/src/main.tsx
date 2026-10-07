@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_cHJvZm91bmQtbGFicmFkb3ItNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk';
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder';
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
   console.warn('⚠️ Missing VITE_CLERK_PUBLISHABLE_KEY in client/.env');
