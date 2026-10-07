@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { Webhook } from 'svix';
+import type { Webhook } from 'svix';
+
+// Workaround for importing ESM modules in CommonJS environment
+const dynamicImport = new Function('specifier', 'return import(specifier)');
 import { prisma } from '../../config/db';
 import { Role } from '@prisma/client';
 
@@ -32,7 +35,9 @@ export const handleClerkWebhook = async (req: Request, res: Response, next: Next
   let evt: any;
 
   try {
-    const wh = new Webhook(WEBHOOK_SECRET || '');
+    const svix = await dynamicImport('svix');
+    const WebhookConstructor = svix.Webhook as typeof Webhook;
+    const wh = new WebhookConstructor(WEBHOOK_SECRET || '');
     evt = wh.verify(body, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
