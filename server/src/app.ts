@@ -37,7 +37,14 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')
 app.use(
 
   cors({
-    origin: ['https://shopping-ce847ycp7-voidcore2.vercel.app', 'http://localhost:5173', process.env.CLIENT_URL || ''],
+    origin: (origin, callback) => {
+      const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL;
+      if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || origin === frontendUrl) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
