@@ -11,7 +11,7 @@ A world-class platform combining commerce, learning, AI-powered discovery, produ
 - **Backend:** Express.js (Node.js REST API with Prisma ORM)
 - **Frontend:** React (Vite, TypeScript, Tailwind CSS, TanStack Query, Zustand)
 - **Auth:** Clerk (`@clerk/clerk-react` + `@clerk/express`)
-- **AI Engine:** Anthropic Claude API + Supabase `pgvector`
+- **AI Engine:** Google Gemini API + Supabase `pgvector`
 
 ---
 
