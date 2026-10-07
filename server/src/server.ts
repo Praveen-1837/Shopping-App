@@ -2,12 +2,15 @@ import app from './app';
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(Number(PORT), '0.0.0.0', () => {
-  console.log(`=================================`);
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📡 Health endpoint: http://localhost:${PORT}/api/v1/health`);
-  console.log(`=================================`);
-});
+// Only listen if not running in a Vercel Serverless environment
+if (!process.env.VERCEL) {
+  app.listen(Number(PORT), '0.0.0.0', () => {
+    console.log(`=================================`);
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📡 Health endpoint: http://localhost:${PORT}/api/v1/health`);
+    console.log(`=================================`);
+  });
+}
 
 // Graceful shutdown handling to prevent dangling database connections
 import { prisma } from './config/db';
@@ -35,3 +38,5 @@ process.on('unhandledRejection', (reason: any) => {
 process.on('uncaughtException', (error: Error) => {
   console.error('💥 [Server Process] Uncaught Exception:', error);
 });
+
+export default app;
