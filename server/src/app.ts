@@ -37,13 +37,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')
 app.use(
 
   cors({
-    origin: (origin, callback) => {
-      if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || origin === process.env.CLIENT_URL) {
-        callback(null, true);
-      } else {
-        callback(null, true);
-      }
-    },
+    origin: ['https://shopping-ce847ycp7-voidcore2.vercel.app', 'http://localhost:5173', process.env.CLIENT_URL || ''],
     credentials: true,
   })
 );
