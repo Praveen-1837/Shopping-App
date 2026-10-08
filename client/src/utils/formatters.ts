@@ -8,6 +8,15 @@ export function formatRoleLabel(role?: string | null): string {
 
 export function optimizeCloudinaryUrl(url: string | undefined | null, width: number = 600, height?: number): string {
   if (!url) return '';
+  
+  // Handle local uploads or hardcoded localhost URLs
+  if (url.startsWith('/uploads/') || url.includes('localhost:5000/uploads/')) {
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://shopping-app-mocha-six.vercel.app/api/v1';
+    const backendUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
+    const uploadPath = url.includes('/uploads/') ? url.substring(url.indexOf('/uploads/')) : url;
+    return `${backendUrl}${uploadPath}`;
+  }
+
   if (!url.includes('res.cloudinary.com')) return url;
   
   // E.g. https://res.cloudinary.com/demo/image/upload/v1612345/sample.jpg

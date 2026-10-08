@@ -62,9 +62,7 @@ export const handleImageUpload = async (req: Request, res: Response, next: NextF
 
       fs.writeFileSync(filePath, req.file.buffer);
 
-      const protocol = req.protocol || 'http';
-      const host = req.get('host') || 'localhost:5000';
-      const fileUrl = `${protocol}://${host}/uploads/${filename}`;
+      const fileUrl = `/uploads/${filename}`;
 
       return res.status(200).json({
         success: true,
