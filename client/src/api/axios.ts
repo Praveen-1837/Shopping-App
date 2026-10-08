@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Automatically use relative path so requests route through the host (tunnel) origin, 
 // which Vite will then proxy to localhost:5000 internally.
-const baseURL = import.meta.env.VITE_API_URL || '/api/v1';
+const baseURL = import.meta.env.VITE_API_URL || 'https://shopping-app-mocha-six.vercel.app/api/v1';
 
 export const apiClient = axios.create({
   baseURL,
