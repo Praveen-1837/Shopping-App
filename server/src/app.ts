@@ -38,8 +38,12 @@ app.use(
 
   cors({
     origin: (origin, callback) => {
-      const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL;
-      if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || origin === frontendUrl) {
+      const frontendUrls = (process.env.FRONTEND_URL || process.env.CLIENT_URL || '')
+        .split(',')
+        .map(url => url.trim())
+        .filter(Boolean);
+      
+      if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || frontendUrls.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
