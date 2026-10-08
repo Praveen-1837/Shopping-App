@@ -4,6 +4,8 @@ A world-class platform combining commerce, learning, AI-powered discovery, produ
 
 **Tagline:** SHOP + LEARN + DISCOVER + CONNECT + IMPACT.
 
+🌍 **Live Demo:** [https://shopping-app-farx.vercel.app/](https://shopping-app-farx.vercel.app/)
+
 ---
 
 ## 🛠️ Stack Overview
