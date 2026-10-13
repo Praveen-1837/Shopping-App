@@ -16,6 +16,12 @@ const router = Router();
 // Order transition rules (Publicly available to build UI, avoids /orders/:id wildcard collision)
 router.get('/order-transitions', getOrderTransitions);
 
+import { requireAuth as appRequireAuth } from '../../middleware/requireAuth';
+import { generateInvoice } from '../seller/sellerController';
+
+// Order PDF Invoice Download
+router.get('/orders/:id/invoice', appRequireAuth, generateInvoice);
+
 // Customer Order History & Detail
 router.get('/my-world/orders', requireAuth(), roleGuard([Role.CUSTOMER]), getMyOrders);
 router.get('/orders/:id', requireAuth(), roleGuard([Role.CUSTOMER]), getOrderDetail);

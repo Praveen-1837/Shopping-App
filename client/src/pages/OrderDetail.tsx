@@ -13,24 +13,36 @@ export default function OrderDetail() {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownloadInvoice = async (orderId: string) => {
-    const pdfWindow = window.open('', '_blank');
+    setIsDownloading(true);
     try {
-      setIsDownloading(true);
       const token = await getToken();
       const response = await apiClient.get(`/orders/${orderId}/invoice`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob',
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      if (pdfWindow) {
-        pdfWindow.location.href = url;
-      } else {
-        window.open(url, '_blank');
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', `Invoice-${orderId.slice(0, 8).toUpperCase()}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (err: any) {
+      console.error('Invoice download error:', err);
+      let errorMsg = 'Failed to download invoice PDF. Please try again.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          if (parsed.error?.message) errorMsg = parsed.error.message;
+        } catch {}
+      } else if (err.response?.data?.error?.message) {
+        errorMsg = err.response.data.error.message;
       }
-    } catch (_err) {
-      if (pdfWindow) pdfWindow.close();
-      alert('Failed to preview invoice PDF.');
+      alert(errorMsg);
     } finally {
       setIsDownloading(false);
     }

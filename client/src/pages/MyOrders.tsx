@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import apiClient from '../api/axios';
 import { Order } from '../types/cart';
-import { Package, ArrowRight, RefreshCw, AlertCircle, ShoppingBag, ChevronLeft, ChevronRight, XCircle } from 'lucide-react';
+import { Package, ArrowRight, RefreshCw, AlertCircle, ShoppingBag, ChevronLeft, ChevronRight, XCircle, Download } from 'lucide-react';
 
 interface MyOrdersResponse {
   success: boolean;
@@ -20,6 +20,42 @@ interface MyOrdersResponse {
 export default function MyOrders() {
   const { getToken, isSignedIn } = useAuth();
   const [page, setPage] = useState<number>(1);
+  const [downloadingInvId, setDownloadingInvId] = useState<string | null>(null);
+
+  const handleDownloadInvoice = async (orderId: string) => {
+    setDownloadingInvId(orderId);
+    try {
+      const token = await getToken();
+      const response = await apiClient.get(`/orders/${orderId}/invoice`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob',
+      });
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', `Invoice-${orderId.slice(0, 8).toUpperCase()}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (err: any) {
+      console.error('Invoice download error:', err);
+      let errorMsg = 'Failed to download invoice PDF. Please try again.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          if (parsed.error?.message) errorMsg = parsed.error.message;
+        } catch {}
+      } else if (err.response?.data?.error?.message) {
+        errorMsg = err.response.data.error.message;
+      }
+      alert(errorMsg);
+    } finally {
+      setDownloadingInvId(null);
+    }
+  };
 
   const { data, isLoading, isError, error } = useQuery<MyOrdersResponse>({
     queryKey: ['my-orders', page],
@@ -209,13 +245,28 @@ export default function MyOrders() {
                     })}
                   </div>
 
-                  <Link
-                    to={`/order/${order.id}`}
-                    className="flex items-center space-x-1 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft shrink-0 ml-4"
-                  >
-                    <span>Track Order</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  <div className="flex items-center space-x-2 shrink-0 ml-4">
+                    <button
+                      onClick={() => handleDownloadInvoice(order.id)}
+                      disabled={downloadingInvId === order.id}
+                      className="flex items-center space-x-1.5 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-semibold rounded-xl transition-colors border border-primary/20 cursor-pointer disabled:opacity-50"
+                      title="Download Tax Invoice PDF"
+                    >
+                      {downloadingInvId === order.id ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Download className="w-3.5 h-3.5" />
+                      )}
+                      <span>{downloadingInvId === order.id ? 'Generating...' : 'Invoice'}</span>
+                    </button>
+                    <Link
+                      to={`/order/${order.id}`}
+                      className="flex items-center space-x-1 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-hover transition-colors shadow-soft"
+                    >
+                      <span>Track Order</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             );

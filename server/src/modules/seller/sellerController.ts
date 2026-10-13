@@ -324,7 +324,7 @@ export const generateInvoice = async (req: Request, res: Response, next: NextFun
       return;
     }
 
-    const dbUser = await prisma.user.findUnique({ where: { clerkId: auth.userId } });
+    const dbUser = (req as any).dbUser || (await prisma.user.findUnique({ where: { clerkId: auth.userId } }));
     if (!dbUser) {
       res.status(401).json({ success: false, error: { code: 'UNAUTHORIZED', message: 'User not found' } });
       return;
@@ -361,8 +361,12 @@ export const generateInvoice = async (req: Request, res: Response, next: NextFun
 
     const doc = new PDFDocument({ margin: 40, size: 'A4' });
 
+    doc.on('error', (err) => {
+      console.error('[generateInvoice] PDF generation stream error:', err);
+    });
+
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename=Invoice-${order.id.slice(0, 8)}.pdf`);
+    res.setHeader('Content-Disposition', `attachment; filename=Invoice-${order.id.slice(0, 8).toUpperCase()}.pdf`);
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -414,10 +418,14 @@ export const generateInvoice = async (req: Request, res: Response, next: NextFun
         addressLines = [order.deliveryAddress];
       } else if (typeof order.deliveryAddress === 'object') {
         const addrObj = order.deliveryAddress as any;
-        if (addrObj.line1) addressLines.push(addrObj.line1);
-        if (addrObj.line2) addressLines.push(addrObj.line2);
-        const cityStatePincode = [addrObj.city, addrObj.state, addrObj.pincode].filter(Boolean).join(', ');
+        if (addrObj.recipientName && addrObj.recipientName !== order.user?.name) {
+          addressLines.push(`Attn: ${addrObj.recipientName}`);
+        }
+        const street = addrObj.streetAddress || addrObj.street || [addrObj.line1, addrObj.line2].filter(Boolean).join(', ');
+        if (street) addressLines.push(street);
+        const cityStatePincode = [addrObj.city, addrObj.state, addrObj.postalCode || addrObj.pincode].filter(Boolean).join(', ');
         if (cityStatePincode) addressLines.push(cityStatePincode);
+        if (addrObj.phone && !order.user?.phone) addressLines.push(`Phone: ${addrObj.phone}`);
       }
     }
 

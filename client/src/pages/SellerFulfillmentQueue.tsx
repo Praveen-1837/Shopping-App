@@ -157,7 +157,6 @@ export default function SellerFulfillmentQueue() {
 
   // Download / Preview PDF Document Helper
   const downloadDocument = async (orderId: string, docType: 'packing-slip' | 'invoice') => {
-    const pdfWindow = window.open('', '_blank');
     try {
       const token = await getToken();
       const response = await apiClient.get(`/orders/${orderId}/${docType}`, {
@@ -165,15 +164,31 @@ export default function SellerFulfillmentQueue() {
         responseType: 'blob',
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      if (pdfWindow) {
-        pdfWindow.location.href = url;
-      } else {
-        window.open(url, '_blank');
-      }
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      const fileName = docType === 'invoice' 
+        ? `Invoice-${orderId.slice(0, 8).toUpperCase()}.pdf` 
+        : `PackingSlip-${orderId.slice(0, 8).toUpperCase()}.pdf`;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 1000);
     } catch (err: any) {
-      if (pdfWindow) pdfWindow.close();
-      alert(`Failed to preview ${docType}: ${err.message || 'Error occurred'}`);
+      console.error(`Download error for ${docType}:`, err);
+      let errorMsg = `Failed to download ${docType}`;
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const parsed = JSON.parse(text);
+          if (parsed.error?.message) errorMsg = parsed.error.message;
+        } catch {}
+      } else if (err.response?.data?.error?.message) {
+        errorMsg = err.response.data.error.message;
+      }
+      alert(errorMsg);
     }
   };
 

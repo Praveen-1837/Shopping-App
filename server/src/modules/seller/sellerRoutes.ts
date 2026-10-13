@@ -27,11 +27,11 @@ router.get('/seller/alerts', roleGuard([...SELLER_ROLES]), getSellerAlerts);
 router.get('/seller/profile', roleGuard([...SELLER_ROLES]), getSellerProfile);
 router.put('/seller/profile', roleGuard([...SELLER_ROLES]), updateSellerProfile);
 
-import { requireAuth } from '@clerk/express';
+import { requireAuth } from '../../middleware/requireAuth';
 
 // Order Packing Slip & Invoice PDF Downloads
 router.get('/orders/:id/packing-slip', roleGuard([...SELLER_ROLES]), generatePackingSlip);
-router.get('/orders/:id/invoice', requireAuth(), generateInvoice);
+router.get('/orders/:id/invoice', requireAuth, generateInvoice);
 
 // NEW ROUTES
 router.post('/seller/product', roleGuard([...SELLER_ROLES]), createProduct);
