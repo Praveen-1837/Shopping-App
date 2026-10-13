@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/**/*.{ts,js}": {
+      "includeFiles": "node_modules/pdfkit/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "functions": {
+    "server/api/**/*.{ts,js}": {
+      "includeFiles": "server/node_modules/pdfkit/**"
+    },
+    "api/**/*.{ts,js}": {
+      "includeFiles": "node_modules/pdfkit/**"
+    }
+  }
+}

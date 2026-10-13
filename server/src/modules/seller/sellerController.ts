@@ -3,6 +3,19 @@ import { Request, Response, NextFunction } from 'express';
 import { getAuth } from '@clerk/express';
 import { prisma } from '../../config/db';
 import PDFDocument from 'pdfkit';
+// Ensure PDFKit standard fonts are bundled for serverless functions (Vercel)
+try {
+  require('pdfkit/standard-fonts/Helvetica');
+  require('pdfkit/standard-fonts/HelveticaBold');
+  require('pdfkit/standard-fonts/HelveticaOblique');
+  require('pdfkit/standard-fonts/HelveticaBoldOblique');
+  require('pdfkit/standard-fonts/TimesRoman');
+  require('pdfkit/standard-fonts/TimesBold');
+  require('pdfkit/standard-fonts/Courier');
+  require('pdfkit/standard-fonts/CourierBold');
+  require('pdfkit/standard-fonts/Symbol');
+  require('pdfkit/standard-fonts/ZapfDingbats');
+} catch {}
 import fs from 'fs';
 import path from 'path';
 
